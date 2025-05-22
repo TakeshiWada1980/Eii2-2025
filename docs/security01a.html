@@ -89,10 +89,11 @@ class="toc-section-number">4.4</span> Cookie の属性設定</a></li>
 <li><a href="#ニュースのコンテンツ" id="toc-ニュースのコンテンツ"><span
 class="toc-section-number">5</span> 「ニュース」のコンテンツ</a>
 <ul>
-<li><a href="#クライアントサイドの処理" id="toc-クライアントサイドの処理"><span
-class="toc-section-number">5.1</span> クライアントサイドの処理</a></li>
-<li><a href="#サーバサイドの処理" id="toc-サーバサイドの処理"><span
-class="toc-section-number">5.2</span> サーバサイドの処理</a></li>
+<li><a href="#クライアントサイド-フロントエンド-の処理"
+id="toc-クライアントサイド-フロントエンド-の処理"><span class="toc-section-number">5.1</span>
+クライアントサイド (フロントエンド) の処理</a></li>
+<li><a href="#サーバサイド-バックエンド-の処理" id="toc-サーバサイド-バックエンド-の処理"><span
+class="toc-section-number">5.2</span> サーバサイド (バックエンド) の処理</a></li>
 <li><a href="#swr-について" id="toc-swr-について"><span class="toc-section-number">5.3</span> SWR
 について</a></li>
 </ul></li>
@@ -709,23 +710,25 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <h3 data-number="4.3.1" id="デベロッパツールからクッキーを確認-httplocalhost3000news"><span
       class="header-section-number">4.3.1</span> デベロッパツールからクッキーを確認
       (<code>http://localhost:3000/news</code>)</h3>
-      <p>デベロッパツールからクッキーを確認することができます。</p>
+      <p>ブラウザのデベロッパツール (<code>F12</code>で起動) から Cookie
+      の内容を確認することができます。</p>
       <figure>
       <img src="figs/01/news-02.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <p>以下のアイコンをクリックすることで <strong>Cookie が削除できること</strong>
-      を確認してください。削除後、再びサイトにアクセスすると Cookie
+      <p>以下のアイコンをクリックすることで <strong>ユーザ操作により Cookie
+      が削除できること</strong> を確認してください。削除後、再びサイトにアクセスすると Cookie
       が再設定されることも確認してください。</p>
       <figure>
       <img src="figs/01/cookie-03.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <p>Cookie の各フィールドをダブルクリックして値の編集ができることを確認してください。</p>
+      <p>Cookie の各フィールドをダブルクリックして <strong>値の編集ができること</strong>
+      を確認してください (ユーザにより Cookie の偽装ができることを確認してください)。</p>
       <h3 data-number="4.3.2" id="next.js-のサーバサイドコンポーネントで-cookie-を設定する例"><span
       class="header-section-number">4.3.2</span> Next.js のサーバサイドコンポーネントで Cookie
       を設定する例</h3>
-      <p>ショップ (<code>http://localhost:3000/shop</code>) に関連する<strong>ウェブAPI</strong>
+      <p>ショップ (<code>http://localhost:3000/shop</code>) に関連する <strong>ウェブAPI</strong>
       (<code>http://localhost:3000/api/cart</code>) の「GET Method」では、HTTPリクエストのヘッダに
       Cookie フィールドが存在しないときは、Cookie を発行したうえで
       DBから「商品リスト」取得して、それをレスポンスしています。</p>
@@ -836,8 +839,8 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <p>このコンテンツは <code>region</code> という Cookie に設定された値
       (<code>OSAKA</code>、<code>TOKYO</code> など)
       に応じて、表示されるニュースが変わるようになっています。</p>
-      <h2 data-number="5.1" id="クライアントサイドの処理"><span
-      class="header-section-number">5.1</span> クライアントサイドの処理</h2>
+      <h2 data-number="5.1" id="クライアントサイド-フロントエンド-の処理"><span
+      class="header-section-number">5.1</span> クライアントサイド (フロントエンド) の処理</h2>
       <p>ページにアクセスしたら、クライアントサイドにおいて Cookie のなかに <code>region</code>
       が存在するかをチェックして、存在しない場合は初期値として <code>OSAKA</code>
       を設定するようにしています。</p>
@@ -903,10 +906,11 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb24-75"><a href="#cb24-75"></a>  }<span class="op">;</span></span>
 <span id="cb24-76"><a href="#cb24-76"></a>  <span class="fu">fetchNews</span>()<span class="op">;</span></span>
 <span id="cb24-77"><a href="#cb24-77"></a>}<span class="op">,</span> [region])<span class="op">;</span></span></code></pre></div>
-      <h2 data-number="5.2" id="サーバサイドの処理"><span class="header-section-number">5.2</span>
-      サーバサイドの処理</h2>
+      <h2 data-number="5.2" id="サーバサイド-バックエンド-の処理"><span
+      class="header-section-number">5.2</span> サーバサイド (バックエンド) の処理</h2>
       <p><code>/api/news</code> にアクセスがあったときに実行される処理は
-      <code>src/app/news/route.ts</code> に記載されます。</p>
+      <code>src/app/news/route.ts</code> に記載されます。サーバサイドでは、Cookie に応じて DB
+      からのデータ取得条件を変えています。</p>
       <div class="sourceCode" id="cb25" data-caption="src/app/news/route.ts (抜粋)"
       data-startFrom="4"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 3;"><span id="cb25-4"><a href="#cb25-4"></a><span class="im">import</span> { cookies } <span class="im">from</span> <span class="st">&quot;next/headers&quot;</span><span class="op">;</span></span></code></pre></div>
       <div class="sourceCode" id="cb26"
