@@ -45,18 +45,19 @@
          <ul>
 <li><a href="#準備" id="toc-準備"><span class="toc-section-number">1</span> 準備</a>
 <ul>
-<li><a href="#演習-1530分" id="toc-演習-1530分"><span class="toc-section-number">1.1</span> 演習
-<i class="fa-solid fa-stopwatch"></i>15～30分</a></li>
+<li><a href="#演習-30分" id="toc-演習-30分"><span class="toc-section-number">1.1</span> 演習
+<i class="fa-solid fa-stopwatch"></i>30分</a></li>
 </ul></li>
 <li><a href="#データベースについて" id="toc-データベースについて"><span
 class="toc-section-number">2</span> データベースについて</a>
 <ul>
+<li><a href="#準備-1" id="toc-準備-1"><span class="toc-section-number">2.1</span> 準備</a></li>
 <li><a href="#package.json-に追記" id="toc-package.json-に追記"><span
-class="toc-section-number">2.1</span> package.json に追記</a></li>
-<li><a href="#準備-1" id="toc-準備-1"><span class="toc-section-number">2.2</span> 準備</a></li>
+class="toc-section-number">2.2</span> package.json に追記</a></li>
 <li><a href="#seed.ts-の作成" id="toc-seed.ts-の作成"><span class="toc-section-number">2.3</span>
 seed.ts の作成</a></li>
 <li><a href="#演習" id="toc-演習"><span class="toc-section-number">2.4</span> 演習</a></li>
+<li><a href="#演習-1" id="toc-演習-1"><span class="toc-section-number">2.5</span> 演習</a></li>
 </ul></li>
 <li><a href="#zod-を利用した型定義やバリデーションについて"
 id="toc-zod-を利用した型定義やバリデーションについて"><span class="toc-section-number">3</span> zod
@@ -101,6 +102,9 @@ class="toc-section-number">6</span> 「ショップ」のコンテンツ</a></li
 <ul>
 <li><a href="#cookie-が窃取されると" id="toc-cookie-が窃取されると"><span
 class="toc-section-number">7.1</span> Cookie が窃取されると…</a></li>
+<li><a href="#flask-python-などでもxss脆弱性に注意"
+id="toc-flask-python-などでもxss脆弱性に注意"><span class="toc-section-number">7.2</span> Flask
+(Python) などでもXSS脆弱性に注意</a></li>
 </ul></li>
 </ul> 
         <!-- ---------------------------------------- -->
@@ -115,42 +119,52 @@ class="toc-section-number">7.1</span> Cookie が窃取されると…</a></li>
     <main class="markdown-body">
       <!-- ---------------------------------------- -->
       <h1 data-number="1" id="準備"><span class="header-section-number">1</span> 準備</h1>
-      <p>このテキストは、知能情報実験実習2 (前期) の「<strong>A班</strong>」の 05月23日 (金)
+      <p>このテキストは、知能情報実験実習2 (前期) の「<strong>A班</strong>」の第5週目・05月23日 (金)
       の内容に関するものです。</p>
       <p><i class="fa-brands fa-github"></i><a
       href="https://github.com/TakeshiWada1980/web-sec-playground-1">こちら</a>
       のリポジトリのプロジェクト <code>web-sec-playground-1</code>
-      を利用して、今週と来週で「<strong>ウェブアプリのセキュリティ</strong>」について実践的に学んでいきます。</p>
+      を利用して、今週と来週で「<strong>ウェブアプリのセキュリティ</strong>」について体験的・実践的に学んでいきます。</p>
       <p>具体的には、次のような内容について学びます (次週に扱う内容も含んでいます) 。</p>
       <ul>
       <li>Cookie (クッキー)</li>
-      <li>Prisma/DBの初期データ投入 (シーディング)</li>
+      <li>Prisma/DBの初期データ投入 (シーディング処理)</li>
+      <li>zod (<a href="https://www.google.com/search?q=zodとは">バリデーションライブラリ</a>)</li>
       <li>XSS (クロスサイトスクリプティング) 攻撃</li>
-      <li>CSRF (クロスサイトリクエストフォージェリ) 攻撃</li>
       <li>SWR (<a href="https://swr.vercel.app/ja">データ取得のための React Hooks
       ライブラリ</a>)</li>
-      <li>zod (<a href="https://www.google.com/search?q=zodとは">バリデーションライブラリ</a>)</li>
-      <li>Next.js ServerActions (Custom Invocation)</li>
       <li>パスワードのハッシュ化</li>
+      <li>Next.js ServerActions (Custom Invocation)</li>
       <li>セッションベース認証</li>
       <li>トークンベース認証 (JWT)</li>
+      <li>CSRF (クロスサイトリクエストフォージェリ) 攻撃</li>
       </ul>
       <p>昨年度の<a
       href="https://takeshiwada1980.github.io/Programming3-2024/">プログラミング3</a>では<a
-      href="https://supabase.com/">Supabase</a>が提供する機能を利用して「<strong>ユーザ認証</strong>」を実装しましたが、ここではセキュティの理解を深めるために自前で実装します。</p>
-      <h2 data-number="1.1" id="演習-1530分"><span class="header-section-number">1.1</span> 演習
-      <i class="fa-solid fa-stopwatch"></i>15～30分</h2>
+      href="https://supabase.com/">Supabase</a>が提供する「<strong>ユーザ認証機能</strong>」を利用してウェブアプリを開発しましたが、ここではセキュティに対する理解を深めるためにゼロからユーザ認証機能を実装していきます。</p>
+      <h2 data-number="1.1" id="演習-30分"><span class="header-section-number">1.1</span> 演習
+      <i class="fa-solid fa-stopwatch"></i>30分</h2>
       <p><a
       href="https://github.com/TakeshiWada1980/web-sec-playground-1">リポジトリ</a>をクローンして
-      <code>README.md</code> に示す手順でセットアップしてください。</p>
-      <p>そして、実際にアプリを実行・操作しながら、<strong>プロジェクトの全体概要を把握
-      (＝フォルダ構成や各プログラムのざっくりと把握) してください</strong>
-      (するように努めてください)。基本的には、昨年度の<a
+      <code>README.md</code> に示す手順でプロジェクトをセットアップしてください。</p>
+      <p>そして、実際にアプリの起動と操作、プログラムの読解を通じて<strong>ウェブアプリの「全体概要」を把握</strong>
+      (＝フォルダ構成やプログラム内容をざっくりと把握) してください
+      (AIも活用してください)。詳細な解説については、このあとで行ないますが、<strong>まずは自分自身で理解に努め、疑問点や不明点を整理して明確化しておくこと</strong>
+      が効果的な学びにつながります。実際の開発においても「<strong>自分でコードを書くこと</strong>」よりも
+      <span class="masked">「他人が書いたコードやAIが提案したコードを読解・評価すること」</span>
+      のほうが圧倒的に多いです。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>実際のソフトウェア開発では「自分でコードを書くこと
+      (＝コーディング)」よりも、「他人が書いたコードあるいはAIが提案したコードを読解・評価すること
+      (＝コードリーディング)」のほうが圧倒的に多い、と聞きました。本当ですか？</p>
+      </blockquote>
+      <p>基本的には、昨年度の<a
       href="https://takeshiwada1980.github.io/Programming3-2024/">プログラミング3</a>で学んだことが定着していれば、概ね理解できる内容となっています。</p>
-      <p>基本的には、以下の順番でコードの内容を把握してください。これらは目安であり、実際には <span
-      class="masked">各ファイルを何度も往復しながら全体像を把握する必要</span>
-      があります。また、<strong>ここに示されている以外のファイルも必要に応じて参照</strong>
-      してください。</p>
+      <p>以下の順序でプログラムや機能を理解・把握していくことを推奨します。ただし、あくまで目安であり、実際には
+      <span class="masked">各ファイルを何度も往復しながら全体像を掴んでいく必要</span>
+      があります。また、<strong>以下に示されている以外のファイルも必要に応じて参照</strong>
+      していく必要があります。</p>
       <ol type="1">
       <li><strong>データベース</strong>
       <ul>
@@ -158,12 +172,12 @@ class="toc-section-number">7.1</span> Cookie が窃取されると…</a></li>
       <li><code>prisma/seed.ts</code></li>
       <li><code>src/app/_types/ApiResponse.ts</code></li>
       </ul></li>
-      <li><strong>ニュース</strong>
+      <li><strong>ニュース</strong> <code>http://localhost:3000/news</code>
       <ul>
       <li><code>src/app/news/page.tsx</code></li>
       <li><code>src/app/api/news/route.ts</code></li>
       </ul></li>
-      <li><strong>ショップ</strong>
+      <li><strong>ショップ</strong> <code>http://localhost:3000/shop</code>
       <ul>
       <li><code>src/app/shop/page.tsx</code></li>
       <li><code>src/app/_types/Product.ts</code></li>
@@ -171,24 +185,32 @@ class="toc-section-number">7.1</span> Cookie が窃取されると…</a></li>
       <li><code>src/app/_types/CartItrem.ts</code></li>
       <li><code>src/app/api/cart/route.ts</code></li>
       </ul></li>
-      <li><strong>ログイン</strong></li>
-      <li><strong>サインイン</strong></li>
+      <li><strong>ログイン</strong> <code>http://localhost:3000/login</code>
+      <ul>
+      <li>主に次週に扱う内容なので余裕があれば</li>
+      </ul></li>
+      <li><strong>サインイン</strong> <code>http://localhost:3000/signup</code>
+      <ul>
+      <li>主に次週に扱う内容なので余裕があれば</li>
+      </ul></li>
       </ol>
-      <p>なお、機能や設定を確認・把握するためにコードを書き換える場合は、<strong>新たにブランチを切って、そちらで編集するようにしてください</strong>
-      (以降の説明と不整合が生じるので、<code>main</code>
-      ブランチでは内容の書き換えをしないでください)。</p>
-      <p><strong>▼ ブランチの新規作成と書き換え ▼</strong></p>
+      <p>なお、機能や設定を確認・把握するためにプログラムや設定を書き換える場合は、<strong>新たにブランチを切って、そこで編集するようにしてください</strong>。以降の説明
+      (特に行番号) との不整合が生じるので、<code>main</code>
+      ブランチでは内容の書き換えをしないでください。</p>
+      <p><strong>▼ ブランチの新規作成と切り替え ▼</strong></p>
       <pre><code>git checkout -b sandbox
 git commit --allow-empty -m &quot;Start sandbox branch&quot;</code></pre>
       <p>また <code>npx prisma studio</code> で「<strong>Prisma Studio</strong>」を起動し、DB
-      の内容についても簡単に把握してください。</p>
+      の内容についても簡単に把握しておいてください。</p>
       <div class="note type-tips">
+      <p><strong>ブランチの切り替え</strong></p>
       <p>演習が終わったあとは、以下の手順で <code>main</code> ブランチに戻っておいてください。</p>
       <pre><code>git commit -m &quot;Finish sandbox branch&quot; 
 git checkout main  # mainブランチに戻る
 git branch -D sandbox  # sandboxブランチの削除（必要に応じて）
 npx prisma db seed</code></pre>
-      <p>コミットせずに <code>main</code> ブランチに切り替えると、作業中の変更がそのまま
+      <p>なお、ファイルを保存・コミットせずに <code>main</code>
+      ブランチに切り替えると、作業中の変更がそのまま
       <code>main</code>ブランチに持ち越されることがあるので注意してください。</p>
       <p>また、DBの内容についても、以下のコマンで初期状態に戻しておいてください。</p>
       <pre><code>npx prisma db seed</code></pre>
@@ -196,45 +218,51 @@ npx prisma db seed</code></pre>
       <h1 data-number="2" id="データベースについて"><span class="header-section-number">2</span>
       データベースについて</h1>
       <p>このプロジェクトでは <code>npx prisma db seed</code>
-      というコマンドを使って、データベースのレコードをクリアした上で、定義済みの初期データを挿入できるようにしています。このような処理は、一般に「<strong>シーディング
+      というコマンドを使って、<strong>データベースのレコードをクリアした上で、定義済みの初期データを挿入</strong>
+      できるようにしています。このような処理は、一般に「<strong>シーディング
       (Seeding)</strong>」や「シード処理」「初期データ投入」と呼ばれます。</p>
       <p>なお、<code>npx prisma db seed</code> は、<code>npx prisma db push</code> や
-      <code>npx prisma generate</code> のように、Prisma が標準で提供しているコマンド
-      (ビルトインコマンド) ではなく、以下のように
-      <strong>開発者が自分でスクリプトを用意し、設定することで使用可能になるカスタムコマンド</strong>
-      となっています。具体的には、<code>package.json</code> の変更と、<code>prisma/seed.ts</code>
+      <code>npx prisma generate</code> のように Prisma が標準で提供しているコマンド
+      (ビルトインコマンド) ではなく、以下のように <span
+      class="masked">開発者が自分でスクリプトを用意し、設定することで使用可能になるカスタムコマンド</span>
+      となっています。具体的には、<code>package.json</code> の変更と　<code>prisma/seed.ts</code>
       の作成が必要となります。</p>
-      <h2 data-number="2.1" id="package.json-に追記"><span class="header-section-number">2.1</span>
+      <h2 data-number="2.1" id="準備-1"><span class="header-section-number">2.1</span> 準備</h2>
+      <p>ここからは <code>week-5</code>
+      というブランチを新規作成して、そこで作業を行なってください。</p>
+      <pre><code>git checkout main
+git checkout -b week-5
+git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
+      <h2 data-number="2.2" id="package.json-に追記"><span class="header-section-number">2.2</span>
       package.json に追記</h2>
-      <p>プロジェクトのルートにある <code>package.json</code>
-      に次のようなコードを追記します。「<code>package.json</code>」の役割や、以下のスクリプトで使用している「<code>ts-node</code>」については、PG3の授業で<a
+      <p>プロジェクトのルートにある <code>package.json</code> に次のようなコードを追記します。</p>
+      <p><code>package.json</code>
+      の役割や、以下のスクリプトで使用している「<code>ts-node</code>」については、PG3の授業で<a
       href="https://takeshiwada1980.github.io/Programming3-2024/lecture01.html#開発を効率的に行なうためのパッケージの追加">既に解説済み</a>です。</p>
-      <div class="sourceCode" id="cb4" data-caption="package.json" data-startFrom="11"><pre
-      class="sourceCode numberSource json numberLines"><code class="sourceCode json" style="counter-reset: source-line 10;"><span id="cb4-11"><a href="#cb4-11"></a><span class="er">&quot;prisma&quot;:</span> <span class="fu">{</span></span>
-<span id="cb4-12"><a href="#cb4-12"></a>  <span class="dt">&quot;seed&quot;</span><span class="fu">:</span> <span class="st">&quot;ts-node --compiler-options {</span><span class="ch">\&quot;</span><span class="st">module</span><span class="ch">\&quot;</span><span class="st">:</span><span class="ch">\&quot;</span><span class="st">CommonJS</span><span class="ch">\&quot;</span><span class="st">} prisma/seed.ts&quot;</span></span>
-<span id="cb4-13"><a href="#cb4-13"></a><span class="fu">}</span><span class="er">,</span></span></code></pre></div>
-      <p>この設定により、ターミナルで <code>npx prisma db seed</code> を入力したときに
+      <div class="sourceCode" id="cb5" data-caption="package.json" data-startFrom="11"><pre
+      class="sourceCode numberSource json numberLines"><code class="sourceCode json" style="counter-reset: source-line 10;"><span id="cb5-11"><a href="#cb5-11"></a><span class="er">&quot;prisma&quot;:</span> <span class="fu">{</span></span>
+<span id="cb5-12"><a href="#cb5-12"></a>  <span class="dt">&quot;seed&quot;</span><span class="fu">:</span> <span class="st">&quot;ts-node --compiler-options {</span><span class="ch">\&quot;</span><span class="st">module</span><span class="ch">\&quot;</span><span class="st">:</span><span class="ch">\&quot;</span><span class="st">CommonJS</span><span class="ch">\&quot;</span><span class="st">} prisma/seed.ts&quot;</span></span>
+<span id="cb5-13"><a href="#cb5-13"></a><span class="fu">}</span><span class="er">,</span></span></code></pre></div>
+      <p>この設定により、ターミナルから <code>npx prisma db seed</code> を入力したときに
       <code>prisma/seed.ts</code> が<strong>単体で実行</strong>されるようになります。</p>
       <p>(プロンプト例)</p>
       <blockquote>
       <p>Next.js 15 / TypeScript / Prisma でウェブアプリ開発をしています。いま
       <code>package.json</code>
-      に以下を追加するように指示されました。この設定の目的と動作について解説してください。</p>
+      に以下の内容を追加するように指示されました。この設定の目的と動作について解説してください。</p>
       <pre><code>&quot;prisma&quot;: {
  &quot;seed&quot;: &quot;ts-node --compiler-options {\&quot;module\&quot;:\&quot;CommonJS\&quot;} prisma/seed.ts&quot;
 },</code></pre>
       </blockquote>
-      <h2 data-number="2.2" id="準備-1"><span class="header-section-number">2.2</span> 準備</h2>
-      <p>ここからは <code>week-5</code> というブランチを作成して、そこで作業を行なってください。</p>
-      <pre><code>git checkout -b week-5
-git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <h2 data-number="2.3" id="seed.ts-の作成"><span class="header-section-number">2.3</span>
       seed.ts の作成</h2>
-      <p>データベースのレコードのクリアと初期データの挿入処理を、上記のスクリプトにあわせて
-      <code>prisma/seed.ts</code> に記述していきます。</p>
-      <p>このとき、<code>seed.ts</code> のファイルの配置場所には注意してください。<code>src</code>
-      フォルダ内に置いてしまうと、<code>npm run dev</code> や <code>npm run build</code>
-      を実行したときに <strong>ビルド対象として処理されてしまう可能性</strong>
+      <p>データベースの「レコードのクリア」と「初期データの挿入処理」を、上記のスクリプトに対応させて
+      <code>prisma/seed.ts</code> というファイルに記述します。</p>
+      <p>このとき、<code>seed.ts</code>
+      ファイルの配置場所には注意してください。もし、<code>src</code>
+      フォルダ内に置いてしまうと<code>npm run dev</code> や <code>npm run build</code>
+      を実行したときに、<strong><code>seed.ts</code>
+      もビルド対象として処理されてしまう可能性</strong>
       があります。プロダクトにデータベースの初期化処理が含まれることは、<strong>セキュリティ上の重大なリスク</strong>となるので十分に注意してください。</p>
       <div class="note type-caution">
       <p><strong>seed.tsのインポート設定について</strong></p>
@@ -244,18 +272,23 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       など）は利用できず、実行時にエラーが発生します。</p>
       </div>
       <h2 data-number="2.4" id="演習"><span class="header-section-number">2.4</span> 演習</h2>
-      <p><code>prisma/seed.ts</code> のインポートを次のように書き換えて
+      <p><code>prisma/seed.ts</code> のインポートを次のように書き換えると
       <code>npx prisma db seed</code>
       に「<strong>失敗すること</strong>」を確認してください。確認後は、元に戻してください。</p>
       <div class="sourceCode" id="cb7" data-caption="prisma/seed.ts (抜粋)" data-startFrom="5"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 4;"><span id="cb7-5"><a href="#cb7-5"></a><span class="im">import</span> { UserSeed<span class="op">,</span> userSeedSchema } <span class="im">from</span> <span class="st">&quot;@/app/_types/UserSeed&quot;</span><span class="op">;</span> <span class="co">// パスエイリアを使用</span></span></code></pre></div>
       <p>なお、上記でインポートされる <code>UserSeed.ts</code>
-      ファイルのなかでも「<strong>相対パス</strong>」でインポートを指定する必要があります。実際に、<code>UserSeed.ts</code>
-      の <strong>第07行目</strong> を以下のように書き換えて <code>npx prisma db seed</code>
+      のなかのインポートの記述についても「<strong>相対パス</strong>」で指定する必要があります。実際に、<code>UserSeed.ts</code>
+      の <strong>第07行目</strong> を以下のように書き換えると <code>npx prisma db seed</code>
       に失敗することを確認してください。</p>
       <div class="sourceCode" id="cb8" data-caption="UserSeed.ts (抜粋)" data-startFrom="7"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 6;"><span id="cb8-7"><a href="#cb8-7"></a>} <span class="im">from</span> <span class="st">&quot;@/app/_types/CommonSchemas&quot;</span><span class="op">;</span> <span class="co">// パスエイリアを使用</span></span></code></pre></div>
       <p>確認後は、元に戻してください。</p>
+      <h2 data-number="2.5" id="演習-1"><span class="header-section-number">2.5</span> 演習</h2>
+      <p><code>nenewsItem</code>、<code>products</code>、<code>user</code>
+      について、初期データをいくつか追加してみてください。追加後は
+      <code>npx prisma db seed</code>、<code>npx prisma studio</code>
+      を実行して内容を確認してください。</p>
       <h1 data-number="3" id="zod-を利用した型定義やバリデーションについて"><span
       class="header-section-number">3</span> zod を利用した型定義やバリデーションについて</h1>
       <p>シーディングに使用する <code>seed.ts</code> や、それに関連する型定義ファイル
@@ -263,13 +296,13 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <strong>バリデーションライブラリ</strong> を積極的に使って <span
       class="masked">入力データの整合性を厳密に検証する設計</span> となっています。</p>
       <p><a
-      href="https://www.google.com/search?q=zodとは">zod</a>は、TypeScriptにおいて「型定義」と「バリデーション（入力値検証）」を同時に記述できるライブラリです。TypeScriptでは、変数やオブジェクトに対して「<strong>数値型（number型）</strong>」や「<strong>文字列型（string型）</strong>」などの基本的な型の指定は可能ですが、<span
+      href="https://www.google.com/search?q=zodとは">zod</a>は、TypeScriptにおいて「型定義」と「バリデーション（入力値検証）」を同時に記述できるライブラリです。TypeScriptでは、変数やオブジェクトに対して「<strong>数値型（number型）</strong>」や「<strong>文字列型（string型）</strong>」などの基本的な「型」の指定は可能となっていますが、<span
       class="masked">「0以上100以下の整数値」や「5文字以上20文字以下の文字列」</span>
       のような細かな制約条件については <strong>開発者が独自にバリデーションロジック
       (入力値検証ロジック) を実装する必要があります</strong>。</p>
       <div class="note type-caution">
       <p><strong>バリデーション (入力値検証) の重要性</strong></p>
-      <p>ウェブアプリ開発においては、特に「テキストボックスなどを使ったユーザからの入力データ」と「&gt;HTTPリクエスト/レスポンスのボディデータ」に関して、セキュリティ上の観点から
+      <p>ウェブアプリ開発においては、特に「テキストボックスなどを使ったユーザからの入力データ」と「HTTPリクエスト/レスポンスのボディデータ」に関して、セキュリティ上の観点から
       <strong>「悪意ある値」や「不正な値」である可能性も十分に予見して安全に取り扱うこと</strong>
       が求められます。</p>
       <p>このような場面において、バリデーション (入力値検証) の処理が重要となってきます。</p>
@@ -309,10 +342,16 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <p>TypeScript による Next.js / React
       のウェブアプリの開発現場で、バリデーションライブラリとして「zodがよく使われている」って聞いたんだけどホント？嘘っぽくない？</p>
       </blockquote>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>Next.js / TypeScript
+      でウェブアプリ開発をしています。データのバリデーションを実施すべきタイミングとは、どのような場面ですか。クライアントサイド
+      (フロントエンド)、サーバサイド (バックエンド) のそれぞれについて教えてください。</p>
+      </blockquote>
       <h2 data-number="3.1" id="バリデーションスキーマの定義と型の自動生成"><span
       class="header-section-number">3.1</span> バリデーションスキーマの定義と型の自動生成</h2>
-      <p><code>prisma/seed.ts</code> に記述しているシーディング処理においても、zod
-      を積極活用しています。</p>
+      <p>このプロジェクトでは <code>prisma/seed.ts</code>
+      に記述している「<strong>シーディング処理</strong>」においても、zod を積極活用しています。</p>
       <p>まず、<code>src/app/_types/CommonSchemas.ts</code> において、<code>UserSeed.ts</code>
       の他に、認証機能などに使用する型定義ファイル (<code>LoginRequest.ts</code> や
       <code>UserProfile.ts</code>) で共通利用する <strong>バリデーションスキーマ</strong>
@@ -533,7 +572,7 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb15-50"><a href="#cb15-50"></a>}<span class="op">;</span></span>
 <span id="cb15-51"><a href="#cb15-51"></a></span>
 <span id="cb15-52"><a href="#cb15-52"></a><span class="im">export</span> <span class="im">default</span> Page<span class="op">;</span></span></code></pre></div>
-      <h3 data-number="3.3.1" id="演習-1"><span class="header-section-number">3.3.1</span> 演習</h3>
+      <h3 data-number="3.3.1" id="演習-2"><span class="header-section-number">3.3.1</span> 演習</h3>
       <p><code>src/app/zod/page.tsx</code> について、以下のことを確認してください。</p>
       <ul>
       <li><strong>第24行目</strong> を変更し、<code>safeParse</code> の戻り値 <code>result</code>
@@ -659,6 +698,14 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       の内容を参照することはできませんが、HTTPリクエストの送信に含めることはできます。</li>
       </ul></li>
       </ul>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>サードパーティクッキーとは何ですか。</p>
+      </blockquote>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>サードパーティクッキーを利用した「リターゲティング広告」の仕組みについて教えてください。</p>
+      </blockquote>
       <h3 data-number="4.3.1" id="デベロッパツールからクッキーを確認-httplocalhost3000news"><span
       class="header-section-number">4.3.1</span> デベロッパツールからクッキーを確認
       (<code>http://localhost:3000/news</code>)</h3>
@@ -898,11 +945,15 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       を埋め込むことで、ユーザのウェブブラウザ上で「<strong>意図しない処理
       JavaScriptプログラム)を実行させる脆弱性</strong>」です。</p>
       <p>例えば、掲示板やコメント欄などに <code>&lt;script&gt;alert("XSS")&lt;/script&gt;</code>
-      のようなタグが投稿され、それが<strong>適切にサニタイズ (無害化) されないまま</strong>に <span
-      class="masked">そのままHTMLとして表示</span>
+      のようなタグが投稿され、それが<strong>適切にサニタイズ (無害化)
+      やエスケープ処理がされず</strong> <span class="masked">そのままHTMLとして表示</span>
       されると、他の閲覧者のブラウザ上でそのスクリプトが実行されてしまいます。これにより「<strong>Cookie情報の窃取</strong>」や「<strong>別のサイト
       (フィッシングサイト) へのリダイレクト</strong>」、さらには「<strong>ユーザの意図しない操作
       (投稿処理や削除処理など)</strong>」が強制される可能性があります。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>ウェブアプリ開発およびXSS脆弱性の文脈で、「サニタイズ処理」と「エスケープ処理」とはなんですか。また、それらの違いについて教えてください。</p>
+      </blockquote>
       <p><code>src/app/news/page.tsx</code> は、<a
       href="http://localhost:3000/news?name=寝屋川タヌキ">http://localhost:3000/news?name=寝屋川タヌキ</a>
       のようなクエリパラメータ (<code>name</code>)
@@ -1021,6 +1072,21 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>  cart_items <span class="op">=</span> res.json().get(<span class="st">&#39;payload&#39;</span>)</span>
 <span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&#39;カートの内容: </span><span class="sc">{</span>json<span class="sc">.</span>dumps(cart_items, indent<span class="op">=</span><span class="dv">2</span>)<span class="sc">}</span><span class="ss">&#39;</span>)</span></code></pre></div>
+      <h2 data-number="7.2" id="flask-python-などでもxss脆弱性に注意"><span
+      class="header-section-number">7.2</span> Flask (Python) などでもXSS脆弱性に注意</h2>
+      <div class="sourceCode" id="cb38" data-caption="XSS脆弱性 (Python)"><pre
+      class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, request, Response</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">&quot;/&quot;</span>)</span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greet():</span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> request.args.get(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  html <span class="op">=</span> <span class="ss">f&quot;こんにちは</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">さん&quot;</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Response(html, content_type<span class="op">=</span><span class="st">&quot;text/html&quot;</span>)</span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  app.run(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
       <!-- ---------------------------------------- -->
     </main>
 
