@@ -51,26 +51,29 @@
 <li><a href="#データベースについて" id="toc-データベースについて"><span
 class="toc-section-number">2</span> データベースについて</a>
 <ul>
-<li><a href="#準備-1" id="toc-準備-1"><span class="toc-section-number">2.1</span> 準備</a></li>
-<li><a href="#package.json-に追記" id="toc-package.json-に追記"><span
-class="toc-section-number">2.2</span> package.json に追記</a></li>
+<li><a href="#作業準備" id="toc-作業準備"><span class="toc-section-number">2.1</span>
+作業準備</a></li>
+<li><a href="#package.json-の変更-スクリプトの追加"
+id="toc-package.json-の変更-スクリプトの追加"><span class="toc-section-number">2.2</span>
+package.json の変更 (スクリプトの追加)</a></li>
 <li><a href="#seed.ts-の作成" id="toc-seed.ts-の作成"><span class="toc-section-number">2.3</span>
 seed.ts の作成</a></li>
 <li><a href="#演習" id="toc-演習"><span class="toc-section-number">2.4</span> 演習</a></li>
 <li><a href="#演習-1" id="toc-演習-1"><span class="toc-section-number">2.5</span> 演習</a></li>
 </ul></li>
-<li><a href="#zod-を利用した型定義やバリデーションについて"
-id="toc-zod-を利用した型定義やバリデーションについて"><span class="toc-section-number">3</span> zod
-を利用した型定義やバリデーションについて</a>
+<li><a href="#zod-を利用したバリデーションと型定義について"
+id="toc-zod-を利用したバリデーションと型定義について"><span class="toc-section-number">3</span> zod
+を利用した「バリデーション」と「型定義」について</a>
 <ul>
 <li><a href="#バリデーションスキーマの定義と型の自動生成"
 id="toc-バリデーションスキーマの定義と型の自動生成"><span class="toc-section-number">3.1</span>
 バリデーションスキーマの定義と型の自動生成</a></li>
-<li><a href="#データのバリデーション" id="toc-データのバリデーション"><span
-class="toc-section-number">3.2</span> データのバリデーション</a></li>
-<li><a href="#データのバリデーション-シンプルな例"
-id="toc-データのバリデーション-シンプルな例"><span class="toc-section-number">3.3</span>
-データのバリデーション (シンプルな例)</a></li>
+<li><a href="#データのバリデーション処理" id="toc-データのバリデーション処理"><span
+class="toc-section-number">3.2</span> データのバリデーション処理</a></li>
+<li><a href="#データのバリデーション処理-シンプルな例"
+id="toc-データのバリデーション処理-シンプルな例"><span class="toc-section-number">3.3</span>
+データのバリデーション処理 (シンプルな例)</a></li>
+<li><a href="#演習-2" id="toc-演習-2"><span class="toc-section-number">3.4</span> 演習</a></li>
 </ul></li>
 <li><a href="#cookie-について" id="toc-cookie-について"><span class="toc-section-number">4</span>
 Cookie について</a>
@@ -79,10 +82,10 @@ Cookie について</a>
 class="toc-section-number">4.1</span> Cookie という仕組みが必要な理由</a></li>
 <li><a href="#cookie-の仕組み" id="toc-cookie-の仕組み"><span class="toc-section-number">4.2</span>
 Cookie の仕組み</a></li>
-<li><a href="#ウェブアプリ開発において-cookie-について知っておくべきこと"
-id="toc-ウェブアプリ開発において-cookie-について知っておくべきこと"><span
-class="toc-section-number">4.3</span> ウェブアプリ開発において Cookie
-について知っておくべきこと</a></li>
+<li><a href="#ウェブアプリ開発者が-cookie-について最低限知っておくべきこと"
+id="toc-ウェブアプリ開発者が-cookie-について最低限知っておくべきこと"><span
+class="toc-section-number">4.3</span> ウェブアプリ開発者が Cookie
+について最低限知っておくべきこと</a></li>
 <li><a href="#cookie-の属性設定" id="toc-cookie-の属性設定"><span
 class="toc-section-number">4.4</span> Cookie の属性設定</a></li>
 </ul></li>
@@ -171,12 +174,12 @@ id="toc-flask-python-などでもxss脆弱性に注意"><span class="toc-section
       <ul>
       <li><code>prisma/schema.prisma</code></li>
       <li><code>prisma/seed.ts</code></li>
-      <li><code>src/app/_types/ApiResponse.ts</code></li>
       </ul></li>
       <li><strong>ニュース</strong> <code>http://localhost:3000/news</code>
       <ul>
       <li><code>src/app/news/page.tsx</code></li>
       <li><code>src/app/api/news/route.ts</code></li>
+      <li><code>src/app/_types/ApiResponse.ts</code></li>
       </ul></li>
       <li><strong>ショップ</strong> <code>http://localhost:3000/shop</code>
       <ul>
@@ -188,16 +191,16 @@ id="toc-flask-python-などでもxss脆弱性に注意"><span class="toc-section
       </ul></li>
       <li><strong>ログイン</strong> <code>http://localhost:3000/login</code>
       <ul>
-      <li>主に次週に扱う内容なので余裕があれば</li>
+      <li>主に次週に扱う内容なので余裕があれば…</li>
       </ul></li>
       <li><strong>サインイン</strong> <code>http://localhost:3000/signup</code>
       <ul>
-      <li>主に次週に扱う内容なので余裕があれば</li>
+      <li>主に次週に扱う内容なので余裕があれば…</li>
       </ul></li>
       </ol>
-      <p>なお、機能や設定を確認・把握するためにプログラムや設定を書き換える場合は、<strong>新たにブランチを切って、そこで編集するようにしてください</strong>。以降の説明
+      <p>なお、機能や設定を確認・把握するためにプログラムや設定を書き換える場合は、<strong>新たにブランチを切って、そのブランチでファイルを編集するようにしてください</strong>。以降の説明
       (特に行番号) との不整合が生じるので、<code>main</code>
-      ブランチでは内容の書き換えをしないでください。</p>
+      ブランチには手を加えないでください。</p>
       <p><strong>▼ ブランチの新規作成と切り替え ▼</strong></p>
       <pre><code>git checkout -b sandbox
 git commit --allow-empty -m &quot;Start sandbox branch&quot;</code></pre>
@@ -219,90 +222,102 @@ npx prisma db seed</code></pre>
       <h1 data-number="2" id="データベースについて"><span class="header-section-number">2</span>
       データベースについて</h1>
       <p>このプロジェクトでは <code>npx prisma db seed</code>
-      というコマンドを使って、<strong>データベースのレコードをクリアした上で、定義済みの初期データを挿入</strong>
+      というコマンドを使って、<strong>データベースのレコードをクリアした上で、定義済みの初期データを投入</strong>
       できるようにしています。このような処理は、一般に「<strong>シーディング
       (Seeding)</strong>」や「シード処理」「初期データ投入」と呼ばれます。</p>
       <p>なお、<code>npx prisma db seed</code> は、<code>npx prisma db push</code> や
       <code>npx prisma generate</code> のように Prisma が標準で提供しているコマンド
       (ビルトインコマンド) ではなく、以下のように <span
       class="masked">開発者が自分でスクリプトを用意し、設定することで使用可能になるカスタムコマンド</span>
-      となっています。具体的には <code>package.json</code> の変更と <code>prisma/seed.ts</code>
-      の作成が必要となります。</p>
-      <h2 data-number="2.1" id="準備-1"><span class="header-section-number">2.1</span> 準備</h2>
+      となっています。</p>
+      <p>具体的には <code>package.json</code> を変更して、<code>prisma/seed.ts</code>
+      を作成する必要があります。</p>
+      <h2 data-number="2.1" id="作業準備"><span class="header-section-number">2.1</span>
+      作業準備</h2>
       <p>ここからは <code>week-5</code>
       というブランチを新規作成して、そこで作業を行なってください。</p>
-      <pre><code>git checkout main
-git checkout -b week-5
+      <pre><code>git checkout main # mainブランチであることを確認
+git checkout -b week-5 # week-5ブランチを作成・切替
 git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
-      <h2 data-number="2.2" id="package.json-に追記"><span class="header-section-number">2.2</span>
-      package.json に追記</h2>
-      <p>プロジェクトのルートにある <code>package.json</code> に次のようなコードを追記します。</p>
-      <p><code>package.json</code>
-      の役割や、以下のスクリプトで使用している「<code>ts-node</code>」については、PG3の授業で<a
+      <h2 data-number="2.2" id="package.json-の変更-スクリプトの追加"><span
+      class="header-section-number">2.2</span> package.json の変更 (スクリプトの追加)</h2>
+      <p>プロジェクトフォルダのルートにある <code>package.json</code> に、次のような設定を追加します
+      (クローンしてきたプロジェクトでは既に設定を追加済みです)。</p>
+      <p><code>package.json</code> の役割や、次のスクリプトのなかで使用している <code>ts-node</code>
+      については、プログラミング3の授業のなかで<a
       href="https://takeshiwada1980.github.io/Programming3-2024/lecture01.html#開発を効率的に行なうためのパッケージの追加">既に解説済み</a>です。</p>
-      <div class="sourceCode" id="cb5" data-caption="package.json" data-startFrom="11"><pre
+      <div class="sourceCode" id="cb5"
+      data-caption="package.json シーディング処理のためのスクリプトの追加" data-startFrom="11"><pre
       class="sourceCode numberSource json numberLines"><code class="sourceCode json" style="counter-reset: source-line 10;"><span id="cb5-11"><a href="#cb5-11"></a><span class="er">&quot;prisma&quot;:</span> <span class="fu">{</span></span>
 <span id="cb5-12"><a href="#cb5-12"></a>  <span class="dt">&quot;seed&quot;</span><span class="fu">:</span> <span class="st">&quot;ts-node --compiler-options {</span><span class="ch">\&quot;</span><span class="st">module</span><span class="ch">\&quot;</span><span class="st">:</span><span class="ch">\&quot;</span><span class="st">CommonJS</span><span class="ch">\&quot;</span><span class="st">} prisma/seed.ts&quot;</span></span>
 <span id="cb5-13"><a href="#cb5-13"></a><span class="fu">}</span><span class="er">,</span></span></code></pre></div>
-      <p>この設定により、ターミナルから <code>npx prisma db seed</code> を入力したときに
-      <code>prisma/seed.ts</code> が<strong>単体で実行</strong>されるようになります。</p>
+      <p>上記のスクリプトを加えることで、VSCode のターミナル (<code>Ctrl+J</code>で起動) から
+      <code>npx prisma db seed</code> というコマンドを実行したときに <code>prisma/seed.ts</code>
+      が<strong>単体で実行</strong>されるようになります。</p>
       <p>(プロンプト例)</p>
       <blockquote>
       <p>Next.js 15 / TypeScript / Prisma でウェブアプリ開発をしています。いま
       <code>package.json</code>
-      に以下の内容を追加するように指示されました。この設定の目的と動作について解説してください。</p>
+      に以下の内容を追加するように指示されました。このようなスクリプトを設定する目的と、実行したときの動作について解説してください。</p>
       <pre><code>&quot;prisma&quot;: {
  &quot;seed&quot;: &quot;ts-node --compiler-options {\&quot;module\&quot;:\&quot;CommonJS\&quot;} prisma/seed.ts&quot;
 },</code></pre>
       </blockquote>
       <h2 data-number="2.3" id="seed.ts-の作成"><span class="header-section-number">2.3</span>
       seed.ts の作成</h2>
-      <p>データベースの「<strong>レコードのクリア処理</strong>」と「<strong>初期データの挿入処理</strong>」を、上記のスクリプトに対応させて
-      <code>prisma/seed.ts</code> というファイルに記述します。</p>
-      <p>このとき、<code>seed.ts</code>
-      ファイルの配置場所には注意してください。もし、<code>src</code>
-      フォルダ内に置いてしまうと<code>npm run dev</code> や <code>npm run build</code>
-      を実行したときに、<strong><code>seed.ts</code>
+      <p>データベースの「<strong>レコードのクリア処理</strong>」と「<strong>初期データの挿入処理</strong>」を
+      <code>prisma/seed.ts</code> というファイルを新規作成して記述します。</p>
+      <p>このとき、<code>seed.ts</code> を配置する場所には注意してください。このファイルを
+      <code>src</code> フォルダ内に置いてしまうと<code>npm run dev</code> や
+      <code>npm run build</code> を実行したときに、<strong><code>seed.ts</code>
       もビルド対象として処理されてしまう可能性</strong>
-      があります。プロダクトにデータベースの初期化処理が含まれることは、<strong>セキュリティ上の重大なリスク</strong>となるので十分に注意してください。</p>
+      があります。プロダクトのなかに「データベースの初期化処理」が含まれることは、<strong>セキュリティ上の重大なリスク</strong>
+      となるので十分に注意してください。</p>
       <div class="note type-caution">
-      <p><strong>seed.tsのインポート設定について</strong></p>
+      <p><strong>要注意 seed.ts のインポート設定について</strong></p>
       <p><code>seed.ts</code> のなかで使用する <strong>自作のモジュール (型定義など)</strong>
-      などは、必ず「<span
-      class="masked">相対パス</span>」でインポートしてください。パスエイリアス（例：<code>@/app/_types/UserSeed</code>
-      など）は利用できず、実行時にエラーが発生します。</p>
+      は、必ず <span class="masked">相対パス</span>
+      で指定してインポートしてください。インポートにパスエイリアス（例：<code>@/app/_types/UserSeed</code>
+      のような記述）を使用すると、<code>npx prisma db seed</code>
+      コマンドの実行時にエラーが発生します。</p>
       </div>
       <h2 data-number="2.4" id="演習"><span class="header-section-number">2.4</span> 演習</h2>
-      <p><code>prisma/seed.ts</code> のインポートを次のように書き換えると
-      <code>npx prisma db seed</code>
-      に「<strong>失敗すること</strong>」を確認してください。確認後は、元に戻してください。</p>
+      <p><code>prisma/seed.ts</code>
+      のインポート設定を次のように書き換えると、<code>npx prisma db seed</code>
+      に「<strong>失敗すること</strong>」を確認してください。確認後は、元に戻しておいてください。</p>
       <div class="sourceCode" id="cb7" data-caption="prisma/seed.ts (抜粋)" data-startFrom="5"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 4;"><span id="cb7-5"><a href="#cb7-5"></a><span class="im">import</span> { UserSeed<span class="op">,</span> userSeedSchema } <span class="im">from</span> <span class="st">&quot;@/app/_types/UserSeed&quot;</span><span class="op">;</span> <span class="co">// パスエイリアを使用</span></span></code></pre></div>
       <p>なお、上記でインポートされる <code>UserSeed.ts</code>
-      のなかのインポートの記述についても「<strong>相対パス</strong>」で指定する必要があります。実際に、<code>UserSeed.ts</code>
+      のなかのインポート設定についても「<strong>相対パス</strong>」で指定する必要があります。実際に、<code>UserSeed.ts</code>
       の <strong>第07行目</strong> を以下のように書き換えると <code>npx prisma db seed</code>
       に失敗することを確認してください。</p>
-      <div class="sourceCode" id="cb8" data-caption="UserSeed.ts (抜粋)" data-startFrom="7"><pre
-      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 6;"><span id="cb8-7"><a href="#cb8-7"></a>} <span class="im">from</span> <span class="st">&quot;@/app/_types/CommonSchemas&quot;</span><span class="op">;</span> <span class="co">// パスエイリアを使用</span></span></code></pre></div>
-      <p>確認後は、元に戻してください。</p>
+      <div class="sourceCode" id="cb8" data-caption="src/app/_types/UserSeed.ts (抜粋)"
+      data-startFrom="7"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 6;"><span id="cb8-7"><a href="#cb8-7"></a>} <span class="im">from</span> <span class="st">&quot;@/app/_types/CommonSchemas&quot;</span><span class="op">;</span> <span class="co">// パスエイリアを使用</span></span></code></pre></div>
+      <p>確認後は、元に戻しておいてください。</p>
       <h2 data-number="2.5" id="演習-1"><span class="header-section-number">2.5</span> 演習</h2>
-      <p><code>newsItem</code>、<code>products</code>、<code>user</code>
-      について、初期データをいくつか追加してみてください。追加後は
-      <code>npx prisma db seed</code>、<code>npx prisma studio</code>
-      を実行して内容を確認してください。</p>
-      <h1 data-number="3" id="zod-を利用した型定義やバリデーションについて"><span
-      class="header-section-number">3</span> zod を利用した型定義やバリデーションについて</h1>
-      <p>シーディングに使用する <code>seed.ts</code> や、それに関連する型定義ファイル
-      <code>UserSeed.ts</code> では、<strong>zod</strong> (ゾッド) という
+      <p><code>prisma/seed.ts</code>
+      を編集して、<code>newsItem</code>、<code>products</code>、<code>user</code>
+      について「初期データ」をいくつか追加してみてください。</p>
+      <p><code>prisma/seed.ts</code> の編集後は
+      <code>npx prisma db seed</code>、<code>npx prisma studio</code> を実行して初期データの編集が
+      DB に反映されているかを確認してください。</p>
+      <h1 data-number="3" id="zod-を利用したバリデーションと型定義について"><span
+      class="header-section-number">3</span> zod
+      を利用した「バリデーション」と「型定義」について</h1>
+      <p>シーディング処理に使用する <code>seed.ts</code> や、それに関連する型定義ファイル
+      (<code>UserSeed.ts</code> など) では、<strong>zod</strong> (ゾッド) という
       <strong>バリデーションライブラリ</strong> を積極的に使って <span
-      class="masked">入力データの整合性を厳密に検証する設計</span> となっています。</p>
+      class="masked">入力データの整合性を厳密に検証する設計</span> で実装されています。</p>
+      <ul>
+      <li><a href="https://www.google.com/search?q=zodとは">zodとは</a> @ Google 検索</li>
+      </ul>
       <p><a
-      href="https://www.google.com/search?q=zodとは">zod</a>は、TypeScriptにおいて「型定義」と「バリデーション（入力値検証）」を同時に記述できるライブラリです。TypeScriptでは、変数やオブジェクトに対して「<strong>数値型（number型）</strong>」や「<strong>文字列型（string型）</strong>」などの基本的な「型」の指定は可能となっていますが、<span
+      href="https://www.google.com/search?q=zodとは">zod</a>は、TypeScriptにおいて「<strong>バリデーション（入力値検証）の定義</strong>」と「<strong>型定義</strong>」を同時に記述することができるライブラリとなっています。TypeScriptでは、変数やオブジェクトに対して「数値型（number型）」や「文字列型（string型）」などの基本的な「型づけ」は可能となっていますが、<span
       class="masked">「0以上100以下の整数値」や「5文字以上20文字以下の文字列」</span>
       のような細かな制約条件については <strong>開発者が独自にバリデーションロジック
-      (入力値検証ロジック) を実装する必要があります</strong>。</p>
+      (入力値の検証ロジック) を実装する必要</strong> があります。</p>
       <div class="note type-caution">
-      <p><strong>バリデーション (入力値検証) の重要性</strong></p>
+      <p><strong>ウェブアプリにおけるバリデーション処理 (入力値検証処理) の重要性</strong></p>
       <p>ウェブアプリ開発においては、特に「テキストボックスなどを使ったユーザからの入力データ」と「HTTPリクエスト/レスポンスのボディデータ」に関して、セキュリティ上の観点から
       <strong>「悪意ある値」や「不正な値」である可能性も十分に予見して安全に取り扱うこと</strong>
       が求められます。</p>
@@ -314,53 +329,54 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       class="masked">入力データが満たすべき制約条件や構造を定義したもの</span>)
       から自動的に「<strong>TypeScriptの型定義</strong>」を生成する機能も利用可能となっています。</p>
       <div class="sourceCode" id="cb9"
-      data-caption="スキーマから型を生成する例 (src/app/_types/CartItem.ts)"><pre
+      data-caption="スキーマから「型」を生成する例 (src/app/_types/CartItem.ts)"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb9-1"><a href="#cb9-1"></a><span class="im">import</span> { z } <span class="im">from</span> <span class="st">&quot;zod&quot;</span><span class="op">;</span> <span class="co">// zodライブラリのインポート</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a></span>
 <span id="cb9-3"><a href="#cb9-3"></a><span class="co">// バリデーションスキーマ（データが満たすべき制約条件や構造を定義）</span></span>
 <span id="cb9-4"><a href="#cb9-4"></a><span class="im">export</span> <span class="kw">const</span> cartItemSchema <span class="op">=</span> z<span class="op">.</span><span class="fu">object</span>({</span>
-<span id="cb9-5"><a href="#cb9-5"></a>  productId<span class="op">:</span> z<span class="op">.</span><span class="fu">string</span>()<span class="op">.</span><span class="fu">min</span>(<span class="dv">1</span>)<span class="op">,</span> <span class="co">// 1文字以上の「文字列」</span></span>
+<span id="cb9-5"><a href="#cb9-5"></a>  productId<span class="op">:</span> z<span class="op">.</span><span class="fu">string</span>()<span class="op">.</span><span class="fu">min</span>(<span class="dv">1</span>)<span class="op">.</span><span class="fu">max</span>(<span class="dv">10</span>)<span class="op">,</span> <span class="co">// 1文字以上10文字以下の「文字列」</span></span>
 <span id="cb9-6"><a href="#cb9-6"></a>  quantity<span class="op">:</span> z<span class="op">.</span><span class="fu">number</span>()<span class="op">.</span><span class="fu">int</span>()<span class="op">.</span><span class="fu">min</span>(<span class="dv">0</span>)<span class="op">,</span> <span class="co">// 0以上の「整数値」</span></span>
 <span id="cb9-7"><a href="#cb9-7"></a>})<span class="op">;</span></span>
 <span id="cb9-8"><a href="#cb9-8"></a></span>
 <span id="cb9-9"><a href="#cb9-9"></a><span class="co">// バリデーションスキーマをもとに「CartItem型」を生成</span></span>
 <span id="cb9-10"><a href="#cb9-10"></a><span class="im">export type</span> CartItem <span class="op">=</span> z<span class="op">.</span><span class="at">infer</span><span class="op">&lt;</span><span class="kw">typeof</span> cartItemSchema<span class="op">&gt;;</span></span></code></pre></div>
-      <p>また、zod は、クライアントサイドにおいて <strong>フォーム入力</strong>
-      (<code>react-hook-form</code> の <code>useForm</code>)
-      とも連携して強力なバリデーション機能を提供してくれます。以下、<code>react-hook-form</code> と
-      <code>zod</code>
-      を組み合わせて作成した入力フォームの例です。このプロジェクトにおいては、ログイン機能
+      <p>また、zod はクライアントサイド (フロントエンド) において、<strong>フォーム入力</strong> (＝
+      <code>react-hook-form</code> の <code>useForm</code>) とも
+      <strong>連携して強力なバリデーション機能を提供してくれます</strong>。</p>
+      <p>以下は、<code>react-hook-form</code> と <code>zod</code> を組み合わせて作成した入力フォーム
+      (<code>src/app/login.tsx</code> ) の例です。このプロジェクトにおいては、ログイン機能
       (<code>/login</code>) や サインイン機能 (<code>/signup</code>) のなかで利用しています。</p>
       <figure>
       <img src="figs/01/zod-01.png" alt="zod" />
       <figcaption aria-hidden="true">zod</figcaption>
       </figure>
       <p>zod
-      を積極活用することで「<strong>煩雑</strong>」かつ「<strong>コードの可読性を低下させる原因</strong>」となっていたバリデーションを
-      <span class="masked">簡潔かつ確実に実装すること</span>
-      が可能になります。実際に、開発現場においても、バリデーションライブラリとして zod
+      を積極活用することで「<strong>煩雑</strong>」かつ「<strong>コードの可読性を低下させる原因</strong>」となるバリデーション処理を
+      <span class="masked">簡潔かつ確実に実装すること</span> が可能になります。実際に、Next.js /
+      React / TypeScript の開発現場においてもバリデーションライブラリとして zod
       は、かなり使用されています。</p>
-      <p>以上のことから、このプロジェクトでも zod を積極的利用した実装をしています。</p>
       <p>(プロンプト例)</p>
       <blockquote>
       <p>TypeScript による Next.js / React
-      のウェブアプリの開発現場で、バリデーションライブラリとして「zodがよく使われている」って聞いたんだけどホント？嘘っぽくない？</p>
+      のウェブアプリの開発現場で、バリデーションライブラリとして「zodがよく使われている」って聞いたんだけどホント？</p>
       </blockquote>
       <p>(プロンプト例)</p>
       <blockquote>
       <p>Next.js / TypeScript
-      でウェブアプリ開発をしています。データのバリデーションを実施すべきタイミングとは、どのような場面ですか。クライアントサイド
+      でウェブアプリ開発をしています。データのバリデーションを実施すべきなのは、どのようなタイミングや場面ですか。クライアントサイド
       (フロントエンド)、サーバサイド (バックエンド) のそれぞれについて教えてください。</p>
       </blockquote>
       <h2 data-number="3.1" id="バリデーションスキーマの定義と型の自動生成"><span
       class="header-section-number">3.1</span> バリデーションスキーマの定義と型の自動生成</h2>
-      <p>このプロジェクトでは <code>prisma/seed.ts</code>
-      に記述している「<strong>シーディング処理</strong>」においても、zod を積極活用しています。</p>
-      <p>まず、<code>src/app/_types/CommonSchemas.ts</code> において、<code>UserSeed.ts</code>
-      の他に、認証機能などに使用する型定義ファイル (<code>LoginRequest.ts</code> や
-      <code>UserProfile.ts</code>) で共通利用する <strong>バリデーションスキーマ</strong>
-      (＝入力データが満たすべき制約条件や構造を定義したもの) を以下のように定義しています。</p>
-      <div class="sourceCode" id="cb10" data-caption="src/app/_types/CommonSchemas.ts"><pre
+      <p>このプロジェクトでは、<code>prisma/seed.ts</code> のシーディング処理についても、zod
+      による型生成やバリデーションを活用しています。</p>
+      <p>まず、<code>src/app/_types/CommonSchemas.ts</code> のなかで <code>UserSeed.ts</code>
+      や、認証機能などに使用する型定義ファイル (<code>LoginRequest.ts</code> や
+      <code>UserProfile.ts</code> など) で共通利用する <strong>バリデーションスキーマ</strong>
+      (＝<span class="masked">入力データが満たすべき制約条件や構造を定義したもの</span>)
+      を以下のように記述しています。</p>
+      <div class="sourceCode" id="cb10"
+      data-caption="src/app/_types/CommonSchemas.ts 共通バリデーションスキーマの定義"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">import</span> { z } <span class="im">from</span> <span class="st">&quot;zod&quot;</span><span class="op">;</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="im">import</span> { Role } <span class="im">from</span> <span class="st">&quot;./Role&quot;</span><span class="op">;</span></span>
 <span id="cb10-3"><a href="#cb10-3"></a></span>
@@ -375,16 +391,15 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb10-12"><a href="#cb10-12"></a><span class="im">export</span> <span class="kw">const</span> uuidSchema <span class="op">=</span> z<span class="op">.</span><span class="fu">string</span>()<span class="op">.</span><span class="fu">refine</span>(isUUID<span class="op">,</span> {</span>
 <span id="cb10-13"><a href="#cb10-13"></a>  message<span class="op">:</span> <span class="st">&quot;Invalid UUID format.&quot;</span><span class="op">,</span></span>
 <span id="cb10-14"><a href="#cb10-14"></a>})<span class="op">;</span></span></code></pre></div>
-      <p><code>CommonSchemas.ts</code> の <strong>第10行目</strong>
-      では、正規表現を使用してUUIDの形式 ( 16進数による
+      <p><code>CommonSchemas.ts</code> の <strong>第10行目</strong> から <strong>第14行目</strong>
+      では、「正規表現」を使用してUUIDの形式 ( 16進数による
       <code>00000000-0000-0000-0000-000000000000</code> 形式)
       をチェックするカスタムバリデーションスキーマを定義しています。なお、正規表現はプログラミング1で<a
       href="https://takeshiwada1980.github.io/Programming1-2024/lecture27.html#正規表現">既に学習済み</a>です。</p>
-      <p>次に、以下に示す <code>UserSeed.ts</code>
-      において、それらのバリデーションスキーマを参照して、<code>userSeedSchema</code>
-      を定義し、それを利用して <strong>第16行目</strong>
-      <code>z.infer&lt;typeof userSeedSchema&gt;</code> により <code>UserSeed</code>
-      型を自動生成しています。</p>
+      <p>次に、<code>UserSeed.ts</code> において、それらのバリデーションスキーマを利用して
+      <code>userSeedSchema</code> を定義し、<strong>第16行目</strong> では
+      <code>z.infer&lt;typeof userSeedSchema&gt;</code>
+      により「<strong>UserSeed型</strong>」を自動生成しています。</p>
       <div class="sourceCode" id="cb11" data-caption="src/app/_types/UserSeed.ts"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb11-1"><a href="#cb11-1"></a><span class="im">import</span> { z } <span class="im">from</span> <span class="st">&quot;zod&quot;</span><span class="op">;</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a><span class="im">import</span> {</span>
@@ -403,26 +418,30 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb11-15"><a href="#cb11-15"></a></span>
 <span id="cb11-16"><a href="#cb11-16"></a><span class="im">export type</span> UserSeed <span class="op">=</span> z<span class="op">.</span><span class="at">infer</span><span class="op">&lt;</span><span class="kw">typeof</span> userSeedSchema<span class="op">&gt;;</span></span></code></pre></div>
       <p>なお、ここではオブジェクトの各プロパティ (<code>name</code> や <code>email</code>)
-      に独立したバリデーションスキーマを設定していますが、zod
-      では<strong>複数のプロパティを参照した複合的なバリデーション</strong>
-      (クロスフィールドバリデーション) や、条件分岐を伴う複雑なバリデーションも可能です。</p>
+      に対して独立したバリデーションスキーマを設定していますが、zod
+      では<strong>複数のプロパティを参照する複合的なバリデーション</strong>
+      (クロスフィールドバリデーション)
+      や、条件分岐をともうな複雑なバリデーションも可能になっています。例えば、オブジェクトのなかの
+      <code>password</code> と <code>confirmPassword</code>
+      の一致を検証するようなバリデーションも設定可能です。</p>
       <p>(プロンプト例)</p>
       <blockquote>
-      <p>バリデーションライブラリである「zod」では、オブジェクトを構成する複数のプロパティを参照した複合的なバリデーションや、条件分岐による複雑なバリデーションも可能であると聞きました。具体的にどのようなバリデーションが可能なのか丁寧に教えてください。</p>
+      <p>バリデーションライブラリである「zod」では、オブジェクトを構成する複数のプロパティを参照した複合的なバリデーションや、条件分岐による複雑なバリデーションも可能であると聞きました。具体的にどのようなバリデーションが可能なのか、コードと解説を示してください。</p>
       </blockquote>
-      <h2 data-number="3.2" id="データのバリデーション"><span
-      class="header-section-number">3.2</span> データのバリデーション</h2>
+      <h2 data-number="3.2" id="データのバリデーション処理"><span
+      class="header-section-number">3.2</span> データのバリデーション処理</h2>
       <p><code>prisma/seed.ts</code> では、以下に示すように、</p>
       <ol type="1">
       <li>テスト用のユーザの種となる <code>userSeeds</code> を作成
       (<strong>第13行目</strong>から<strong>第38行目</strong>) して、</li>
       <li>zod によるバリデーションで <strong>データ形式や制約条件を満たしていることを確認</strong>
       (<strong>第41行目</strong>から<strong>第58行目</strong>) したうえで、</li>
-      <li>DBに投入 (<strong>第70行目</strong>から<strong>第78行目</strong>)</li>
+      <li>DBにデータを投入 (<strong>第70行目</strong>から<strong>第78行目</strong>)</li>
       </ol>
       <p>… しています。</p>
-      <div class="sourceCode" id="cb12" data-caption="prisma/seed.ts (抜粋)" data-startFrom="9"><pre
-      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 8;"><span id="cb12-9"><a href="#cb12-9"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">main</span>() {</span>
+      <div class="sourceCode" id="cb12"
+      data-caption="prisma/seed.ts (抜粋) テストデータの生成とバリデーション"
+      data-startFrom="9"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 8;"><span id="cb12-9"><a href="#cb12-9"></a><span class="kw">async</span> <span class="kw">function</span> <span class="fu">main</span>() {</span>
 <span id="cb12-10"><a href="#cb12-10"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&quot;Seeding database...&quot;</span>)<span class="op">;</span></span>
 <span id="cb12-11"><a href="#cb12-11"></a></span>
 <span id="cb12-12"><a href="#cb12-12"></a>  <span class="co">// テスト用のユーザ情報の「種」となる userSeeds を作成</span></span>
@@ -472,7 +491,8 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb12-56"><a href="#cb12-56"></a>  } <span class="cf">catch</span> (error) {</span>
 <span id="cb12-57"><a href="#cb12-57"></a>    <span class="cf">throw</span> error<span class="op">;</span></span>
 <span id="cb12-58"><a href="#cb12-58"></a>  }</span></code></pre></div>
-      <div class="sourceCode" id="cb13" data-caption="prisma/seed.ts (抜粋)"
+      <div class="sourceCode" id="cb13"
+      data-caption="prisma/seed.ts (抜粋) バリデーション済みデータの DB 投入"
       data-startFrom="69"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 68;"><span id="cb13-69"><a href="#cb13-69"></a><span class="co">// ユーザ（user）テーブルにテストデータを挿入</span></span>
 <span id="cb13-70"><a href="#cb13-70"></a><span class="cf">await</span> prisma<span class="op">.</span><span class="at">user</span><span class="op">.</span><span class="fu">createMany</span>({</span>
 <span id="cb13-71"><a href="#cb13-71"></a>  data<span class="op">:</span> userSeeds<span class="op">.</span><span class="fu">map</span>((userSeed) <span class="kw">=&gt;</span> ({</span>
@@ -483,8 +503,8 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb13-76"><a href="#cb13-76"></a>    email<span class="op">:</span> userSeed<span class="op">.</span><span class="at">email</span><span class="op">,</span></span>
 <span id="cb13-77"><a href="#cb13-77"></a>  }))<span class="op">,</span></span>
 <span id="cb13-78"><a href="#cb13-78"></a>})<span class="op">;</span></span></code></pre></div>
-      <p>例えば、<strong>第17行目</strong> の <code>email: "admin01@example.com",</code> を
-      <code>email: "hoge-fuga-piyo",</code> のように <strong>email形式としては不正に値</strong>
+      <p>ここで、例えば <strong>第17行目</strong> の <code>email: "admin01@example.com",</code> を
+      <code>email: "hoge-fuga-piyo",</code> のように <strong>emailとしては不正な値</strong>
       に書き変えて <code>npx prisma db seed</code>
       を実行すると、以下のように例外が発生して<strong>シーディング処理が中断</strong>されます
       (＝<span class="masked">不正な値が DB に投入されることを未然に防いでくれます</span>)。</p>
@@ -515,15 +535,22 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       とは何ですか。</p>
       </blockquote>
       </div>
-      <h2 data-number="3.3" id="データのバリデーション-シンプルな例"><span
-      class="header-section-number">3.3</span> データのバリデーション (シンプルな例)</h2>
-      <p>zod によるバリデーション処理 <code>safeParse()</code> もしくは <code>parse()</code>
+      <h2 data-number="3.3" id="データのバリデーション処理-シンプルな例"><span
+      class="header-section-number">3.3</span> データのバリデーション処理 (シンプルな例)</h2>
+      <p>zod によるバリデーション処理 ( <code>safeParse()</code> もしくは <code>parse()</code> )
       を理解するためのコードを <code>src/app/zod/page.tsx</code> に配置しています。こちらを利用して
       <code>safeParse()</code> の使い方について理解してください。</p>
       <p>ウェブアプリ実行時は <a href="http://localhost:3000/zod">http://localhost:3000/zod</a>
       でアクセスできます。<code>F12</code>
-      で開発者ツールを開いて「コンソール」から検証処理（バリデーション処理）の結果について確認してください。</p>
-      <div class="sourceCode" id="cb15" data-caption="src/app/zod/page.tsx"><pre
+      で開発者ツールを開いて「<strong>コンソール</strong>」から検証処理（バリデーション処理）の結果について確認してください。</p>
+      <figure>
+      <img src="figs/01/zod-02.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <p><strong>第27行目</strong> において <code>userSeedSchema.safeParse(...)</code>
+      によるバリデーションを実行しています。</p>
+      <div class="sourceCode" id="cb15"
+      data-caption="src/app/zod/page.tsx safeParseを使ったバリデーションの単純例"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb15-1"><a href="#cb15-1"></a><span class="st">&quot;use client&quot;</span><span class="op">;</span></span>
 <span id="cb15-2"><a href="#cb15-2"></a><span class="im">import</span> React <span class="im">from</span> <span class="st">&quot;react&quot;</span><span class="op">;</span></span>
 <span id="cb15-3"><a href="#cb15-3"></a><span class="im">import</span> { userSeedSchema } <span class="im">from</span> <span class="st">&quot;@/app/_types/UserSeed&quot;</span><span class="op">;</span></span>
@@ -576,59 +603,65 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb15-50"><a href="#cb15-50"></a>}<span class="op">;</span></span>
 <span id="cb15-51"><a href="#cb15-51"></a></span>
 <span id="cb15-52"><a href="#cb15-52"></a><span class="im">export</span> <span class="im">default</span> Page<span class="op">;</span></span></code></pre></div>
-      <h3 data-number="3.3.1" id="演習-2"><span class="header-section-number">3.3.1</span> 演習</h3>
+      <h2 data-number="3.4" id="演習-2"><span class="header-section-number">3.4</span> 演習</h2>
       <p><code>src/app/zod/page.tsx</code> について、以下のことを確認してください。</p>
       <ul>
       <li><strong>第24行目</strong> を変更し、<code>safeParse</code> の戻り値 <code>result</code>
       がどのように変わるかを確認してください。</li>
-      <li><code>unsafeUserSeed_02</code> のように「UserSeed型」として余分なプロパティを含んだものを
+      <li><code>unsafeUserSeed_02</code>
+      のように「UserSeed型」としては<strong>余分なプロパティを持ったオブジェクト</strong>を
       <code>safeParse</code> で処理するとどのようになるのか確認してください。
       <ul>
       <li>バリデーションエラーになるのか否か</li>
-      <li><code>result.data</code> で取得されるオブジェクトには当該プロパティが残るか否か</li>
-      <li>それらの処理を設定変更できるか否か</li>
+      <li><code>result.data</code> で取得されるオブジェクトには当該プロパティ (<code>age</code>)
+      が残るか否か</li>
+      <li>余分なプロパティがあったときの処理を設定により変更できるか否か</li>
       </ul></li>
-      <li>zod のバリデーション処理に <code>safeParse</code> の他に、<code>parse</code>
-      が利用できます。<code>safeParse</code> と <code>parse</code>
-      の処理の違いについて調べて理解してください。</li>
       </ul>
+      <p>バリデーションに <code>safeParse</code> の他に <span
+      class="masked"><code>parse</code></span> が利用できます。<code>safeParse</code> と
+      <code>parse</code> の処理の違いについて調べて理解してください。</p>
       <p>(プロンプト例)</p>
       <blockquote>
-      <p>バリエーションライブラリ zod における <code>parse</code> と <code>safeParse</code>
+      <p>バリデーションライブラリ zod における <code>parse</code> と <code>safeParse</code>
       の違いについて丁寧に解説してください。また、それらのユースケース (使い分け)
       についても教えてください。</p>
       </blockquote>
       <h1 data-number="4" id="cookie-について"><span class="header-section-number">4</span> Cookie
       について</h1>
-      <p>Cookie (クッキー) とは、サーバとクライアント (ブラウザ) の間で「<strong>状態
-      (ステート)</strong>」を管理するために導入された仕組みになります。この状態管理技術は、1994年頃から導入されており、もともとは
-      Netscape 社が開発した独自仕様でした。</p>
-      <p>まずはじめに <strong>Cookie が必要となる理由 (＝状態管理が必要となる理由)</strong>
-      から確認していきます。</p>
+      <p><strong>Cookie (クッキー🍪)</strong> とは、サーバとクライアント (ウェブブラウザ) の間で
+      <span class="masked">状態 (ステート)</span>
+      を管理するために導入された仕組みになります。この状態管理技術は、1994年頃からウェブブラウザに導入されており、もともとは
+      <a href="https://ja.wikipedia.org/wiki/ネットスケープコミュニケーションズ">Netscape社</a>
+      が開発した独自仕様でした。</p>
+      <p>まずはじめに「<strong>Cookie が必要となる理由
+      (＝状態管理が必要となる理由)</strong>」について確認していきます。</p>
       <h2 data-number="4.1" id="cookie-という仕組みが必要な理由"><span
       class="header-section-number">4.1</span> Cookie という仕組みが必要な理由</h2>
-      <p>そもそも「ウェブ」および「HTTP」は、状態管理を想定しないシンプルな
+      <p>もともと「ウェブ」と「HTTP (Hyper Text Transfer
+      Protocol)」は、状態管理を想定しないシンプルな
       <strong>ステートレス（Stateless）なシステム</strong>
-      として設計されたものでした。ステートレスとは「以前の処理内容」や「通信の結果」を内部状態として記憶せずに、各リクエストに対しては、URIのみに対応して独立してレスポンスを返すというアーキテクチャです。</p>
-      <p>つまり、特定のURI (<code>http://hoge-shop/cart</code>)
-      に対するリクエストに対しては「誰からのアクセスであっても」「それが何度目のアクセスであっても」「それ以前に、その
-      URI でどんな操作をしていても」、<strong>同一のURI
-      に対するリクエストには、常に同一のレスポンスを返す</strong>
-      というのが、本来的なウェブの動作となります。</p>
-      <p>インターネットの黎明期 (1990年代前半)
-      は、このステートレスなアーキテクチャで十分な機能を提供できていました。しかし、インターネットの普及するにつれて
-      <strong>ステートレスな設計だけでは実現困難なシステム</strong>
-      (例えば「オンラインショッピング」など) に対する需要が急速に高まってきました。つまり…</p>
+      として設計・開発されたものでした。<strong>ステートレス</strong>とは「以前の処理内容や通信の結果を内部状態として記憶せずに、各リクエストに対しては
+      URI (URL) のみに基づいて独立してレスポンスを返す」というアーキテクチャのことです。</p>
+      <p>つまり、サーバは特定のURI (<code>http://hoge-shop/cart</code>)
+      に対するリクエストがあったとき「誰からのリクエストであっても」「それが何度目のリクエストであっても」「それ以前に、その
+      URI でどのような操作をしていても」、<strong>常に同じレスポンスを返す</strong>
+      というのが、本来のウェブとしてステートレスな動作となります。</p>
+      <p>初期のインターネットにおいては、このステートレスなアーキテクチャで十分な機能を提供できていました。しかし、インターネットの普及とともに
+      <span class="masked">ステートレスな設計だけでは実現困難なシステム
+      (例えば「オンラインショッピング」のようなウェブサービス)</span>
+      に対する需要が急速に高まってきました。つまり…</p>
       <ul>
       <li><code>http://hoge-shop/cart</code>
       に対して、Aさんがアクセスしたときと、Bさんがアクセスしたときで異なるレスポンスを返すようにしたい。</li>
       <li>Aさんが以前に <code>http://hoge-shop/cart</code> で操作
-      (例えば、カートに商品を追加する操作)
-      をしているとき、Aさんから再度アクセスあった際には、その操作を反映した内容のレスポンスを返すようにしたい。</li>
+      (例えば、商品をカートに追加する操作)
+      をしているとき、Aさんから再度アクセスがあった際には、その操作を反映した内容のレスポンスを返すようにしたい。</li>
       </ul>
       <p>…といった「<strong>ステートフル</strong>」なシステムの実現に対する需要がでてきました。</p>
-      <p>そのようななかで、HTTPの基本的なステートレスな基本特性を維持しつつ、アプリケーションレベルで
-      <strong>ステートフルな動作</strong>を可能にする仕組みとして考案・導入されたものが「<strong>Cookie</strong>」となります。</p>
+      <p>そのようななかで、HTTP のステートレスな基本特性を維持しつつ、アプリケーションレベルで
+      <strong>ステートフルな動作</strong>
+      を可能にする仕組みとして考案・導入されたものが「<strong>Cookie</strong>」となります。</p>
       <ul>
       <li>「ステートレス」の対義語が「ステートフル」となります。</li>
       </ul>
@@ -642,64 +675,68 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <ol type="1">
       <li><strong>【クライアント】</strong>: サーバ（例：<code>http://hoge.com/</code>）に対して
       <strong>HTTP リクエスト</strong> を送信する。</li>
-      <li><strong>【サーバ】</strong>: <code>Set-Cookie: session_id=12345;</code>
-      のようなヘッダを含む <strong>HTTP レスポンス</strong> をクライアントに返す。</li>
-      <li><strong>【クライアント】</strong>: レスポンスヘッダに <code>Set-Cookie</code>
-      が含まれていれば、ブラウザは
-      Cookie（例：<code>session_id=12345</code>）を対応するドメイン（この場合は
-      <code>hoge.com</code>）に紐付けて保存する。</li>
+      <li><strong>【サーバ】</strong>: クライアントに対して
+      <code>Set-Cookie: session_id=12345;</code> のようなヘッダを含む <strong>HTTP
+      レスポンス</strong> を返す。</li>
+      <li><strong>【クライアント】</strong>: サーバからのレスポンスに <code>Set-Cookie</code>
+      があれば、ドメイン（<code>hoge.com</code>）に紐付けて
+      Cookie（<code>session_id=12345</code>）をブラウザに保存する。</li>
       <li><strong>【クライアント】</strong>:
-      以後、そのドメインに対してリクエストを送る際、保存された Cookie をリクエストヘッダに
-      <code>Cookie: session_id=12345</code> のように自動付与して送信する。</li>
-      <li><strong>【サーバ】</strong>: 受信した <strong>HTTP リクエスト</strong> の Cookie
-      ヘッダを読み取り、その内容に応じて処理を分岐し、<strong>HTTP レスポンス</strong> を返す。</li>
+      以後、そのドメインに対してリクエストを送信するときは、自動的にヘッダに
+      <code>Cookie: session_id=12345</code> を付与する。</li>
+      <li><strong>【サーバ】</strong>: リクエストのヘッダから Cookie (session_id=12345)
+      を読み取り、その内容に応じて処理を分岐してレスポンスを返す。</li>
       </ol>
-      <p>以上のように Cookie は「サーバがレスポンスで Cookie
-      を発行する」「クライアントはその後のリクエストに自動的に Cookie
-      を含める」ことで、元々のステートレスな性質を補う形で「状態管理」や「ユーザ識別」の仕組みを実現しています。</p>
-      <h3 data-number="4.2.1" id="httpレスポンスのヘッダに含まれる-set-cookie-フィールド"><span
-      class="header-section-number">4.2.1</span> 「HTTPレスポンス」のヘッダに含まれる
-      <code>Set-Cookie</code> フィールド</h3>
-      <p>デベロッパツールを使って確認することができます。<code>cart_session_id=947012da...</code>
-      につづけて、<strong>いくつかの属性情報</strong> (<code>Path</code> や
-      <code>Expires</code>、<code>Max-Age</code>、<code>SameSite</code> など)
-      が付加されていることに着目してください。属性については、後ほど解説します。</p>
+      <p>このように Cookie🍪 は「<strong>サーバがレスポンスで Cookie
+      を発行する</strong>」👉「クライアントがその後のリクエストに自動的にCookieを含める」という仕組みで、本来はステートレスなHTTPプロトコルにおいて「状態管理」や「ユーザ識別」を可能にしています。</p>
+      <h3 data-number="4.2.1" id="httpレスポンスの-set-cookie-フィールド"><span
+      class="header-section-number">4.2.1</span> 「HTTPレスポンス」の <code>Set-Cookie</code>
+      フィールド</h3>
+      <p>サーバからの <strong>HTTPレスポンス</strong> のなかの <code>Set-Cookie</code>
+      フィールドは、ブラウザのデベロッパツールの「<strong>ネットワーク</strong>」のツールを使って確認することができます。以下は
+      <code>http://localhost:3000/api/cart</code> にアクセスしたときのレスポンスの観測です。</p>
       <figure>
       <img src="figs/01/cookie-01.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <h3 data-number="4.2.2" id="httpリクエストのヘッダに-cookie-フィールド"><span
-      class="header-section-number">4.2.2</span> 「HTTPリクエスト」のヘッダに <code>Cookie</code>
+      <p>上記では <code>cart_session_id=947012da...</code>
+      につづけて、<strong>いくつかの属性情報</strong> (<code>Path</code> や
+      <code>Expires</code>、<code>Max-Age</code>、<code>SameSite</code> など)
+      が付加されていることに着目してください。属性については、後ほど解説します。</p>
+      <h3 data-number="4.2.2" id="httpリクエストの-cookie-フィールド"><span
+      class="header-section-number">4.2.2</span> 「HTTPリクエスト」の <code>Cookie</code>
       フィールド</h3>
-      <p>デベロッパツールを使って確認することができます。先ほど、<code>Set-Cookie</code>
-      でセットされた <code>cart_session_id=947012da-3995-4071-8bfe-c4afaa923756</code>
-      が送信されていることに着目してください。</p>
+      <p>同様に <strong>HTTPリクエスト</strong> のなかの <code>Cookie</code>
+      フィールドも、以下のように確認することができます。先ほど、<code>Set-Cookie</code> で受け取った
+      <code>cart_session_id=947012da-3995-4071-8bfe-c4afaa923756</code>
+      を送信していることに着目してください。</p>
       <figure>
       <img src="figs/01/cookie-02.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <h2 data-number="4.3" id="ウェブアプリ開発において-cookie-について知っておくべきこと"><span
-      class="header-section-number">4.3</span> ウェブアプリ開発において Cookie
-      について知っておくべきこと</h2>
-      <p>ウェブアプリ開発においては、Cookie に関連して以下のことも把握しておいてください。</p>
+      <h2 data-number="4.3" id="ウェブアプリ開発者が-cookie-について最低限知っておくべきこと"><span
+      class="header-section-number">4.3</span> ウェブアプリ開発者が Cookie
+      について最低限知っておくべきこと</h2>
+      <p>安全なウェブアプリを開発するにあたり、Cookie について
+      のなかの以下のことを把握しておいてください。</p>
       <ul>
-      <li>ユーザ操作による通常のウェブナビゲーション（リンクをクリックするなど）においては、Cookie
-      は自動で HTTP
-      リクエストに付与されます。言い換えれば、ユーザが意識することなく、勝手に送信されています。</li>
-      <li>Cookie
-      の内容は、ブラウザのデベロッパーツールを使って、<strong>ユーザが内容を参照したり、書き換えたり、消去したりすることができます</strong>。</li>
+      <li>ユーザ操作による通常のウェブナビゲーション（リンクをクリックするなど）において、Cookie
+      は自動的にHTTPリクエストに付与されます。言い換えれば、ユーザが意識することなく自動で Cookie
+      が送信されます。</li>
+      <li>Cookie の内容は、ブラウザのデベロッパーツールを使って
+      <strong>ユーザが内容を参照したり、書き換えたり、消去したりすることができます</strong>。</li>
       <li>Cookie は、ひとつのドメインにつき、約 <span class="masked">4KB</span>
       まで保持することができます（画像や長文を Cookie として保存することはできません）。</li>
-      <li>Cookie は、基本的にサーバ側で発行するものですが、<strong>ウェブアプリなどでは JavaScript
+      <li>Cookie は、基本的にサーバ側で発行するものですが、<strong>JavaScript
       を使ってクライアント側で Cookie
       を設定したり、読み込んだりすることもできます</strong>。ただし、後述する <span
       class="masked">HttpOnly属性</span> が設定されている Cookie については、JavaScript
-      から値を参照することはできません。</li>
-      <li>JavaScript から <code>fetch</code> 関数などで ウェブAPI にアクセスするときに Cookie
+      から値を読み取ったり、上書きしたりすることはできません。</li>
+      <li>JavaScript の <code>fetch</code> 関数などで ウェブAPI にアクセスするとき、そこに Cookie
       を含めることができます。
       <ul>
-      <li>「HttpOnly属性」がついているとき、Cookie
-      の内容を参照することはできませんが、HTTPリクエストの送信に含めることはできます。</li>
+      <li>「HttpOnly属性」がついている Cookie については、内容を参照することはできませんが
+      HTTPリクエストの送信に含めることはできます。</li>
       </ul></li>
       </ul>
       <p>(プロンプト例)</p>
@@ -713,28 +750,32 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <h3 data-number="4.3.1" id="デベロッパツールからクッキーを確認-httplocalhost3000news"><span
       class="header-section-number">4.3.1</span> デベロッパツールからクッキーを確認
       (<code>http://localhost:3000/news</code>)</h3>
-      <p>ブラウザのデベロッパツール (<code>F12</code>で起動) から Cookie
-      の内容を確認することができます。</p>
+      <p>ブラウザのデベロッパツール (<code>F12</code>で起動) から、ブラウザ内部に保存されている
+      Cookie の内容を確認することができます。</p>
       <figure>
       <img src="figs/01/news-02.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <p>以下のアイコンをクリックすることで <strong>ユーザ操作により Cookie
-      が削除できること</strong> を確認してください。削除後、再びサイトにアクセスすると Cookie
+      <p>以下の「削除アイコン」をクリックすることで「<strong>ユーザ操作により Cookie
+      が削除できること</strong>」を確認してください。削除後、再びサイトにアクセスすると
+      (レスポンスの <code>Set-Cookie</code> により) Cookie
       が再設定されることも確認してください。</p>
       <figure>
       <img src="figs/01/cookie-03.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <p>Cookie の各フィールドをダブルクリックして <strong>値の編集ができること</strong>
-      を確認してください (ユーザにより Cookie の偽装ができることを確認してください)。</p>
-      <h3 data-number="4.3.2" id="next.js-のサーバサイドコンポーネントで-cookie-を設定する例"><span
-      class="header-section-number">4.3.2</span> Next.js のサーバサイドコンポーネントで Cookie
-      を設定する例</h3>
-      <p>ショップ (<code>http://localhost:3000/shop</code>) に関連する <strong>ウェブAPI</strong>
-      (<code>http://localhost:3000/api/cart</code>) の「GET Method」では、HTTPリクエストのヘッダに
-      Cookie フィールドが存在しないときは、Cookie を発行しています。また、Cookie があったときは
-      DBから「カート情報」取得して、それをレスポンスしています。</p>
+      <p>また、Cookie
+      の各フィールドをダブルクリックして「<strong>値の編集ができること</strong>」も確認してください
+      (ユーザによって「Cookieの偽装ができること」も確認してください)。</p>
+      <h3 data-number="4.3.2" id="next.js-のサーバサイドで-cookie-を設定する例"><span
+      class="header-section-number">4.3.2</span> Next.js のサーバサイドで Cookie を設定する例</h3>
+      <p><strong>ショップ</strong> (＝<code>http://localhost:3000/shop</code>) に関連する
+      <strong>ウェブAPI</strong> (<code>http://localhost:3000/api/cart</code>) の「GET
+      Method」では、HTTPリクエストのヘッダに Cookie フィールドが存在しないときは、Cookie
+      を新規発行しています。また、<code>cart_session_id</code> という Cookie
+      フィールドがあれば、<strong>その値を使って
+      DBから「カート情報」取得して、それをレスポンスしています</strong> (同時に Cookie
+      の有効期限の延長も行なっています)。</p>
       <p><code>src/app/api/cart/route.ts</code> を参照して、ざっくりと処理を追ってみてください
       (詳しいことは後から確認していきます)。</p>
       <div class="sourceCode" id="cb16"
@@ -742,23 +783,25 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 3;"><span id="cb16-4"><a href="#cb16-4"></a><span class="im">import</span> { cookies } <span class="im">from</span> <span class="st">&quot;next/headers&quot;</span><span class="op">;</span></span></code></pre></div>
       <div class="sourceCode" id="cb17" data-caption="src/app/api/cart/route.ts (抜粋)"
       data-startFrom="10"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 9;"><span id="cb17-10"><a href="#cb17-10"></a><span class="kw">const</span> cKey <span class="op">=</span> <span class="st">&quot;cart_session_id&quot;</span><span class="op">;</span></span></code></pre></div>
-      <div class="sourceCode" id="cb18" data-caption="src/app/api/cart/route.ts (抜粋)"
+      <div class="sourceCode" id="cb18"
+      data-caption="src/app/api/cart/route.ts (抜粋) クッキーを発行する処理"
       data-startFrom="19"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 18;"><span id="cb18-19"><a href="#cb18-19"></a>cookieStore<span class="op">.</span><span class="fu">set</span>(cKey<span class="op">,</span> id<span class="op">,</span> {</span>
 <span id="cb18-20"><a href="#cb18-20"></a>  path<span class="op">:</span> <span class="st">&quot;/&quot;</span><span class="op">,</span></span>
 <span id="cb18-21"><a href="#cb18-21"></a>  maxAge<span class="op">:</span> sessionMaxAge<span class="op">,</span></span>
-<span id="cb18-22"><a href="#cb18-22"></a>  <span class="co">// httpOnly: false, // 💀 コメントアウトするとXSS脆弱性</span></span>
+<span id="cb18-22"><a href="#cb18-22"></a>  <span class="co">// httpOnly: true, // 💀 コメントアウトするとXSS攻撃で窃取される可能性あり</span></span>
 <span id="cb18-23"><a href="#cb18-23"></a>  sameSite<span class="op">:</span> <span class="st">&quot;strict&quot;</span><span class="op">,</span> <span class="co">// 💀 &quot;none&quot; にするとCSRF脆弱性</span></span>
 <span id="cb18-24"><a href="#cb18-24"></a>  secure<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
 <span id="cb18-25"><a href="#cb18-25"></a>})<span class="op">;</span></span></code></pre></div>
-      <p>各属性の意味を理解して適切に設定しないと、重大なセキュリティリスクとなるので注意してください。</p>
-      <h3 data-number="4.3.3"
-      id="next.js-のクライアントサイドコンポーネントで-cookie-を設定する例"><span
-      class="header-section-number">4.3.3</span> Next.js のクライアントサイドコンポーネントで Cookie
+      <p>上記の <strong>第20行目</strong>から<strong>第24行目</strong>について、それぞれの
+      Cookie属性
+      の意味を十分に理解して適切に設定しないと、重大なセキュリティリスクとなるので注意してください。ただし、ここでは後で「XSS脆弱性」に関する実験をするために、属性設定はこのままにしておいてください。</p>
+      <h3 data-number="4.3.3" id="next.js-のクライアントサイドで-cookie-を設定する例"><span
+      class="header-section-number">4.3.3</span> Next.js のクライアントサイドで Cookie
       を設定する例</h3>
-      <p>ニュース (<code>http://localhost:3000/news</code>) では <code>js-cookie</code>
-      というライブラリを使って <strong>クライアントサイド</strong> で JavaScript プログラムから
-      Cookie の「読取り」と「書込み」をしています。サーバサイドとは異なる方法で Cookie
-      を設定している点に注意してください。</p>
+      <p><strong>ニュース</strong> (＝<code>http://localhost:3000/news</code>) では
+      <code>js-cookie</code> というライブラリを使って <strong>クライアントサイド</strong> で <span
+      class="masked">JavaScript プログラムを使って Cookie の「読取り」と「書込み」</span>
+      をしています。サーバサイドとは異なる方法で Cookie を設定していることに注意してください。</p>
       <p><code>src/app/news/page.tsx</code> を参照して、ざっくりと処理を追ってみてください。</p>
       <div class="sourceCode" id="cb19"
       data-caption="src/app/news/page.tsx (抜粋) 「js-cookie」のインポート" data-startFrom="5"><pre
@@ -785,34 +828,64 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <h2 data-number="4.4" id="cookie-の属性設定"><span class="header-section-number">4.4</span>
       Cookie の属性設定</h2>
       <p>個々の Cookie には、次のような「<strong>属性</strong>」を設定することができます。</p>
-      <p><strong>Expires属性</strong> :
-      有効期限に関する属性です。期限を過ぎるとブラウザによって自動削除されます。特に設定しなければ「セッション
-      Cookie」となり、ブラウザを閉じると削除されます。</p>
-      <p><strong>HttpOnly属性</strong> : この属性が設定されている Cookie は、JavaScript
-      から値を読み込むことができなくなります。<strong>XSS攻撃</strong>
-      によるセッションハイジャックを防ぐセキュリティ対策として <strong>超重要</strong>
-      となってきます。。</p>
-      <p><strong>Secure属性</strong> : この属性が設定されている Cookie は HTTPS
-      通信時のみ送信されるようになります。HTTP (≠HTTPS) による平文通信により Cookie が漏洩 (盗聴)
-      することを防ぐために使用します。なお、ローカル環境で <code>npm run dev</code> や
-      <code>npm run build</code> で Next.js
-      アプリを起動すると、基本的には「HTTP」になります。そのため、この属性がついている Cookie
-      は、送信されないので注意してください。Vercel にデプロイ・ホストすればHTTPS
-      通信が使用されるた「HTTPS」となるため機能します。</p>
-      <p><strong>SameSite属性</strong> :
-      CSRF攻撃を防ぐための重要な属性です。次の3つの値を設定できます。</p>
+      <h3 data-number="4.4.1" id="expires属性"><span class="header-section-number">4.4.1</span>
+      Expires属性</h3>
+      <p>有効期限に関する設定です。期限を過ぎるとブラウザによって自動削除されます。特に設定しなければ「セッションCookie」となり、ブラウザを閉じると削除されます。</p>
+      <h3 data-number="4.4.2" id="httponly属性"><span class="header-section-number">4.4.2</span>
+      HttpOnly属性</h3>
+      <p>この属性が設定されている Cookie は <span class="masked">JavaScript
+      から値を読み込むことができなく</span> なります。<strong>XSS攻撃</strong>
+      によるセッションハイジャックを防ぐセキュリティ対策として「<strong>超重要</strong>」な設定となってきます。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>Cookie
+      に「HttpOnly属性」をつけないと「XSS攻撃によるセッションハイジャックが云々…」とか言われたのですが意味不明です🫠。分かりやすく解説してください。</p>
+      </blockquote>
+      <h3 data-number="4.4.3" id="secure属性"><span class="header-section-number">4.4.3</span>
+      Secure属性</h3>
+      <p>この属性が設定されている Cookie は、HTTPS 通信のときだけ送信されるようになります。HTTP
+      (≠HTTPS) による非暗号化通信で Cookie が漏洩 (盗聴) することを防ぐために使用します。</p>
       <ul>
-      <li><code>strict</code>: 同一サイトからのリクエストでのみ Cookie が送信されます。</li>
+      <li>ローカル環境で <code>npm run dev</code> や <code>npm run build</code> で Next.js
+      アプリを起動すると <strong>HTTP</strong> になります。そのため、この属性をつけると Cookie
+      の送信が制限されるので注意してください。Vercel にデプロイ・ホストすればHTTPS
+      通信が使用されるため Cookie は問題なく送信されます。</li>
+      </ul>
+      <h3 data-number="4.4.4" id="samesite属性"><span class="header-section-number">4.4.4</span>
+      SameSite属性</h3>
+      <p>CSRF攻撃を防ぐための重要な属性です。次の3つの値を設定できます。</p>
+      <ul>
+      <li><code>strict</code>: 同一サイトからのリクエストでのみ Cookie が送信されます。
+      <ul>
+      <li>外部サイト (<code>https://fuga.jp/</code>) から <code>https://hoge.com/</code>
+      に移動した場合、<code>hoge.com</code> の <code>SameSite=Strict</code> な Cookie
+      は送信されません。つまり、移動直後、<code>https://hoge.com/</code>
+      からは、そのサイトに初アクセスしたときと同じレスポンスが返ってきます。UX的に不自然…。</li>
+      </ul></li>
       <li><code>lax</code>:
       同一サイトからのリクエストと、トップレベルナビゲーション（リンクのクリックなど）による GET
-      リクエストで Cookie が送信されます。</li>
+      リクエストで Cookie が送信されます。
+      <ul>
+      <li>トップレベルナビゲーションとは、ユーザが <code>&lt;a href&gt;</code>
+      をクリックしたり、URLを直接ブラウザに入力してページを開いたりする操作です。</li>
+      </ul></li>
       <li><code>none</code>: すべてのクロスサイトリクエストで Cookie が送信されます。Secure
-      属性との併用が必須となります。サードパーティ Cookie が必要な場合に使用します。</li>
+      属性との併用が必須となります。サードパーティ Cookie が必要な場合に使用します。
+      <ul>
+      <li>この設定を使用するには Secure 属性（HTTPS限定）との併用が必須になります。</li>
+      </ul></li>
       </ul>
-      <p>これらの属性を適切に設定することで、セキュリティを向上させつつ、ユーザビリティを保った
-      Cookie の運用が可能になります。</p>
-      <p>なお、上記以外にも、<code>Path</code> や <code>Max-Age</code> などの Cookie
-      の属性が存在します。それらについて、ウェブや生成AIを使って概要を把握してください。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>Cookie の「SameSite属性」の strict と lax の違いが分かりません。strict にすると「ログインの
+      UX が云々・・・」とか言われたのですが意味不明です🫠。具体例で解説してください。</p>
+      </blockquote>
+      <h3 data-number="4.4.5" id="適切なcookie属性の設定"><span
+      class="header-section-number">4.4.5</span> 適切なCookie属性の設定</h3>
+      <p>Cookie の属性を適切に設定することで、セキュリティを向上させつつ、ユーザビリティを保った
+      Cookie の運用が可能になります。なお、上記以外にも <code>Path</code> や <code>Max-Age</code>
+      などの Cookie
+      の属性が存在します。それらについて、ウェブや生成AIを使って概要を把握しておいてください。</p>
       <p>(プロンプト例)</p>
       <blockquote>
       <p>Cookie
@@ -820,20 +893,28 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       </blockquote>
       <blockquote>
       <p>Cookie
-      の「SameSite属性」と「CSRF攻撃」の関係が分かりません。そもそも「CSRF攻撃とは何か？」から教えてください。</p>
+      の「SameSite属性」と「CSRF攻撃」の関係が分かりません🫠。そもそも「CSRF攻撃とは何か？」から教えてください。</p>
       </blockquote>
-      <h3 data-number="4.4.1" id="javascriptから-cookie-を確認"><span
-      class="header-section-number">4.4.1</span> JavaScriptから Cookie を確認</h3>
-      <p>ブラウザのデベロッパーツールの「コンソール」からは、「JavaScriptコード」を対話的に実行することができます。例えば
-      <code>document.cookie</code> と入力することで、現在表示しているウェブサイト (ドメイン)
-      のなかで <strong>HttpOnly属性</strong> が設定されていない Cookie
-      の値を取得することが可能です。</p>
+      <h3 data-number="4.4.6" id="javascriptから-cookie-を確認"><span
+      class="header-section-number">4.4.6</span> JavaScriptから Cookie を確認</h3>
+      <p>ブラウザのデベロッパーツールの「コンソール」からは、<span
+      class="masked">JavaScriptコードを対話的に実行すること</span> ができます。例えば、コンソールに
+      <code>document.cookie</code> と入力すれば、現在表示しているウェブサイト (ドメイン) のなかで
+      <strong>HttpOnly属性</strong> が設定されていない Cookie の値を取得することができます。</p>
       <figure>
       <img src="figs/01/cookie-04.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <p>観点を変えれば、第3者によって、そのウェブサイトに悪意あるJavaScriptコードが埋め込まれた場合、それらの
-      Cookie が窃取される可能性があると言えます。</p>
+      <p>視点を変えれば、第3者👿によって、そのウェブサイトに悪意あるJavaScriptコード
+      (<code>document.cookie</code>の戻り値を外部送信するようなコード)
+      が埋め込まれた場合、<strong>HttpOnly属性</strong> がついていない Cookie
+      が窃取される可能性があるということになります。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>Cookie
+      が窃取されたからって何か困ることがあるのですか？セッションIDなんて単なる数字の羅列でしょ？セッションID
+      の Cookie にHttpOnly属性を付け忘れてたら、先輩が激おこ😡💢なんですが…</p>
+      </blockquote>
       <h1 data-number="5" id="ニュースのコンテンツ"><span class="header-section-number">5</span>
       「ニュース」のコンテンツ</h1>
       <ul>
@@ -844,9 +925,9 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       に応じて、表示されるニュースが変わるようになっています。</p>
       <h2 data-number="5.1" id="クライアントサイド-フロントエンド-の処理"><span
       class="header-section-number">5.1</span> クライアントサイド (フロントエンド) の処理</h2>
-      <p>ページにアクセスしたら、クライアントサイドにおいて Cookie のなかに <code>region</code>
-      が存在するかをチェックして、存在しない場合は初期値として <code>OSAKA</code>
-      を設定するようにしています。</p>
+      <p>このページにアクセスすると、クライアントサイド (フロントエンド側) で、Cookie のなかに
+      <code>region</code> が存在するかをチェックして、存在しない場合は初期値として
+      <code>OSAKA</code> を設定します。</p>
       <div class="sourceCode" id="cb22"
       data-caption="src/app/news/page.tsx (抜粋) useStateによる状態管理" data-startFrom="43"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 42;"><span id="cb22-43"><a href="#cb22-43"></a><span class="fu">useEffect</span>(() <span class="kw">=&gt;</span> {</span>
@@ -858,9 +939,9 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb22-49"><a href="#cb22-49"></a>  }</span>
 <span id="cb22-50"><a href="#cb22-50"></a>  <span class="fu">setRegion</span>(regionStr <span class="im">as</span> Region)<span class="op">;</span> <span class="co">// Cookieから取得した地域をセット</span></span>
 <span id="cb22-51"><a href="#cb22-51"></a>}<span class="op">,</span> [])<span class="op">;</span></span></code></pre></div>
-      <p><strong>第47行目</strong> の <code>setSessionCookie</code>
-      は、以下のような自作関数になっています。このあとセキュリティの脆弱性に関する実験をするために、あえて
-      <code>path</code> や <code>sameSite</code> をコメントアウトしています。</p>
+      <p>上記の <strong>第47行目</strong> で呼び出している <code>setSessionCookie</code>
+      は、以下のような自作関数になっています。以降の脆弱性実験のために、あえて <code>path</code> や
+      <code>sameSite</code> をコメントアウトしています。</p>
       <div class="sourceCode" id="cb23"
       data-caption="src/app/news/page.tsx (抜粋) Cookie をセットする関数" data-startFrom="27"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 26;"><span id="cb23-27"><a href="#cb23-27"></a><span class="co">// Cookie をセットする関数の定義</span></span>
@@ -873,17 +954,22 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb23-34"><a href="#cb23-34"></a>  })<span class="op">;</span></span>
 <span id="cb23-35"><a href="#cb23-35"></a>  <span class="co">// 👆 セキュアに利用する観点から各設定の意味を調べてみてください</span></span>
 <span id="cb23-36"><a href="#cb23-36"></a>}<span class="op">,</span> [])<span class="op">;</span></span></code></pre></div>
-      <p>ブラウザを閉じても Cookie には値が残っているので
-      (有効期限は7日間に設定されているので)、再度 <code>/news</code>
-      にアクセスしたときには、最後に表示していた地域のニュースが表示されるようになっています。</p>
-      <p>ただし、Chrome において Cookie
-      はプロファイル毎に管理されているため、あるプロファイルで地域を「沖縄」に設定しても、別のプロファイルで
-      <code>/news</code> にアクセスすれば初期値の「大阪」が表示されます。</p>
-      <p>地域毎の「ニュース記事」の取得は、状態管理の変数 <code>state</code> の変更をトリガーに
-      <code>/api/news</code> に対するGET Method で行なっています。以下の <strong>第61行目</strong>
-      ように <code>fetch</code> のオプションに <code>credentials: "include"</code>
-      を設定することで、JavaScript から HTTPリクエストを送るときにも Cookie
-      が追加されるようになります。</p>
+      <p>ブラウザを閉じても Cookie には値が残るので (有効期限が7日間に設定されているので)、再度
+      <code>/news</code> にアクセスしたときには <span
+      class="masked">最後に表示していた地域のニュースが表示</span> されるようになっています。</p>
+      <div class="note type-tips">
+      <p><strong>Chrome において Cookie の管理はプロファイル単位</strong></p>
+      <p>Chrome では「<strong>Cookie
+      はプロファイル毎に管理されている</strong>」ため、あるプロファイルで起動した Chrome
+      で地域を「沖縄」に設定して <code>region=OKINAWA</code> が Cookie
+      に設定されていても、別のプロファイルで起動した Chrome で <code>/news</code>
+      にアクセスすれば初期値の「大阪」が表示されます。</p>
+      </div>
+      <p>地域毎の「ニュース記事」は、<code>useState</code> で生成したステート変数の
+      <code>region</code> の変更をトリガーに <code>/api/news</code> に対する <code>fetch</code>
+      を実行することで取得しています。以下の <strong>第61行目</strong> ように <code>fetch</code>
+      のオプションに <code>credentials: "include"</code> を設定することで、JavaScript から
+      HTTPリクエストを送るときにも Cookie が付与されるようになります。</p>
       <div class="sourceCode" id="cb24"
       data-caption="src/app/news/page.tsx (抜粋) Cookie をセットする関数" data-startFrom="55"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 54;"><span id="cb24-55"><a href="#cb24-55"></a><span class="fu">useEffect</span>(() <span class="kw">=&gt;</span> {</span>
@@ -909,11 +995,14 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb24-75"><a href="#cb24-75"></a>  }<span class="op">;</span></span>
 <span id="cb24-76"><a href="#cb24-76"></a>  <span class="fu">fetchNews</span>()<span class="op">;</span></span>
 <span id="cb24-77"><a href="#cb24-77"></a>}<span class="op">,</span> [region])<span class="op">;</span></span></code></pre></div>
+      <h3 data-number="5.1.1" id="演習-3"><span class="header-section-number">5.1.1</span> 演習</h3>
+      <p><strong>第61行目</strong> を <code>credentials: "omit",</code> (＝Cookieを送信しない設定)
+      に変えるとドロップダウンリストから地域を変更しても、常に大阪の記事しか取得できなくなることを確認してください。</p>
       <h2 data-number="5.2" id="サーバサイド-バックエンド-の処理"><span
       class="header-section-number">5.2</span> サーバサイド (バックエンド) の処理</h2>
-      <p><code>/api/news</code> にアクセスがあったときに実行される処理は
-      <code>src/app/news/route.ts</code> に記載されます。サーバサイドでは、Cookie に応じて DB
-      からのデータ取得条件を変えています。</p>
+      <p>ウェブAPI <code>/api/news</code> にアクセスがあったときの処理は
+      <code>src/app/news/route.ts</code> に記述されています。サーバサイドでは、Cookie の値
+      (<code>region=XXXXX</code>) に応じて DB からのデータ取得条件を変えています。</p>
       <div class="sourceCode" id="cb25" data-caption="src/app/news/route.ts (抜粋)"
       data-startFrom="4"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 3;"><span id="cb25-4"><a href="#cb25-4"></a><span class="im">import</span> { cookies } <span class="im">from</span> <span class="st">&quot;next/headers&quot;</span><span class="op">;</span></span></code></pre></div>
       <div class="sourceCode" id="cb26"
