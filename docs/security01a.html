@@ -257,7 +257,7 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       </blockquote>
       <h2 data-number="2.3" id="seed.ts-の作成"><span class="header-section-number">2.3</span>
       seed.ts の作成</h2>
-      <p>データベースの「レコードのクリア」と「初期データの挿入処理」を、上記のスクリプトに対応させて
+      <p>データベースの「<strong>レコードのクリア処理</strong>」と「<strong>初期データの挿入処理</strong>」を、上記のスクリプトに対応させて
       <code>prisma/seed.ts</code> というファイルに記述します。</p>
       <p>このとき、<code>seed.ts</code>
       ファイルの配置場所には注意してください。もし、<code>src</code>
@@ -327,12 +327,15 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb9-10"><a href="#cb9-10"></a><span class="im">export type</span> CartItem <span class="op">=</span> z<span class="op">.</span><span class="at">infer</span><span class="op">&lt;</span><span class="kw">typeof</span> cartItemSchema<span class="op">&gt;;</span></span></code></pre></div>
       <p>また、zod は、クライアントサイドにおいて <strong>フォーム入力</strong>
       (<code>react-hook-form</code> の <code>useForm</code>)
-      とも連携して強力なバリデーション機能を提供してくれます。</p>
+      とも連携して強力なバリデーション機能を提供してくれます。以下、<code>react-hook-form</code> と
+      <code>zod</code>
+      を組み合わせて作成した入力フォームの例です。このプロジェクトにおいては、ログイン機能
+      (<code>/login</code>) や サインイン機能 (<code>/signup</code>) のなかで利用しています。</p>
       <figure>
       <img src="figs/01/zod-01.png" alt="zod" />
       <figcaption aria-hidden="true">zod</figcaption>
       </figure>
-      <p>以上のようなことから、zod
+      <p>zod
       を積極活用することで「<strong>煩雑</strong>」かつ「<strong>コードの可読性を低下させる原因</strong>」となっていたバリデーションを
       <span class="masked">簡潔かつ確実に実装すること</span>
       が可能になります。実際に、開発現場においても、バリデーションライブラリとして zod
@@ -356,7 +359,7 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <p>まず、<code>src/app/_types/CommonSchemas.ts</code> において、<code>UserSeed.ts</code>
       の他に、認証機能などに使用する型定義ファイル (<code>LoginRequest.ts</code> や
       <code>UserProfile.ts</code>) で共通利用する <strong>バリデーションスキーマ</strong>
-      (入力データが満たすべき制約条件や構造を定義したもの) を以下のように定義しています。</p>
+      (＝入力データが満たすべき制約条件や構造を定義したもの) を以下のように定義しています。</p>
       <div class="sourceCode" id="cb10" data-caption="src/app/_types/CommonSchemas.ts"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb10-1"><a href="#cb10-1"></a><span class="im">import</span> { z } <span class="im">from</span> <span class="st">&quot;zod&quot;</span><span class="op">;</span></span>
 <span id="cb10-2"><a href="#cb10-2"></a><span class="im">import</span> { Role } <span class="im">from</span> <span class="st">&quot;./Role&quot;</span><span class="op">;</span></span>
