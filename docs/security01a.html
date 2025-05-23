@@ -226,7 +226,7 @@ npx prisma db seed</code></pre>
       <code>npx prisma generate</code> のように Prisma が標準で提供しているコマンド
       (ビルトインコマンド) ではなく、以下のように <span
       class="masked">開発者が自分でスクリプトを用意し、設定することで使用可能になるカスタムコマンド</span>
-      となっています。具体的には、<code>package.json</code> の変更と　<code>prisma/seed.ts</code>
+      となっています。具体的には <code>package.json</code> の変更と <code>prisma/seed.ts</code>
       の作成が必要となります。</p>
       <h2 data-number="2.1" id="準備-1"><span class="header-section-number">2.1</span> 準備</h2>
       <p>ここからは <code>week-5</code>
@@ -286,7 +286,7 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 6;"><span id="cb8-7"><a href="#cb8-7"></a>} <span class="im">from</span> <span class="st">&quot;@/app/_types/CommonSchemas&quot;</span><span class="op">;</span> <span class="co">// パスエイリアを使用</span></span></code></pre></div>
       <p>確認後は、元に戻してください。</p>
       <h2 data-number="2.5" id="演習-1"><span class="header-section-number">2.5</span> 演習</h2>
-      <p><code>nenewsItem</code>、<code>products</code>、<code>user</code>
+      <p><code>newsItem</code>、<code>products</code>、<code>user</code>
       について、初期データをいくつか追加してみてください。追加後は
       <code>npx prisma db seed</code>、<code>npx prisma studio</code>
       を実行して内容を確認してください。</p>
