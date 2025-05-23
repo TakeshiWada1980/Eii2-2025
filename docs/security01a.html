@@ -733,8 +733,8 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       を設定する例</h3>
       <p>ショップ (<code>http://localhost:3000/shop</code>) に関連する <strong>ウェブAPI</strong>
       (<code>http://localhost:3000/api/cart</code>) の「GET Method」では、HTTPリクエストのヘッダに
-      Cookie フィールドが存在しないときは、Cookie を発行したうえで
-      DBから「商品リスト」取得して、それをレスポンスしています。</p>
+      Cookie フィールドが存在しないときは、Cookie を発行しています。また、Cookie があったときは
+      DBから「カート情報」取得して、それをレスポンスしています。</p>
       <p><code>src/app/api/cart/route.ts</code> を参照して、ざっくりと処理を追ってみてください
       (詳しいことは後から確認していきます)。</p>
       <div class="sourceCode" id="cb16"
