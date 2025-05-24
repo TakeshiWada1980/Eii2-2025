@@ -109,8 +109,12 @@ id="toc-実はニュースには反射型xssの潜在的リスクがある"><spa
 実は「ニュース」には反射型XSSの潜在的リスクがある</a></li>
 <li><a href="#クエリパラメータの処理" id="toc-クエリパラメータの処理"><span
 class="toc-section-number">7.2</span> クエリパラメータの処理</a></li>
+<li><a href="#エスケープ処理の方法" id="toc-エスケープ処理の方法"><span
+class="toc-section-number">7.3</span> エスケープ処理の方法</a></li>
+<li><a href="#サニタイズ-無害化-の方法" id="toc-サニタイズ-無害化-の方法"><span
+class="toc-section-number">7.4</span> サニタイズ (無害化) の方法</a></li>
 <li><a href="#flask-python-などでもxss脆弱性に注意"
-id="toc-flask-python-などでもxss脆弱性に注意"><span class="toc-section-number">7.3</span> Flask
+id="toc-flask-python-などでもxss脆弱性に注意"><span class="toc-section-number">7.5</span> Flask
 (Python) などでもXSS脆弱性に注意</a></li>
 </ul></li>
 </ul> 
@@ -1324,25 +1328,61 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       に適切な属性を設定することの重要性、適切なサニタイズやエスケープ処理をすることの重要性が理解できたと思います。</p>
       <p>Cookie
       に「HttpOnly属性」をつけていれば…もしくはサニタイズもしくはエスケープ処理をしていれば…防ぐことができた被害でした。</p>
-      <h2 data-number="7.3" id="flask-python-などでもxss脆弱性に注意"><span
-      class="header-section-number">7.3</span> Flask (Python) などでもXSS脆弱性に注意</h2>
+      <h2 data-number="7.3" id="エスケープ処理の方法"><span class="header-section-number">7.3</span>
+      エスケープ処理の方法</h2>
+      <p>エスケープ処理とは、<code>&lt;</code> や <code>&gt;</code> などの
+      <strong>HTMLとして解釈される可能性がある文字</strong> を <code>&amp;lt;</code> や
+      <code>&amp;gt;</code> などに置き換える処理を指します。ここで <code>&amp;lt;</code> や
+      <code>&amp;gt;</code> は <span class="masked">文字実体参照</span>
+      とばれるもので、ウェブブラウザでは、これを「HTML」ではなく「文字」としての <code>&lt;</code>
+      や <code>&gt;</code> に変換して表示 (レンダリング) します。</p>
+      <p>例えば…</p>
+      <ul>
+      <li><code>&lt;img src=x onerror="alert('Hoge!')"&gt;</code></li>
+      </ul>
+      <p>…に対して<strong>エスケープ処理</strong>をかけると…</p>
+      <ul>
+      <li><code>&amp;lt;img src=x onerror=&amp;quot;alert(&amp;#39;Hoge!&amp;#39;)&amp;quot;&amp;gt;</code></li>
+      </ul>
+      <p>…となります。ここで、<code>"</code> は <code>&amp;quot;</code> に、<code>'</code> は
+      <code>&amp;#39;</code> に変換されています。</p>
+      <p>Next.js (JSX) においては、<strong>デフォルトでエスケープ処理が適用</strong>
+      されるため、以下のように書き換えれば <code>src/app/news/page.tsx</code>
+      は安全なコードとなります (<code>dangerouslySetInnerHTML</code>
+      だけが、例外的にエスケープ処理が適用されません)。</p>
+      <div class="sourceCode" id="cb40" data-caption="src/app/news/page.tsx (抜粋) 💀 XSS脆弱性あり"
+      data-startFrom="143"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 142;"><span id="cb40-143"><a href="#cb40-143"></a><span class="op">&lt;</span>span dangerouslySetInnerHTML<span class="op">=</span>{{ __html<span class="op">:</span> name }} className<span class="op">=</span><span class="st">&quot;mr-1&quot;</span> <span class="op">/&gt;</span></span></code></pre></div>
+      <div class="sourceCode" id="cb41"
+      data-caption="src/app/news/page.tsx (抜粋) 😁 エスケープ処理" data-startFrom="143"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 142;"><span id="cb41-143"><a href="#cb41-143"></a><span class="op">&lt;</span>span className<span class="op">=</span><span class="st">&quot;mr-1&quot;</span><span class="op">&gt;</span>{name}<span class="op">&lt;/</span>span<span class="op">&gt;</span></span></code></pre></div>
+      <p>エスケープ処理がされたときは、次のように画面がレンダリングされます。</p>
+      <figure>
+      <img src="figs/01/xss-06.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <h2 data-number="7.4" id="サニタイズ-無害化-の方法"><span
+      class="header-section-number">7.4</span> サニタイズ (無害化) の方法</h2>
+      <p>Next.js のクライアントサイド (フロントエンド) における <strong>サニタイズ</strong> には
+      <code>isomorphic-dompurify</code> ライブラリが便利です。</p>
+      <h2 data-number="7.5" id="flask-python-などでもxss脆弱性に注意"><span
+      class="header-section-number">7.5</span> Flask (Python) などでもXSS脆弱性に注意</h2>
       <p>Next.js は、基本的にはXSS攻撃が成功しにくい設計になっています。あえて
       <code>dangerouslySetInnerHTML</code> 属性をしなければ問題ありません。</p>
       <p>一方で、Flask (前期実験のもう一方のテーマで使用)
       などは、標準でXSS攻撃が成功しやすい設計になっています。十分に注意してください。</p>
-      <div class="sourceCode" id="cb40" data-caption="XSS脆弱性 (Python)"><pre
-      class="sourceCode python"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, request, Response</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">&quot;/&quot;</span>)</span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greet():</span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> request.args.get(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
-<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  html <span class="op">=</span> <span class="ss">f&quot;こんにちは</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">さん&quot;</span></span>
-<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Response(html, content_type<span class="op">=</span><span class="st">&quot;text/html&quot;</span>)</span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
-<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>  app.run(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+      <div class="sourceCode" id="cb42" data-caption="XSS脆弱性 (Python)"><pre
+      class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, request, Response</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">&quot;/&quot;</span>)</span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greet():</span>
+<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> request.args.get(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
+<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  html <span class="op">=</span> <span class="ss">f&quot;こんにちは</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">さん&quot;</span></span>
+<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Response(html, content_type<span class="op">=</span><span class="st">&quot;text/html&quot;</span>)</span>
+<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>  app.run(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
       <!-- ---------------------------------------- -->
     </main>
 
