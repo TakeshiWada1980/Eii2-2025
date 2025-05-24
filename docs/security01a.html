@@ -1363,27 +1363,66 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       </figure>
       <h2 data-number="7.4" id="サニタイズ-無害化-の方法"><span
       class="header-section-number">7.4</span> サニタイズ (無害化) の方法</h2>
-      <p>Next.js のクライアントサイド (フロントエンド) における <strong>サニタイズ</strong> には
-      <code>isomorphic-dompurify</code> ライブラリが便利です。</p>
+      <p>エスケープ処理を適用すると全ての HTMLタグ や JavaScript
+      が無効化されますが、<strong>一部の安全なタグ</strong>
+      (<code>&lt;br /&gt;</code>、<code>&lt;font&gt;</code>) や、属性
+      (<code>size=</code>、<code>color=</code>) だけは <strong>有効化したい場合</strong>
+      もあります。たとえば、ブログ投稿機能をもったウェブアプリなどでは簡単な装飾などを許可したい場合があります。</p>
+      <p>この場合は、<code>isomorphic-dompurify</code>
+      というサニタイズライブラリが便利です。<code>isomorphic-dompurify</code> は、Next.js
+      のクライアントコンポーネント (<code>use client</code>)
+      で動作するもので、以下のように使用します。</p>
+      <div class="sourceCode" id="cb42" data-caption="src/app/news/page.tsx (抜粋) Before 💀"
+      data-startFrom="39"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 38;"><span id="cb42-39"><a href="#cb42-39"></a><span class="kw">const</span> params <span class="op">=</span> <span class="kw">new</span> <span class="fu">URLSearchParams</span>(<span class="bu">window</span><span class="op">.</span><span class="at">location</span><span class="op">.</span><span class="at">search</span>)<span class="op">;</span></span>
+<span id="cb42-40"><a href="#cb42-40"></a><span class="fu">setName</span>(params<span class="op">.</span><span class="fu">get</span>(<span class="st">&quot;name&quot;</span>))<span class="op">;</span> <span class="co">// 💀 サニタイズ（無害化）ぜずに値を格納</span></span></code></pre></div>
+      <div class="sourceCode" id="cb43"
+      data-caption="src/app/news/page.tsx (抜粋) After 😁 サニタイズ処理" data-startFrom="39"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 38;"><span id="cb43-39"><a href="#cb43-39"></a><span class="kw">const</span> name <span class="op">=</span> params<span class="op">.</span><span class="fu">get</span>(<span class="st">&quot;name&quot;</span>)<span class="op">;</span></span>
+<span id="cb43-40"><a href="#cb43-40"></a><span class="cf">if</span> (<span class="op">!</span>name) { <span class="co">// name が null のとき</span></span>
+<span id="cb43-41"><a href="#cb43-41"></a>  <span class="fu">setName</span>(name)<span class="op">;</span></span>
+<span id="cb43-42"><a href="#cb43-42"></a>  <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb43-43"><a href="#cb43-43"></a>}</span>
+<span id="cb43-44"><a href="#cb43-44"></a><span class="co">// 注意：tsx の冒頭で import DOMPurify from &quot;isomorphic-dompurify&quot; が必要</span></span>
+<span id="cb43-45"><a href="#cb43-45"></a><span class="kw">const</span> sanitizedName <span class="op">=</span> DOMPurify<span class="op">.</span><span class="fu">sanitize</span>(name<span class="op">,</span> { <span class="co">// サニタイズ処理</span></span>
+<span id="cb43-46"><a href="#cb43-46"></a>  ALLOWED_TAGS<span class="op">:</span> [<span class="st">&quot;b&quot;</span><span class="op">,</span> <span class="st">&quot;i&quot;</span><span class="op">,</span> <span class="st">&quot;font&quot;</span>]<span class="op">,</span> <span class="co">// 許可するタグ</span></span>
+<span id="cb43-47"><a href="#cb43-47"></a>  ALLOWED_ATTR<span class="op">:</span> [<span class="st">&quot;color&quot;</span>]<span class="op">,</span> <span class="co">// 許可する属性</span></span>
+<span id="cb43-48"><a href="#cb43-48"></a>})<span class="op">;</span></span>
+<span id="cb43-49"><a href="#cb43-49"></a><span class="fu">setName</span>(sanitizedName)<span class="op">;</span> <span class="co">// 😁 サニタイズして値を格納</span></span></code></pre></div>
+      <p>上記のようにすると、太字タグ <code>&lt;b&gt;&lt;/b&gt;</code>、斜体タグ
+      <code>&lt;i&gt;&lt;/i&gt;</code>、フォントタグ <code>&lt;font&gt;&lt;/font&gt;</code>
+      のみを許可し、さらにタグの属性のうち <code>color=</code>
+      のみを許可するようなサニタイズ処理がされます。<strong>許可されていない該当しないタグや属性は削除
+      (≠無害化) されます</strong>。そのうえで <code>dangerouslySetInnerHTML</code> を使用して
+      <code>name</code> を出力してください。</p>
+      <p>以上のようなサニタイズ処理を適当したとき、次のようなURLでアクセスすると…</p>
+      <pre><code>http://localhost:3000/news?name=&lt;font color=&quot;blue&quot; size=&quot;100&quot;&gt;&lt;b&gt;萱島ウサギ&lt;/b&gt;&lt;/font&gt;</code></pre>
+      <p>次のように出力されます
+      (<code>size=</code>の属性は適用されていないことに着目してください)。</p>
+      <figure>
+      <img src="figs/01/xss-07.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <h3 data-number="7.4.1" id="演習-5"><span class="header-section-number">7.4.1</span> 演習</h3>
+      <p>サニタイズ処理を適用してください。</p>
       <h2 data-number="7.5" id="flask-python-などでもxss脆弱性に注意"><span
       class="header-section-number">7.5</span> Flask (Python) などでもXSS脆弱性に注意</h2>
       <p>Next.js は、基本的にはXSS攻撃が成功しにくい設計になっています。あえて
       <code>dangerouslySetInnerHTML</code> 属性をしなければ問題ありません。</p>
       <p>一方で、Flask (前期実験のもう一方のテーマで使用)
       などは、標準でXSS攻撃が成功しやすい設計になっています。十分に注意してください。</p>
-      <div class="sourceCode" id="cb42" data-caption="XSS脆弱性 (Python)"><pre
-      class="sourceCode python"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, request, Response</span>
-<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span>
-<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">&quot;/&quot;</span>)</span>
-<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greet():</span>
-<span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> request.args.get(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
-<span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>  html <span class="op">=</span> <span class="ss">f&quot;こんにちは</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">さん&quot;</span></span>
-<span id="cb42-9"><a href="#cb42-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Response(html, content_type<span class="op">=</span><span class="st">&quot;text/html&quot;</span>)</span>
-<span id="cb42-10"><a href="#cb42-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb42-11"><a href="#cb42-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
-<span id="cb42-12"><a href="#cb42-12" aria-hidden="true" tabindex="-1"></a>  app.run(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+      <div class="sourceCode" id="cb45" data-caption="XSS脆弱性 (Python)"><pre
+      class="sourceCode python"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, request, Response</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">&quot;/&quot;</span>)</span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greet():</span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> request.args.get(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a>  html <span class="op">=</span> <span class="ss">f&quot;こんにちは</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">さん&quot;</span></span>
+<span id="cb45-9"><a href="#cb45-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Response(html, content_type<span class="op">=</span><span class="st">&quot;text/html&quot;</span>)</span>
+<span id="cb45-10"><a href="#cb45-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-11"><a href="#cb45-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb45-12"><a href="#cb45-12" aria-hidden="true" tabindex="-1"></a>  app.run(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
       <!-- ---------------------------------------- -->
     </main>
 
