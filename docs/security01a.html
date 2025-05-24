@@ -1330,12 +1330,12 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       に「HttpOnly属性」をつけていれば…もしくはサニタイズもしくはエスケープ処理をしていれば…防ぐことができた被害でした。</p>
       <h2 data-number="7.3" id="エスケープ処理の方法"><span class="header-section-number">7.3</span>
       エスケープ処理の方法</h2>
-      <p>エスケープ処理とは、<code>&lt;</code> や <code>&gt;</code> などの
+      <p><strong>エスケープ処理</strong>とは <code>&lt;</code> や <code>&gt;</code> などの
       <strong>HTMLとして解釈される可能性がある文字</strong> を <code>&amp;lt;</code> や
       <code>&amp;gt;</code> などに置き換える処理を指します。ここで <code>&amp;lt;</code> や
       <code>&amp;gt;</code> は <span class="masked">文字実体参照</span>
       とばれるもので、ウェブブラウザでは、これを「HTML」ではなく「文字」としての <code>&lt;</code>
-      や <code>&gt;</code> に変換して表示 (レンダリング) します。</p>
+      や <code>&gt;</code> として表示 (レンダリング) します。</p>
       <p>例えば…</p>
       <ul>
       <li><code>&lt;img src=x onerror="alert('Hoge!')"&gt;</code></li>
@@ -1346,14 +1346,15 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       </ul>
       <p>…となります。ここで、<code>"</code> は <code>&amp;quot;</code> に、<code>'</code> は
       <code>&amp;#39;</code> に変換されています。</p>
-      <p>Next.js (JSX) においては、<strong>デフォルトでエスケープ処理が適用</strong>
-      されるため、以下のように書き換えれば <code>src/app/news/page.tsx</code>
+      <p>Next.js (React) では、安全のために <strong>エスケープ処理がデフォルト適用</strong>
+      される仕様となっているため、以下のように書き換えれば <code>src/app/news/page.tsx</code>
       は安全なコードとなります (<code>dangerouslySetInnerHTML</code>
       だけが、例外的にエスケープ処理が適用されません)。</p>
-      <div class="sourceCode" id="cb40" data-caption="src/app/news/page.tsx (抜粋) 💀 XSS脆弱性あり"
-      data-startFrom="143"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 142;"><span id="cb40-143"><a href="#cb40-143"></a><span class="op">&lt;</span>span dangerouslySetInnerHTML<span class="op">=</span>{{ __html<span class="op">:</span> name }} className<span class="op">=</span><span class="st">&quot;mr-1&quot;</span> <span class="op">/&gt;</span></span></code></pre></div>
+      <div class="sourceCode" id="cb40"
+      data-caption="src/app/news/page.tsx (抜粋) Before 💀 XSS脆弱性あり" data-startFrom="143"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 142;"><span id="cb40-143"><a href="#cb40-143"></a><span class="op">&lt;</span>span dangerouslySetInnerHTML<span class="op">=</span>{{ __html<span class="op">:</span> name }} className<span class="op">=</span><span class="st">&quot;mr-1&quot;</span> <span class="op">/&gt;</span></span></code></pre></div>
       <div class="sourceCode" id="cb41"
-      data-caption="src/app/news/page.tsx (抜粋) 😁 エスケープ処理" data-startFrom="143"><pre
+      data-caption="src/app/news/page.tsx (抜粋) After 😁 エスケープ処理" data-startFrom="143"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 142;"><span id="cb41-143"><a href="#cb41-143"></a><span class="op">&lt;</span>span className<span class="op">=</span><span class="st">&quot;mr-1&quot;</span><span class="op">&gt;</span>{name}<span class="op">&lt;/</span>span<span class="op">&gt;</span></span></code></pre></div>
       <p>エスケープ処理がされたときは、次のように画面がレンダリングされます。</p>
       <figure>
