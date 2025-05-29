@@ -200,7 +200,7 @@ id="toc-flask-python-などでもxss脆弱性に注意"><span class="toc-section
       <ul>
       <li>主に次週に扱う内容なので余裕があれば…</li>
       </ul></li>
-      <li><strong>サインイン</strong> <code>http://localhost:3000/signup</code>
+      <li><strong>サインアップ</strong> <code>http://localhost:3000/signup</code>
       <ul>
       <li>主に次週に扱う内容なので余裕があれば…</li>
       </ul></li>
@@ -1388,18 +1388,18 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       <p>一方で、Flask (前期実験のもう一方のテーマで使用)
       などは、標準でXSS攻撃が成功しやすい設計になっています。十分に注意してください。</p>
       <div class="sourceCode" id="cb46" data-caption="XSS脆弱性 (Python)"><pre
-      class="sourceCode python"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, request, Response</span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a><span class="at">@app.route</span>(<span class="st">&quot;/&quot;</span>)</span>
-<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> greet():</span>
-<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>  name <span class="op">=</span> request.args.get(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
-<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>  html <span class="op">=</span> <span class="ss">f&quot;こんにちは</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">さん&quot;</span></span>
-<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> Response(html, content_type<span class="op">=</span><span class="st">&quot;text/html&quot;</span>)</span>
-<span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
-<span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>  app.run(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
+      class="sourceCode numberSource python numberLines"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1"></a><span class="im">from</span> flask <span class="im">import</span> Flask, request, Response</span>
+<span id="cb46-2"><a href="#cb46-2"></a></span>
+<span id="cb46-3"><a href="#cb46-3"></a>app <span class="op">=</span> Flask(<span class="va">__name__</span>)</span>
+<span id="cb46-4"><a href="#cb46-4"></a></span>
+<span id="cb46-5"><a href="#cb46-5"></a><span class="at">@app.route</span>(<span class="st">&quot;/&quot;</span>)</span>
+<span id="cb46-6"><a href="#cb46-6"></a><span class="kw">def</span> greet():</span>
+<span id="cb46-7"><a href="#cb46-7"></a>  name <span class="op">=</span> request.args.get(<span class="st">&quot;name&quot;</span>, <span class="st">&quot;&quot;</span>)</span>
+<span id="cb46-8"><a href="#cb46-8"></a>  html <span class="op">=</span> <span class="ss">f&quot;こんにちは</span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">さん&quot;</span></span>
+<span id="cb46-9"><a href="#cb46-9"></a>  <span class="cf">return</span> Response(html, content_type<span class="op">=</span><span class="st">&quot;text/html&quot;</span>)</span>
+<span id="cb46-10"><a href="#cb46-10"></a></span>
+<span id="cb46-11"><a href="#cb46-11"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb46-12"><a href="#cb46-12"></a>  app.run(debug<span class="op">=</span><span class="va">True</span>)</span></code></pre></div>
       <!-- ---------------------------------------- -->
     </main>
 
