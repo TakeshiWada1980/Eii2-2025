@@ -106,9 +106,9 @@ class="toc-section-number">6</span> トークンベース認証の詳細</a>
 </ul></li>
 <li><a href="#content-security-policy-csp" id="toc-content-security-policy-csp"><span
 class="toc-section-number">7</span> Content Security Policy (CSP)</a></li>
-<li><a href="#next.js-serveractions-custom-invocation"
-id="toc-next.js-serveractions-custom-invocation"><span class="toc-section-number">8</span> Next.js
-ServerActions (Custom Invocation)</a></li>
+<li><a href="#おまけnext.js-serveractions-custom-invocation"
+id="toc-おまけnext.js-serveractions-custom-invocation"><span class="toc-section-number">8</span>
+おまけ：Next.js ServerActions (Custom Invocation)</a></li>
 <li><a href="#実装課題02" id="toc-実装課題02"><span class="toc-section-number">9</span>
 実装課題02</a>
 <ul>
@@ -137,7 +137,7 @@ ServerActions (Custom Invocation)</a></li>
       <li>セッションベース認証</li>
       <li>トークンベース認証 (JWT)</li>
       <li>Content Security Policy (CSP)</li>
-      <li>Next.js ServerActions (Custom Invocation)</li>
+      <li>Next.js ServerActions (Custom Invocation) ※おまけ</li>
       </ul>
       <h2 data-number="1.1" id="リモートリポジトリからプロジェクトの最新版を取得"><span
       class="header-section-number">1.1</span> リモートリポジトリからプロジェクトの最新版を取得</h2>
@@ -1412,22 +1412,25 @@ Match  false</code></pre>
       <p>Next.js 15 (TypeScript) において <code>next.config.ts</code> で CSP
       を設定する方法について教えてください。また、一般的な設定例を示してください。なお、Googleフォントを使っているので、それは制限したくありません。</p>
       </blockquote>
-      <h1 data-number="8" id="next.js-serveractions-custom-invocation"><span
-      class="header-section-number">8</span> Next.js ServerActions (Custom Invocation)</h1>
-      <p>Next.js 13.4 から、APIルートを使用せずに (＝<code>src/app/api/</code> に
-      <code>route.ts</code> を記述せずに)、バックエンドの処理を記述可能な <span
-      class="masked">「ServerActions」</span>
-      という仕組みが導入されました。これにより、かなり簡潔にフロントエンドとバックエンドを連携させることができるようになりました。</p>
+      <h1 data-number="8" id="おまけnext.js-serveractions-custom-invocation"><span
+      class="header-section-number">8</span> おまけ：Next.js ServerActions (Custom Invocation)</h1>
+      <p>Next.js 13.4 以降では、APIルート (＝<code>src/app/api/</code> 以下に <code>route.ts</code>
+      を設ける枠組み) を使わずに、<span class="masked">バックエンド処理</span>
+      を直接的に記述できる仕組みとして「ServerActions」が導入されています。これを活用することにより、フロントエンドとバックエンドの連携が、かなりシンプルに書けるようになります
+      (開発の生産性がグッとあがります🤩)。</p>
       <p>ただし、すべてのAPIルートを無条件に ServerActions
-      に置換えることができるわけではなく、いくつかの条件や制限が生じます。</p>
-      <p>このプロジェクトでは、サインアップのバックエンド処理 (データベース操作) を ServerActions
+      に置き換えられるわけではなく、いくつかの条件や前提がある点に注意が必要です。特に、ServerActions
+      は <code>useEffect</code> の内部で呼び出すことができない点に注意が必要です。</p>
+      <p>このプロジェクトでは、サインアップ (<code>/signup</code>) のバックエンド処理
+      (新規登録のユーザ情報のデータベースへの書き込みなど) を、APIルートを設けずに ServerActions
       で記述しています。</p>
-      <div class="sourceCode" id="cb20" data-caption="src/app/signup/page.ts (抜粋)"
-      data-startFrom="64"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 63;"><span id="cb20-64"><a href="#cb20-64"></a><span class="co">// フォームの送信処理</span></span>
+      <div class="sourceCode" id="cb20"
+      data-caption="src/app/signup/page.ts (抜粋) ServerActions の呼び出し" data-startFrom="64"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 63;"><span id="cb20-64"><a href="#cb20-64"></a><span class="co">// フォームの送信処理</span></span>
 <span id="cb20-65"><a href="#cb20-65"></a><span class="kw">const</span> onSubmit <span class="op">=</span> <span class="kw">async</span> (signupRequest<span class="op">:</span> SignupRequest) <span class="kw">=&gt;</span> {</span>
 <span id="cb20-66"><a href="#cb20-66"></a>  <span class="cf">try</span> {</span>
 <span id="cb20-67"><a href="#cb20-67"></a>    <span class="fu">startTransition</span>(<span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
-<span id="cb20-68"><a href="#cb20-68"></a>      <span class="co">// ServerAction (Custom Invocation) の利用</span></span>
+<span id="cb20-68"><a href="#cb20-68"></a>      <span class="co">// ServerActions (Custom Invocation) の利用</span></span>
 <span id="cb20-69"><a href="#cb20-69"></a>      <span class="kw">const</span> res <span class="op">=</span> <span class="cf">await</span> <span class="fu">signupServerAction</span>(signupRequest)<span class="op">;</span></span>
 <span id="cb20-70"><a href="#cb20-70"></a>      <span class="cf">if</span> (<span class="op">!</span>res<span class="op">.</span><span class="at">success</span>) {</span>
 <span id="cb20-71"><a href="#cb20-71"></a>        <span class="fu">setRootError</span>(res<span class="op">.</span><span class="at">message</span>)<span class="op">;</span></span>
@@ -1441,6 +1444,11 @@ Match  false</code></pre>
 <span id="cb20-79"><a href="#cb20-79"></a>    <span class="fu">setRootError</span>(errorMsg)<span class="op">;</span></span>
 <span id="cb20-80"><a href="#cb20-80"></a>  }</span>
 <span id="cb20-81"><a href="#cb20-81"></a>}<span class="op">;</span></span></code></pre></div>
+      <p>上記の <strong>第69行目</strong> で ServerActions の仕組みを利用して以下に示す
+      <code>src/app/_actions/signup.ts</code> の <code>signupServerAction</code>
+      という処理を呼び出しています。</p>
+      <p>以下に ServerActions の本体を示します。ファイル先頭に <span
+      class="masked"><code>"use server";</code></span> のように記述しているのがポイントです。</p>
       <div class="sourceCode" id="cb21" data-caption="src/app/_actions/signup.ts"><pre
       class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb21-1"><a href="#cb21-1"></a><span class="st">&quot;use server&quot;</span><span class="op">;</span></span>
 <span id="cb21-2"><a href="#cb21-2"></a></span>
@@ -1512,6 +1520,22 @@ Match  false</code></pre>
 <span id="cb21-68"><a href="#cb21-68"></a>    }<span class="op">;</span></span>
 <span id="cb21-69"><a href="#cb21-69"></a>  }</span>
 <span id="cb21-70"><a href="#cb21-70"></a>}<span class="op">;</span></span></code></pre></div>
+      <p>本来、<strong>データベースの操作はバックエンドでしか許されていない処理</strong> となります
+      (クライアントサイドで prisma のような ORM
+      は読み込めません)。それにも関わらず、<strong>あたかもクライアント側からバックエンド処理を直接的に呼び出しているように記述できること</strong>
+      が、Server Actions
+      のセールスポイントになっています。ただし、実際には、内部的にAPIエンドポイントがつくられ、それを叩いている仕組みになります。</p>
+      <p>この仕組みを正しく理解せずに使ってしまうと、セキュリティ上のリスクを生む可能性があります。とても便利な仕組みですが、<strong>「何がクライアント側に公開されるのか」「どの処理が安全なのか」</strong>をよく考えた上で使うようにしてください。</p>
+      <h3 data-number="8.0.1" id="参考"><span class="header-section-number">8.0.1</span> 参考</h3>
+      <p><a href="https://github.com/TakeshiWada1980/nextjs-render-compare">こちら</a>
+      のリポジトリは、同じ機能を持つ画面を、以下の4バージョンで実装して比較したものです。ServerAction
+      に興味があるひとは参考にしてみてください。</p>
+      <ul>
+      <li>CSR (Client Side Rendering) only <strong>PG3で扱った手法</strong></li>
+      <li>SSR (Server Side Rendering) only</li>
+      <li>Hybrid1（CSR+SSR+ServerAction（Custom Invocation））</li>
+      <li>Hybrid2（CSR+SSR+ServerAction（Progressive Enhancement））</li>
+      </ul>
       <h1 data-number="9" id="実装課題02"><span class="header-section-number">9</span>
       実装課題02</h1>
       <p>実装課題02として、以下の内容に取り組み、その <strong>GitHubリポジトリ (Public)</strong>
@@ -1534,6 +1558,8 @@ Match  false</code></pre>
       <li>秘密の質問によるパスワードリセット機能</li>
       <li>ログイン試行の間隔制限機能</li>
       <li>ログイン履歴の表示機能</li>
+      <li>チェックボックス「次回からログインIDを自動入力する」</li>
+      <li>キーロガー対策のソフトウェアキーボードによるパスワード入力機能</li>
       </ul></li>
       <li>提出期限：<strong>2025年06月29日 (日)</strong> 23時59分 (これ以降に確認・評価します)
       <ul>
