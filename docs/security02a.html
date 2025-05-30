@@ -143,6 +143,12 @@ id="toc-おまけnext.js-serveractions-custom-invocation"><span class="toc-secti
       class="header-section-number">1.1</span> リモートリポジトリからプロジェクトの最新版を取得</h2>
       <p>05月24日 (金) 以降、リモートリポジトリ (GitHub上)
       で複数のファイルが更新されています。ローカルのプロジェクトフォルダを最新版に更新するために、以下の手順で処理を実行してください。</p>
+      <div class="note type-tips">
+      <p><strong>以下の作業に失敗するときは…</strong></p>
+      <p>現在のプロジェクトフォルダをリネームして、GitHub
+      から再度プロジェクトをクローンしてください。</p>
+      <pre><code>git clone https://github.com/TakeshiWada1980/web-sec-playground-1.git</code></pre>
+      </div>
       <p><strong>手順1：</strong> 前回クローンしたプロジェクトフォルダを VSCode
       で開いてください。</p>
       <p><strong>手順2：</strong> <code>Ctrl+J</code>
@@ -179,12 +185,6 @@ JWT_SECRET=ABCDEFG123456789UVWXYZ</code></pre>
       <li><code>JWT_SECRET</code> は <span class="masked">認証機能における暗号化用のキー</span>
       として使用します。安全性を確保するため、適当なランダムな英数字を用いた16文字以上の文字列に置き換えてください。<strong><em>文字数が不十分だと、動作時にエラーとなる可能性があります。</em></strong></li>
       </ul>
-      <div class="note type-tips">
-      <p><strong>上記の処理に失敗するときは</strong></p>
-      <p>現在のプロジェクトフォルダをリネームして、GitHub
-      から再度プロジェクトをクローンしてください。</p>
-      <pre><code>git clone https://github.com/TakeshiWada1980/web-sec-playground-1.git</code></pre>
-      </div>
       <h2 data-number="1.2" id="作業準備"><span class="header-section-number">1.2</span>
       作業準備</h2>
       <p>ここからは <code>week-6</code> というブランチを作成して、そこで作業を行なってください。</p>
