@@ -797,9 +797,11 @@ Match  false</code></pre>
       <p>主に、以下のファイルの変更が必要になります。</p>
       <ul>
       <li><a
-      href="https://github.com/TakeshiWada1980/web-sec-playground-1/blob/main/prisma/seed.ts">prisma/seed.ts</a></li>
-      <li><code>src/app/api/login/route.ts</code></li>
-      <li><code>src/app/_actions/signup.ts</code></li>
+      href="https://github.com/TakeshiWada1980/web-sec-playground-1/blob/main/prisma/seed.ts">prisma/seed.ts<i class="fa-brands fa-github"></i></a></li>
+      <li><a
+      href="https://github.com/TakeshiWada1980/web-sec-playground-1/blob/main/src/app/api/login/route.ts">src/app/api/login/route.ts<i class="fa-brands fa-github"></i></a></li>
+      <li><a
+      href="https://github.com/TakeshiWada1980/web-sec-playground-1/blob/main/src/app/_actions/signup.ts">src/app/_actions/signup.ts<i class="fa-brands fa-github"></i></a></li>
       </ul>
       <p>改修後は、データベースのシーディング処理を再実行し、シーディングに含まれるユーザのログイン処理が正常にできることを確認してください。また、新規ユーザのサインアップ
       (<code>/signup</code>) およびログインが問題なく機能することを確認してください。</p>
@@ -1199,7 +1201,7 @@ Match  false</code></pre>
 <span id="cb16-22"><a href="#cb16-22"></a>    <span class="op">.</span><span class="fu">sign</span>(secret)<span class="op">;</span></span>
 <span id="cb16-23"><a href="#cb16-23"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`[1] JWT: </span><span class="sc">${</span>jwt<span class="sc">}\n</span><span class="vs">`</span>)<span class="op">;</span></span>
 <span id="cb16-24"><a href="#cb16-24"></a></span>
-<span id="cb16-25"><a href="#cb16-25"></a>  <span class="co">// [2] JWＴのデコード (署名を検証せずにペイロードを取得)</span></span>
+<span id="cb16-25"><a href="#cb16-25"></a>  <span class="co">// [2] JWTのデコード (署名を検証せずにペイロードを取得)</span></span>
 <span id="cb16-26"><a href="#cb16-26"></a>  <span class="kw">const</span> decoded <span class="op">=</span> <span class="fu">decodeJwt</span>(jwt)<span class="op">;</span></span>
 <span id="cb16-27"><a href="#cb16-27"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`[2] Decoded : </span><span class="sc">${</span><span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(decoded<span class="op">,</span> <span class="kw">null</span><span class="op">,</span> <span class="dv">2</span>)<span class="sc">}\n</span><span class="vs">`</span>)<span class="op">;</span></span>
 <span id="cb16-28"><a href="#cb16-28"></a></span>
