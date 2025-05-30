@@ -586,8 +586,8 @@ hash3 0df12e29bcfff3d9eb71a6c196f7cc68df7c13300748eaa77350fc582381bcd8</code></p
       </figure>
       <p><code>auth.users</code> テーブルの <code>encrypted_password</code>
       列には、以下のような文字列 (＝ハッシュ化されたパスワード)
-      が格納されていることが確認できます。各値とも末尾から16文字分は意図的に <code>x</code>
-      でマスクしています。</p>
+      が格納されていることが確認できます。各値とも末尾から16文字分は意図的に <code>x</code> でマスク
+      (上書き) しています。</p>
       <ul>
       <li><code>$2a$10$k7thHryjUJcy3O9Jo9hG7OepuIJVfibEuoB03xxxxxxxxxxxxxxxx</code></li>
       <li><code>$2a$10$ZRpWw4DghRAQF/zPCJr.mOZ21S9AgaLJUkUrZxxxxxxxxxxxxxxxx</code></li>
@@ -650,7 +650,7 @@ hash3 0df12e29bcfff3d9eb71a6c196f7cc68df7c13300748eaa77350fc582381bcd8</code></p
       <h3 data-number="3.5.2" id="レインボーテーブル対策のソルトとは何か"><span
       class="header-section-number">3.5.2</span> レインボーテーブル対策の「ソルト」とは何か？</h3>
       <p>ハッシュ関数は、同じ入力に対して <strong>常に同じ出力 (＝ハッシュ値)</strong>
-      を生成します。そのため、A氏とB氏がどちらもパスワードに <code>password</code>
+      を生成します。そのため、A氏とB氏が、両者ともパスワードに <code>password</code>
       という文字列を使っていた場合、同じハッシュ値 (SHA-256 の場合は
       <code>5e884898da280471...</code> ) となってしまします。</p>
       <pre><code>hash(&quot;password&quot;) → 5e884898da280471...</code></pre>
@@ -1540,8 +1540,8 @@ Match  false</code></pre>
       </ul>
       <h1 data-number="9" id="実装課題02"><span class="header-section-number">9</span>
       実装課題02</h1>
-      <p>実装課題02として、以下の内容に取り組み、その <strong>GitHubリポジトリ (Public)</strong>
-      の「URL」を Teams に提出してください。</p>
+      <p>実装課題02として、以下の内容に取り組み、その <strong>GitHubリポジトリ (Public)
+      の「URL」</strong> を Teams に提出してください。</p>
       <ul>
       <li>本教材<i class="fa-brands fa-github"></i><a
           href="https://github.com/TakeshiWada1980/web-sec-playground-1">web-sec-playground-1</a>
@@ -1560,7 +1560,7 @@ Match  false</code></pre>
       <li>秘密の質問によるパスワードリセット機能</li>
       <li>ログイン試行の間隔制限機能</li>
       <li>ログイン履歴の表示機能</li>
-      <li>チェックボックス「次回からログインIDを自動入力する」</li>
+      <li>チェックボックス「次回からログインIDを自動入力する」な機能</li>
       <li>キーロガー対策のソフトウェアキーボードによるパスワード入力機能</li>
       </ul></li>
       <li>提出期限：<strong>2025年06月29日 (日)</strong> 23時59分 (これ以降に確認・評価します)
@@ -1575,7 +1575,7 @@ Match  false</code></pre>
       <li>GitHubリポジトリの <strong>README.md</strong>
       の内容を「5点満点」、ソースコードを「5点満点」で「合計10点満点」で評価します。「7.6点」を<strong>標準</strong>とします。
       <ul>
-      <li>README.md
+      <li>評価に際しては、まず README.md
       を読んでから、それに関係しそうなソースコードを確認します。そのため、<strong>README.md
       に書かれていない内容は、実装していても評価でスルーされる可能性があります</strong>。実装した機能や創意工夫した箇所は、詳細に
       README.md に記載してください。</li>
@@ -1587,10 +1587,14 @@ Match  false</code></pre>
       <ul>
       <li>評価の際、(基本的には) アプリを起動させる予定はないので環境変数等の共有は不要です。</li>
       </ul></li>
-      <li>ガチガチに <strong>セキュアな設計</strong> としてしてください。</li>
+      <li>ガチガチに <strong>セキュアな設計</strong> としてしてください。
+      <ul>
+      <li>パスワードは bcrypt を使ってハッシュ化して保存、Cookie を使う場合は適切な属性を設定、CSP
+      も設定するなどを講じてください。</li>
+      </ul></li>
       <li><i class="fa-brands fa-github"></i><a
           href="https://github.com/TakeshiWada1980/web-sec-playground-1">web-sec-playground-1</a>
-      をベースに開発するときは、<strong>使用しない認証方式に関連するコードや、「ニュース」や「ショップ」に関連するコード
+      をベースに開発するときは、<strong>使用しない認証方式に関連するコードやコメント、「ニュース」や「ショップ」に関連するコード
       (処理や型) は全て削除</strong> してください。残っている場合は減点とします。</li>
       </ul>
       <h2 data-number="9.2" id="その他"><span class="header-section-number">9.2</span> その他</h2>
