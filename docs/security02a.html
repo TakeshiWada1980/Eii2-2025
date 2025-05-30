@@ -796,7 +796,8 @@ Match  false</code></pre>
       bcrypt を使って、安全にパスワードを管理するように改修してください。</p>
       <p>主に、以下のファイルの変更が必要になります。</p>
       <ul>
-      <li><code>prisma/seed.ts</code></li>
+      <li><a
+      href="https://github.com/TakeshiWada1980/web-sec-playground-1/blob/main/prisma/seed.ts">prisma/seed.ts</a></li>
       <li><code>src/app/api/login/route.ts</code></li>
       <li><code>src/app/_actions/signup.ts</code></li>
       </ul>
@@ -1013,7 +1014,7 @@ Match  false</code></pre>
       <code>password</code>
       を使ってユーザ認証を行ないます。認証に成功したら、そのユーザに対応する情報（<code>id</code>,
       <code>name</code>, <code>role</code> など）を含む「<strong>JWT</strong>」を作成し、それを
-      <span class="masked">レスポンスのボディ&gt;</span> としてクライアントに返します。</p>
+      <span class="masked">レスポンスのボディ</span> としてクライアントに返します。</p>
       <ul>
       <li>JWT には、<span class="masked">サーバだけが参照可能な「秘密鍵」</span>
       を使って改竄検出のための署名をします。</li>
@@ -1027,7 +1028,7 @@ Match  false</code></pre>
       <code>email</code> などの情報が内包されています。</p>
       <h3 data-number="4.3.2" id="クライアント側ログインレスポンスの処理-1"><span
       class="header-section-number">4.3.2</span> [2] クライアント側：ログインレスポンスの処理</h3>
-      <p>ログイン処理にレスポンスとして JWT を受け取ったクライアントは、それを手動で <span
+      <p>ログイン処理のレスポンスとして JWT を受け取ったクライアントは、それを手動で <span
       class="masked">ウェブブラウザの LocalStorage (または SessionStorage)</span>
       のなかに保存します。</p>
       <ul>
