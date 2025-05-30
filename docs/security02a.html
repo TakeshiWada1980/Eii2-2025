@@ -204,8 +204,10 @@ git commit --allow-empty -m &quot;Start week-6 branch&quot;</code></pre>
       <ol type="1">
       <li><strong>ログイン</strong> <code>http://localhost:3000/login</code>
       <ul>
-      <li><code>src/config/auth.ts</code><br />
-      </li>
+      <li><code>src/config/auth.ts</code>
+      <ul>
+      <li>このファイルで「セッションベース認証」と「トークンベース認証」を切り替えできます。</li>
+      </ul></li>
       <li><code>src/app/login/page.tsx</code></li>
       <li><code>src/app/api/login/route.ts</code></li>
       </ul></li>
