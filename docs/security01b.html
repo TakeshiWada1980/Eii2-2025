@@ -309,7 +309,7 @@ git commit --allow-empty -m &quot;Start week-5 branch&quot;</code></pre>
       に「<strong>失敗すること</strong>」を確認してください。確認後は、元に戻しておいてください。</p>
       <div class="sourceCode" id="cb7"
       data-caption="prisma/seed.ts (抜粋) パスエイリアスを使用すると実行失敗"
-      data-startFrom="5"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 4;"><span id="cb7-5"><a href="#cb7-5"></a><span class="im">import</span> { UserSeed<span class="op">,</span> userSeedSchema } <span class="im">from</span> <span class="st">&quot;@/app/_types/UserSeed&quot;</span><span class="op">;</span> <span class="co">// パスエイリアを使用</span></span></code></pre></div>
+      data-startFrom="5"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 4;"><span id="cb7-5"><a href="#cb7-5"></a><span class="im">import</span> { UserSeed<span class="op">,</span> userSeedSchema } <span class="im">from</span> <span class="st">&quot;@/app/_types/UserSeed&quot;</span><span class="op">;</span> <span class="co">// パスエイリアスを使用</span></span></code></pre></div>
       <p>なお、上記でインポートされる <code>UserSeed.ts</code>
       のなかのインポート設定についても「<strong>相対パス</strong>」で指定する必要があります。実際に、<code>UserSeed.ts</code>
       の <strong>第07行目</strong> を以下のように書き換えると <code>npx prisma db seed</code>
