@@ -1,0 +1,1668 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=yes"
+    />
+    <meta name="robots" content="noindex,nofollow,noarchive" />
+    <meta name="referrer" content="no-referrer" />
+
+    <script>
+      MathJax = {
+        chtml: {
+          displayAlign: "left",
+          displayIndent: "1em",
+        },
+      };
+    </script>
+
+     <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js"
+type="text/javascript"></script> 
+
+    <link rel="icon" href="favicon.ico" sizes="any" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/css/all.min.css"
+      integrity="sha512-SzlrxWUlpfuzQ+pcUCosxcglQRNAq/DZjVsC0lE40xsADsfeQoEypE+enwcOiGjk/bSuGGKHEyjSoQ1zVisanQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c"
+    />
+    <link rel="stylesheet" href="style.css" />
+
+    <title>4I-知能情報実験実習2</title>
+  </head>
+
+  <body>
+    <div class="openbtn"><span></span><span></span><span></span></div>
+    <nav id="g-nav">
+      <div id="g-nav-list">
+        <!-- ---------------------------------------- -->
+         <ul>
+<li><a href="#準備" id="toc-準備"><span class="toc-section-number">1</span> 準備</a>
+<ul>
+<li><a href="#リモートリポジトリからプロジェクトの最新版を取得"
+id="toc-リモートリポジトリからプロジェクトの最新版を取得"><span
+class="toc-section-number">1.1</span> リモートリポジトリからプロジェクトの最新版を取得</a></li>
+<li><a href="#作業準備" id="toc-作業準備"><span class="toc-section-number">1.2</span>
+作業準備</a></li>
+<li><a href="#演習-30分" id="toc-演習-30分"><span class="toc-section-number">1.3</span> 演習
+<i class="fa-solid fa-stopwatch"></i>30分</a></li>
+</ul></li>
+<li><a href="#ユーザのパスワード管理と認証認可の機能"
+id="toc-ユーザのパスワード管理と認証認可の機能"><span class="toc-section-number">2</span>
+ユーザのパスワード管理と認証/認可の機能</a></li>
+<li><a href="#ユーザパスワードのハッシュ化" id="toc-ユーザパスワードのハッシュ化"><span
+class="toc-section-number">3</span> ユーザパスワードのハッシュ化</a>
+<ul>
+<li><a href="#ハッシュ関数とは" id="toc-ハッシュ関数とは"><span
+class="toc-section-number">3.1</span> ハッシュ関数とは</a></li>
+<li><a href="#パスワードのハッシュ化" id="toc-パスワードのハッシュ化"><span
+class="toc-section-number">3.2</span> パスワードのハッシュ化</a></li>
+<li><a href="#パスワードのハッシュに-sha-256-が適さない理由"
+id="toc-パスワードのハッシュに-sha-256-が適さない理由"><span class="toc-section-number">3.3</span>
+パスワードのハッシュに SHA-256 が適さない理由</a></li>
+<li><a href="#パスワード保護に特化したハッシュ関数"
+id="toc-パスワード保護に特化したハッシュ関数"><span class="toc-section-number">3.4</span>
+パスワード保護に特化したハッシュ関数</a></li>
+<li><a href="#bcrypt-でハッシュ化されたパスワードの確認-supabase"
+id="toc-bcrypt-でハッシュ化されたパスワードの確認-supabase"><span
+class="toc-section-number">3.5</span> bcrypt でハッシュ化されたパスワードの確認 (Supabase)</a></li>
+<li><a href="#bcrypt-によるハッシュ生成" id="toc-bcrypt-によるハッシュ生成"><span
+class="toc-section-number">3.6</span> bcrypt によるハッシュ生成</a></li>
+<li><a href="#演習" id="toc-演習"><span class="toc-section-number">3.7</span> 演習</a></li>
+</ul></li>
+<li><a href="#ユーザ認証機能" id="toc-ユーザ認証機能"><span class="toc-section-number">4</span>
+ユーザ認証機能</a>
+<ul>
+<li><a href="#セッションベース認証とトークンベース認証"
+id="toc-セッションベース認証とトークンベース認証"><span class="toc-section-number">4.1</span>
+「セッションベース認証」と「トークンベース認証」</a></li>
+<li><a href="#セッションベース認証の概要" id="toc-セッションベース認証の概要"><span
+class="toc-section-number">4.2</span> セッションベース認証の概要</a></li>
+<li><a href="#トークンベース認証-jwt-の概要" id="toc-トークンベース認証-jwt-の概要"><span
+class="toc-section-number">4.3</span> トークンベース認証 (JWT) の概要</a></li>
+<li><a href="#jwt-のデコード" id="toc-jwt-のデコード"><span class="toc-section-number">4.4</span>
+JWT のデコード</a></li>
+<li><a href="#jwt-生成デコード署名検証を行なうプログラム"
+id="toc-jwt-生成デコード署名検証を行なうプログラム"><span class="toc-section-number">4.5</span> JWT
+生成・デコード・署名検証を行なうプログラム</a></li>
+<li><a href="#比較" id="toc-比較"><span class="toc-section-number">4.6</span> 比較</a></li>
+</ul></li>
+<li><a href="#セッションベース認証の詳細" id="toc-セッションベース認証の詳細"><span
+class="toc-section-number">5</span> セッションベース認証の詳細</a>
+<ul>
+<li><a href="#演習-2" id="toc-演習-2"><span class="toc-section-number">5.1</span> 演習</a></li>
+</ul></li>
+<li><a href="#トークンベース認証の詳細" id="toc-トークンベース認証の詳細"><span
+class="toc-section-number">6</span> トークンベース認証の詳細</a>
+<ul>
+<li><a href="#演習-3" id="toc-演習-3"><span class="toc-section-number">6.1</span> 演習</a></li>
+</ul></li>
+<li><a href="#content-security-policy-csp" id="toc-content-security-policy-csp"><span
+class="toc-section-number">7</span> Content Security Policy (CSP)</a></li>
+<li><a href="#おまけnext.js-serveractions-custom-invocation"
+id="toc-おまけnext.js-serveractions-custom-invocation"><span class="toc-section-number">8</span>
+おまけ：Next.js ServerActions (Custom Invocation)</a></li>
+<li><a href="#実装課題2" id="toc-実装課題2"><span class="toc-section-number">9</span> 実装課題2</a>
+<ul>
+<li><a href="#評価の観点" id="toc-評価の観点"><span class="toc-section-number">9.1</span>
+評価の観点</a></li>
+<li><a href="#その他" id="toc-その他"><span class="toc-section-number">9.2</span> その他</a></li>
+</ul></li>
+</ul> 
+        <!-- ---------------------------------------- -->
+      </div>
+    </nav>
+
+    <header class="markdown-body">
+      <p>2025-4I 知能情報実験実習2 (前期) 講義資料</p>
+      <p>毎週金曜日 1-4時限</p>
+    </header>
+
+    <main class="markdown-body">
+      <!-- ---------------------------------------- -->
+      <h1 data-number="1" id="準備"><span class="header-section-number">1</span> 準備</h1>
+      <p>このテキストは、知能情報実験実習2 (前期) の「<strong>B班</strong>」の第6週目・07月25日 (金)
+      の内容に関するものです。</p>
+      <p><a
+      href="security01b.html">前回</a>のつづきの内容になります。具体的には、次の事項について学んでいきます。</p>
+      <ul>
+      <li>パスワードのハッシュ化</li>
+      <li>セッションベース認証</li>
+      <li>トークンベース認証 (JWT)</li>
+      <li>Content Security Policy (CSP)</li>
+      <li>Next.js ServerActions (Custom Invocation) ※おまけ</li>
+      </ul>
+      <h2 data-number="1.1" id="リモートリポジトリからプロジェクトの最新版を取得"><span
+      class="header-section-number">1.1</span> リモートリポジトリからプロジェクトの最新版を取得</h2>
+      <p>リモートリポジトリ (GitHub上)
+      でファイルが更新されています。ローカルのプロジェクトフォルダを最新版に更新するために、以下の手順で処理を実行してください。</p>
+      <div class="note type-tips">
+      <p><strong>以下の作業に失敗するときは…</strong></p>
+      <p>現在のプロジェクトフォルダをリネームして、GitHub
+      から再度プロジェクトをクローンしてください。</p>
+      <pre><code>git clone https://github.com/TakeshiWada1980/web-sec-playground-1.git</code></pre>
+      </div>
+      <p><strong>手順1：</strong> 前回クローンしたプロジェクトフォルダを VSCode
+      で開いてください。</p>
+      <p><strong>手順2：</strong> <code>Ctrl+J</code>
+      を押下して、VSCodeの下部にターミナルを表示してください。</p>
+      <p><strong>手順3：</strong> 先週は <code>week-5</code> というブランチ (≠ <code>main</code>
+      ブランチ) で作業していたはずです。もし <code>week-5</code>
+      での作業内容がコミットされていない状態で <code>main</code> ブランチに切り替えると、<span
+      class="masked">その変更が <code>main</code> 側のものとして扱われてしまう可能性</span>
+      があります。それを防ぐため、以下の手順で、<strong>未保存のファイルを保存し、作業中の変更は全てコミットしておいてください</strong>。</p>
+      <pre><code>git checkout week-5
+# 未保存のファイルがある場合は保存してください
+git commit --allow-empty -m &quot;Finish week-5 branch&quot;</code></pre>
+      <ul>
+      <li><code>--allow-empty</code>
+      を付けることで、仮に変更がなくても形式的にコミットが作成できます。</li>
+      </ul>
+      <p><strong>手順4：</strong> 最新の <code>main</code> ブランチを取得し、ローカルの
+      <code>main</code> に反映させます。</p>
+      <pre><code>git checkout main
+git fetch origin
+git merge origin/main</code></pre>
+      <ul>
+      <li><code>main</code>
+      ブランチにローカルでの編集がなければ、コンフリクトは発生しない<strong>はず</strong>です。</li>
+      </ul>
+      <p><strong>手順5：</strong>
+      プロジェクトに新しいパッケージが追加されています。依存関係を正しく反映させるために、以下のコマンドを実行してパッケージをインストールしてください。</p>
+      <pre><code>npm i</code></pre>
+      <p><strong>手順6：</strong> <code>.env</code>
+      という「<strong>環境変数設定ファイル</strong>」の内容を、以下のように書き換えてください。</p>
+      <pre><code>DATABASE_URL=&quot;file:./app.db&quot;
+JWT_SECRET=ABCDEFG123456789UVWXYZ</code></pre>
+      <ul>
+      <li><code>JWT_SECRET</code> は <span class="masked">認証機能における暗号化用のキー</span>
+      として使用します。安全性を確保するため、適当なランダムな英数字を用いた16文字以上の文字列に置き換えてください。<strong><em>文字数が不十分だと、動作時にエラーとなる可能性があります。</em></strong></li>
+      </ul>
+      <p><strong>手順7：</strong> データベースのスキーマ (<code>schema.prisma</code>)
+      にも変更を加えています。<code>prisma/app.db</code> を削除後、以下を実行してください。</p>
+      <pre><code>npx prisma db push
+npx prisma generate
+npx prisma db seed</code></pre>
+      <h2 data-number="1.2" id="作業準備"><span class="header-section-number">1.2</span>
+      作業準備</h2>
+      <p>ここからは <code>week-6</code> というブランチを作成して、そこで作業を行なってください。</p>
+      <pre><code>git checkout main # mainブランチであることを確認
+git checkout -b week-6
+git commit --allow-empty -m &quot;Start week-6 branch&quot;</code></pre>
+      <h2 data-number="1.3" id="演習-30分"><span class="header-section-number">1.3</span> 演習
+      <i class="fa-solid fa-stopwatch"></i>30分</h2>
+      <p>アプリを起動し、実際の操作とプログラムの読解を通じて
+      <strong>「ログイン」および「サインイン」に関する処理の理解・把握</strong>
+      を試みてください。詳細な解説については、このあとに行ないますが、<strong>まずは自分自身で理解に努め、疑問点や不明点を整理・明確化しておくこと</strong>
+      が効果的な学びとなります。</p>
+      <p>以下の順序でプログラムや機能を理解・把握していくことを推奨します。ただし、あくまで目安であり、実際には
+      <span class="masked">各ファイルを何度も往復しながら全体像を徐々に掴んでいく必要</span>
+      があります。また、<strong>以下に示されている以外のファイルも必要に応じて参照</strong>
+      していく必要があります。</p>
+      <ol type="1">
+      <li><strong>ログイン</strong> <code>http://localhost:3000/login</code>
+      <ul>
+      <li><code>src/config/auth.ts</code>
+      <ul>
+      <li>このファイルで「セッションベース認証」と「トークンベース認証」を切り替えできます。</li>
+      </ul></li>
+      <li><code>src/app/login/page.tsx</code></li>
+      <li><code>src/app/api/login/route.ts</code></li>
+      </ul></li>
+      <li><strong>ヘッダ</strong>
+      <ul>
+      <li><code>src/app/layout.tsx</code></li>
+      <li><code>src/app/_components/Header.tsx</code></li>
+      <li><code>src/app/_hooks/useAuth.ts</code></li>
+      <li><code>src/app/_contexts/AuthContext.tsx</code></li>
+      <li><code>src/app/_contexts/sessionFetcher.ts</code></li>
+      <li><code>src/app/api/logout/route.ts</code></li>
+      <li><code>src/app/_contexts/jwtFetcher.ts</code></li>
+      </ul></li>
+      <li><strong>サインアップ</strong> <code>http://localhost:3000/signup</code>
+      <ul>
+      <li><code>src/app/signup/page.tsx</code></li>
+      <li><code>src/app/_actions/signup.ts</code></li>
+      </ul></li>
+      <li><strong>公開プロフィールの確認・編集</strong>
+      <code>http://localhost:3000/member/about</code>
+      <ul>
+      <li><code>src/app/member/layout.tsx</code></li>
+      <li><code>src/app/member/about/page.tsx</code></li>
+      <li><code>src/app/_components/AboutView.tsx</code></li>
+      <li><code>src/app/api/about-draft/route.ts</code></li>
+      <li><code>src/app/api/about/route.ts</code></li>
+      </ul></li>
+      </ol>
+      <h1 data-number="2" id="ユーザのパスワード管理と認証認可の機能"><span
+      class="header-section-number">2</span> ユーザのパスワード管理と認証/認可の機能</h1>
+      <p>認証機能を備えたウェブアプリやウェブサービスの開発する場合、<span
+      class="masked">サーバーサイド (バックエンド) におけるユーザのパスワード管理</span>
+      は避けて通れない重要な課題となります。パスワード管理を含む認証/認可の仕組みは、<strong>セキュリティの根幹</strong>であり、その<strong>適切かつ安全な実装と運用には高度な専門知識</strong>が求められます。</p>
+      <p>このような理由から、通常はフルスクラッチ (＝<span
+      class="masked">フレームワークや既存のサービスを使わずにゼロから自前で構築すること</span>)
+      でアプリに認証/認可機能を実装することは<strong>推奨されていません</strong>🙅。</p>
+      <p>代わりに、ウェブアプリのフレームワークが提供する認証ライブラリ (＝<strong>Next.js</strong>
+      であれば <code>Auth.js</code> (旧 <code>NextAuth.js</code>)、<strong>Flask</strong> であれば
+      <code>flask_login</code> など) や、クラウドサービス (<a
+      href="https://supabase.com/">Supabase</a>、<a href="https://auth0.com/">Auth0</a>、<a
+      href="https://firebase.google.com/docs/auth?hl=ja">Firebase Authentication</a>)
+      などを利用することが推奨されています🙆‍♂️。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>Next.js の認証ライブラリ「Auth.js (<span class="citation"
+      data-cites="auth/nextjs">@auth/nextjs</span>)」は、どのような機能を提供してくれますか。</p>
+      </blockquote>
+      <blockquote>
+      <p>Next.js 開発において、Auth.js (<span class="citation"
+      data-cites="auth/nextjs">@auth/nextjs</span>)
+      を利用せずに、フルスクラッチで認証/認可機能を実装することが必要になるのは、どのようなときですか。</p>
+      </blockquote>
+      <p>こうした背景を踏まえ、昨年度の<a
+      href="https://takeshiwada1980.github.io/Programming3-2024/">プログラミング3</a>では BaaS
+      (Backend as a Service) である<a
+      href="https://supabase.com/">Supabase</a>を利用して、パスワード管理と認証の機能をアプリに組み込みました。</p>
+      <figure>
+      <img src="figs/02/supabase-01.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <p>しかし、今回は「<strong>ウェブアプリの脆弱性評価</strong>」がテーマとなっているので、ライブラリの使用を最低限にとどめ、あえて
+      <strong>パスワード管理と認証/認可の機能</strong> を <strong>ゼロから実装</strong>
+      していたいと思います。</p>
+      <div class="note type-tips">
+      <p><strong>認証 (Authentication) と認可 (Authorization)</strong></p>
+      <p>「認証」と「認可」は言葉として非常に似ていますが、ウェブアプリ開発の文脈では、次のように区別されるので注意してください。</p>
+      <ul>
+      <li><strong>認証 (Authentication)</strong> :
+      ユーザが「誰か？」また「本人であるか？」を確認するための仕組み。
+      <ul>
+      <li>例えば、パスワードのように「ユーザ本人しか知り得ない情報」を用いて、現在アクセスしているのが
+      <code>admin@example.com</code> 本人であることを確認する処理が「認証」にあたります。</li>
+      </ul></li>
+      <li><strong>認可 (Authorization)</strong> : 認証されたユーザ (あるいは未認証のユーザ)
+      に対して、特定の情報や操作へのアクセスを許可するか否かを判断するための仕組み。
+      <ul>
+      <li>例えば、<code>admin@example.com</code> として認証されたユーザについて、<code>/admin</code>
+      や <code>/admin/posts/new</code> に対するアクセスが許可されているかを確認し、それに応じて処理
+      (<strong>許可または拒否</strong>) をするのが「認可」にあたります。</li>
+      </ul></li>
+      </ul>
+      </div>
+      <h1 data-number="3" id="ユーザパスワードのハッシュ化"><span
+      class="header-section-number">3</span> ユーザパスワードのハッシュ化</h1>
+      <p>ウェブアプリに限らず、認証機能を提供するシステムでは「<strong>ユーザのパスワードは、元の文字列のまま保存せず、必ず『ハッシュ関数』で変換した値を保存する</strong>」という鉄則・大原則があります。これは、不正侵入等によって、万一、<span
+      class="masked">ユーザのパスワードを管理しているデータベースやファイルが漏洩</span>
+      した場合でも、そこから「元のパスワード文字列」が解析され、その悪用による被害を防ぐため
+      (＝被害が発生するまでの時間を少しでも遅らせるため) です。</p>
+      <div class="note type-tips">
+      <p>パスワードをハッシュ化して保存すべき理由として「<strong>たとえシステム管理者であっても、ユーザの生のパスワード文字列を閲覧できる状態にしておくべきではない</strong>」という考え方もあります。</p>
+      </div>
+      <h3 data-number="3.0.1" id="定着確認"><span class="header-section-number">3.0.1</span>
+      定着確認</h3>
+      <ul>
+      <li>ウェブアプリの認証機能は、セキュリティや保守性の観点から一般にフルスクラッチで実装することが推奨されている。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>ユーザのパスワードを保存する際、平文のまま保存せず、ハッシュ化して保存するのが基本的なセキュリティ対策である。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切である</span></li>
+      </ul></li>
+      <li>暗号化に関する文脈で「平文」の読み仮名を答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">ひらぶん</span></li>
+      </ul></li>
+      <li>ユーザが本人であるかを確認する処理は、認証 (Authentication) と認可 (Authorization)
+      のどちらに該当するか答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">認証 (Authentication)</span></li>
+      </ul></li>
+      <li>パスワードをハッシュ化して保存する目的のひとつは、データベースが漏洩した場合でもパスワードの復元を困難にすることである。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切である</span></li>
+      </ul></li>
+      <li>ハッシュ化されたパスワードは、秘密鍵を使った復号処理によって元のパスワードに復元することができる。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>Auth.js（<span class="citation" data-cites="auth/nextjs">@auth/nextjs</span>）は、Firebase
+      Authentication や Supabase のような BaaS
+      に分類される。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      </ul>
+      <h2 data-number="3.1" id="ハッシュ関数とは"><span class="header-section-number">3.1</span>
+      ハッシュ関数とは</h2>
+      <p><strong>ハッシュ関数 (一方向ハッシュ関数)</strong> とは、<a
+      href="https://omunet-my.sharepoint.com/:f:/g/personal/z21707r_omu_ac_jp/Erp11_biHetIspXEBAJ_qrABXGkt8PQNtAH5SgY-a4k7_w">情報2</a>の第09回講義で学んだように「<strong>入力情報のサイズに関係なく、元の情報を推測しにくい固定長データ
+      (ハッシュ値) を出力する関数</strong>」です。</p>
+      <p>このハッシュ関数には <span
+      class="masked">入力情報が1ビットでも異なると、出力されるハッシュ値が大きく変化する</span>
+      という特性があります。また、ハッシュ値から元の入力を推測するには、<strong>基本的にブルートフォース攻撃（総当たり攻撃）以外に現実的な方法がない</strong>
+      という特性があります。</p>
+      <p>代表的なハッシュ関数 (アルゴリズム) としては、<strong>MD5</strong>
+      (エム・ディー・ファイブ)、<strong>SHA-1</strong> (シャー・ワン /
+      エス・エイチ・エー・ワン)、<strong>SHA-256</strong> (シャー・ニゴロ / シャー・ニーゴーロク)
+      などが知られています。このうち、SHA-256 は、HTTPSのデジタル証明書の署名アルゴリズムや、<span
+      class="masked">ビットコイン (ブロックチェーン)</span>
+      の検証やマイニングに使われている信頼性の高いハッシュ関数となっています。</p>
+      <p>TypeScript において SHA-256
+      によるハッシュ値を求める処理は次のように記述することができます。このプログラムは、プロジェクトフォルダの
+      <code>.lab/SHA-256.ts</code> に配置しています。</p>
+      <div class="sourceCode" id="cb8"
+      data-caption=".lab/SHA-256.ts  SHA-256 によるハッシュ計算"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb8-1"><a href="#cb8-1"></a><span class="im">import</span> { createHash } <span class="im">from</span> <span class="st">&quot;crypto&quot;</span><span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2"></a></span>
+<span id="cb8-3"><a href="#cb8-3"></a><span class="kw">const</span> main <span class="op">=</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb8-4"><a href="#cb8-4"></a>  <span class="kw">const</span> pw1 <span class="op">=</span> <span class="st">&quot;password&quot;</span><span class="op">;</span></span>
+<span id="cb8-5"><a href="#cb8-5"></a>  <span class="kw">const</span> pw2 <span class="op">=</span> <span class="st">&quot;passworD&quot;</span><span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6"></a>  <span class="kw">const</span> pw3 <span class="op">=</span> <span class="st">&quot;Password-Password-Password&quot;</span><span class="op">;</span></span>
+<span id="cb8-7"><a href="#cb8-7"></a></span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="co">// SHA-256 ハッシュを生成</span></span>
+<span id="cb8-9"><a href="#cb8-9"></a>  <span class="kw">const</span> hash1 <span class="op">=</span> <span class="fu">createHash</span>(<span class="st">&quot;sha256&quot;</span>)<span class="op">.</span><span class="fu">update</span>(pw1)<span class="op">.</span><span class="fu">digest</span>(<span class="st">&quot;hex&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-10"><a href="#cb8-10"></a>  <span class="kw">const</span> hash2 <span class="op">=</span> <span class="fu">createHash</span>(<span class="st">&quot;sha256&quot;</span>)<span class="op">.</span><span class="fu">update</span>(pw2)<span class="op">.</span><span class="fu">digest</span>(<span class="st">&quot;hex&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-11"><a href="#cb8-11"></a>  <span class="kw">const</span> hash3 <span class="op">=</span> <span class="fu">createHash</span>(<span class="st">&quot;sha256&quot;</span>)<span class="op">.</span><span class="fu">update</span>(pw3)<span class="op">.</span><span class="fu">digest</span>(<span class="st">&quot;hex&quot;</span>)<span class="op">;</span></span>
+<span id="cb8-12"><a href="#cb8-12"></a></span>
+<span id="cb8-13"><a href="#cb8-13"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`hash1 </span><span class="sc">${</span>hash1<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb8-14"><a href="#cb8-14"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`hash2 </span><span class="sc">${</span>hash2<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb8-15"><a href="#cb8-15"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`hash3 </span><span class="sc">${</span>hash3<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb8-16"><a href="#cb8-16"></a>}<span class="op">;</span></span>
+<span id="cb8-17"><a href="#cb8-17"></a></span>
+<span id="cb8-18"><a href="#cb8-18"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div>
+      <p>実行結果は、以下のようになります。</p>
+      <pre><code>hash1 5e884898da28047151d0e56f8dc6292773603d0d6aabbdd62a11ef721d1542d8
+hash2 9e78de733c6a51c0cc954c1d956d8929ad1310513e1042d81edc375219c6a2ef
+hash3 0df12e29bcfff3d9eb71a6c196f7cc68df7c13300748eaa77350fc582381bcd8</code></pre>
+      <ul>
+      <li>上記プログラムは、何度実行しても同じ結果が得られること
+      (＝<strong>「同じ入力」からは「同じハッシュ値」が出力されること</strong>) を確認してください。
+      <ul>
+      <li>Python を使って SHA-256ハッシュ を計算した例を<a
+      href="https://colab.research.google.com/drive/1GKfPko5xDaOa5b03UvVZ1gkOjZ7CfmcU?usp=sharing">こちら</a>に示します。実行環境が異なっていても、<span
+      class="masked">同じ SHA-256 ハッシュ が出力されること</span> を確認してください。</li>
+      </ul></li>
+      <li><code>pw1</code> と <code>pw2</code> のように <strong>入力情報が1文字違うだけ</strong>
+      でハッシュ値 ( <code>hash1</code> と <code>hash2</code> ) は <span
+      class="masked">まったく違う値になること</span> を確認してください。</li>
+      <li><code>pw1</code> と <code>p3</code> のように
+      <strong>入力情報のサイズが違う場合でも、出力されるハッシュ値が「固定長」であること</strong>
+      を確認してください。SHA-256 は、常に <span class="masked">256ビット</span>
+      (＝16進数で64文字なので <span class="math inline">\(64^{16}=2^{256}\)</span> )
+      の出力となります。</li>
+      </ul>
+      <p>理論上は、異なる入力から同一のハッシュ値が生成される可能性（これを一般に「<strong>衝突</strong>」と呼びます）がありますが、これまでに
+      SHA-256 ハッシュ
+      において<strong>実際に衝突が確認された例はありません</strong>。万一、衝突を発見したときは報告しましょう
+      (有名になれます🤩)。</p>
+      <div class="note type-caution">
+      <p><strong>MD5 や SHA-1 は非推奨</strong></p>
+      <p>MD5 や SHA-1
+      といった古いハッシュ関数では、すでに<strong>実際の衝突例が報告</strong>されています。</p>
+      <p>特に <strong>MD5</strong> に関しては、2004 年に研究者によって
+      <strong>異なる入力から同じハッシュ値を得る手法が公開されており、暗号学的には安全性が失われた</strong>
+      とされています。したがって、セキュリティを要する用途には MD5 は非推奨で、SHA-256
+      などのより安全なハッシュ関数が推奨されています。</p>
+      </div>
+      <h3 data-number="3.1.1" id="定着確認-1"><span class="header-section-number">3.1.1</span>
+      定着確認</h3>
+      <ul>
+      <li>SHA-256
+      は、同じ入力に対して毎回異なるユニークなハッシュ値を出力する。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>SHA-256 によって得られる出力 (ハッシュ値)
+      の長さは、常に【　　】ビットとなる。【　　】にあてはまる適切な数値を答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">256</span></li>
+      </ul></li>
+      <li>SHA-256 によって得られる出力 (ハッシュ値)
+      を16進数の文字列とした表したとき、常に【　　】文字となる。【　　】にあてはまる適切な数値を答えよ。<code>0x</code>
+      の接頭辞を含めずに答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">64</span></li>
+      </ul></li>
+      <li>衝突耐性が破られたことが確認され、暗号学的な安全性が喪失されたとして現在非推奨とされているハッシュ関数について、代表的なものを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">MD5、SHA-1</span></li>
+      </ul></li>
+      </ul>
+      <h2 data-number="3.2" id="パスワードのハッシュ化"><span
+      class="header-section-number">3.2</span> パスワードのハッシュ化</h2>
+      <p>一般に、サーバサイドにおいて、パスワードはハッシュ関数を使用して次のように管理・照合されます。</p>
+      <ul>
+      <li><strong>サインアップのとき</strong> :
+      クライアントから受け取ったパスワードにハッシュ関数を適用し、得られたハッシュ値を
+      <code>hashed_password</code> としてデータベースに保存する。</li>
+      <li><strong>ログインのとき</strong> :
+      クライアントから受け取ったパスワードにハッシュ関数を適用して得られたハッシュ値と、データベースに保存されている
+      <code>hashed_password</code> を照合する。</li>
+      </ul>
+      <p>以上の仕組みにより、<span class="masked">平文のパスワード (生のパスワード文字列)
+      をデータベースに保存することなく、安全にパスワード認証を実現すること</span> ができます。</p>
+      <p>また、万一、不注意やハッキングなどよって <code>hashed_password</code>
+      が漏洩しても、そこから元の平文パスワードを推測するにはブルートフォース攻撃以外の手段がない
+      (＝膨大な時間がかかる) ため、<strong>被害の拡大
+      (＝漏洩したIDとPWで他のウェブサービスに不正ログインすること等)
+      を大幅に遅らせること</strong>ができます。このため、漏洩を検知した段階で速やかに「ユーザへのパスワード変更要請」などの対策を講じることで、実質的な被害を最小限に抑えることが可能となります。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>ハッシュ化したパスワードから、元のパスワードを得るためには、ブルートフォース攻撃
+      (総当たり攻撃) が必要であると聞きました。ブルートフォース攻撃とは何ですか？</p>
+      </blockquote>
+      <blockquote>
+      <p>十分な長さを持ったパスワードに対しては、ブルートフォース攻撃は「事実上成功しない」ということを分かりやすく説明してください。</p>
+      </blockquote>
+      <h2 data-number="3.3" id="パスワードのハッシュに-sha-256-が適さない理由"><span
+      class="header-section-number">3.3</span> パスワードのハッシュに SHA-256 が適さない理由</h2>
+      <p>ここまで、SHA-256
+      を例にパスワードのハッシュ化について説明してきました。しかし、実際のパスワードのハッシュ化に
+      SHA-256 を使用することは、次のような理由から<strong>非推奨となっています</strong>。</p>
+      <p>そして、SHA-256 の代わりに <strong>bcrypt</strong> や <strong>Argon2</strong>
+      などの「パスワード保護に特化したハッシュ関数」を使用することが推奨されています。</p>
+      <ul>
+      <li><strong>SHA-256 をそのまま使うと「レインボーテーブル攻撃」に対して脆弱</strong>
+      <ul>
+      <li>実際に確認してもらったように SHA-256 には <span
+      class="masked">「同じ入力に対して、常に同じハッシュ値を出力する」</span>
+      という特性があります。この性質を利用すれば、大量のパスワードとそのハッシュ値をセットにした「<strong>レインボーテーブル</strong>」と呼ばれる辞書を作成しておくことができます。そして、攻撃者はレインボーテーブルを用いることで、(ブルートフォース攻撃よりも)
+      <strong>短時間でハッシュ値から元のパスワードを割り出すことが可能</strong>となります。実際、よく使用されるパスワード
+      (例えば、英国 National Cyber Security Centre の<a
+      href="https://www.ncsc.gov.uk/static-assets/documents/PwnedPasswordsTop100k.txt">PwnedPasswordsTop100k</a>など)
+      を対象としたレインボーテーブルなどがネットから簡単に入手可能となっています。</li>
+      </ul></li>
+      <li><strong>SHA-256 のハッシュ計算は「高速」すぎる</strong>
+      <ul>
+      <li>SHA-256
+      は、「デジタル署名」や「整合性のチェック」など、高速な処理が求められる用途に向けて設計されたアルゴリズムとなっています。しかし、<strong>その高速性が「パスワードのハッシュ化」においては、逆にセキュリティ上の弱点</strong>
+      となってしまいます。つまり、攻撃者は、SHA-256が高速であるという性質を故に
+      <strong>限られた時間やマシンパワーでも効率よくパスワード候補を次々と試すこと</strong>
+      が可能になってしまいます。特に、<span class="masked">GPU
+      や専用ハードウェアを用いた並列処理と組み合わせたブルートフォース攻撃</span> に対して、SHA-256
+      を使ったパスワードハッシュは脆弱になります。</li>
+      </ul></li>
+      </ul>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>SHA-256
+      によるパスワードのハッシュ化はレインボーテーブル攻撃に対して脆弱だ、という説明を授業で聞きました。いまいち理解できませんでした。分かりやすく解説してください。</p>
+      </blockquote>
+      <blockquote>
+      <p>SHA-256でハッシュ化したパスワードに対する「ブルートフォース攻撃」と「レインボーテーブル攻撃」について計算量
+      (時間計算量・空間計算量) を評価してください。</p>
+      </blockquote>
+      <h3 data-number="3.3.1" id="定着確認-2"><span class="header-section-number">3.3.1</span>
+      定着確認</h3>
+      <ul>
+      <li>パスワード認証において、ログイン時にはユーザが入力したパスワードをハッシュ化してから、保存済みのハッシュ値と照合する。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切である</span></li>
+      </ul></li>
+      <li>SHA-256
+      をパスワードハッシュ化にそのまま使うと、同じ入力に対して常に同じハッシュ値を返す性質により、ブルートフォース攻撃が成立しやすくなる。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>パスワードハッシュ化の用途において、SHA-256 よりも推奨されるアルゴリズムを挙げよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">bcrypt や Argon2</span></li>
+      </ul></li>
+      <li>パスワードのハッシュ化において、SHA-256
+      のような高速な処理性能は、ブルートフォース攻撃に対する耐性を高める手段として有効である。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>レインボーテーブル攻撃とは、あらかじめ大量の【　　】とそのハッシュ値を対応づけた辞書を用いて、照合によって元の入力を特定する攻撃手法である。【　　】にあてはまる適切な語を答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">パスワード</span></li>
+      </ul></li>
+      </ul>
+      <h2 data-number="3.4" id="パスワード保護に特化したハッシュ関数"><span
+      class="header-section-number">3.4</span> パスワード保護に特化したハッシュ関数</h2>
+      <p>パスワードのハッシュ化には、<strong>意図的に計算処理に時間を要する設計</strong>を持ち、<span
+      class="masked">「GPU」や「専用ハードウェア」などによる並列処理</span>
+      が難しい「<strong>bcrypt</strong>」や「<strong>Argon2</strong>」といったハッシュ関数を使用することが推奨されています。</p>
+      <p>このうち、<strong>bcrypt</strong> (ビークリプト)
+      は、1999年に開発され、現在でも広く使われているパスワードハッシュ関数となります。2015年の <a
+      href="https://www.password-hashing.net/">Password Hashing Competition</a>
+      では「Argon2」とともに最終選考に残っています。bcrypt は <strong>Blowfish暗号</strong>
+      をベースとしており、<span class="masked">「Cost
+      factor」と呼ばれるパラメータで計算時間を調整</span> できる仕組みを持っています。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>パスワードハッシュ関数「bcrypt」の「Cost factor」とは何ですか。</p>
+      </blockquote>
+      <blockquote>
+      <p>Argon2 の方が bcrypt
+      よりも「新しく安全性も高い」と評価されているのに、認証ライブラリなどでは bcrypt
+      のほうが標準採用されることが多いのはなぜですか。</p>
+      </blockquote>
+      <blockquote>
+      <p>bcrypt のベースとなっている「Blowfish暗号」とは、どのような特徴を持ったものですか。</p>
+      </blockquote>
+      <p>以上のことから、bcryptは
+      様々なウェブフレームワークやクラウドサービスの認証機能で採用されています。<strong>Supabase
+      の認証機能でもデフォルトのパスワードハッシュ化方式として bcrypt
+      が使用されています</strong>。</p>
+      <ul>
+      <li><a
+      href="https://supabase.com/docs/guides/auth/password-security#frequently-asked-questions">How
+      are passwords stored?</a>@ Supabaseの公式リファレンスの日本語訳</li>
+      </ul>
+      <blockquote>
+      <p>Supabase
+      Authでは、ユーザーのパスワードのハッシュを保存するために、<strong>強力なパスワードハッシュ化関数である
+      bcrypt
+      を使用しています</strong>。保存されるのはハッシュ化されたパスワードのみです。パスワードハッシュを使ってユーザーになりすますことはできません。セキュリティを強化するため、各ハッシュには
+      <strong>ランダムに生成されたソルトパラメータ</strong> が付与されています。</p>
+      <p>ハッシュは <code>auth.users</code> テーブルの <code>encrypted_password</code>
+      列に保存されます。<strong>この列名は誤った命名（暗号学的ハッシュ化は暗号化ではないため）ですが、後方互換性のために維持されています</strong>。</p>
+      </blockquote>
+      <h3 data-number="3.4.1" id="定着確認-3"><span class="header-section-number">3.4.1</span>
+      定着確認</h3>
+      <ul>
+      <li>Supabase における <code>auth.users</code> テーブルの <code>encrypted_password</code>
+      列に保存されているパスワードは、暗号化されたものである。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span
+      class="masked">適切ではない。暗号化ではなくハッシュ化が正しい。</span></li>
+      </ul></li>
+      <li>暗号化とハッシュ化の違いを説明せよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">略。生成AIに採点してもらって。</span></li>
+      </ul></li>
+      </ul>
+      <h2 data-number="3.5" id="bcrypt-でハッシュ化されたパスワードの確認-supabase"><span
+      class="header-section-number">3.5</span> bcrypt でハッシュ化されたパスワードの確認
+      (Supabase)</h2>
+      <p>実際に<a href="https://supabase.com/">Supabase</a>にアクセスして <code>auth.users</code>
+      テーブルから <code>encrypted_password</code> 列の内容を確認してみてください。</p>
+      <figure>
+      <img src="figs/02/supabase-02.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <p><code>auth.users</code> テーブルの <code>encrypted_password</code>
+      列には、以下のような文字列 (＝ハッシュ化されたパスワード)
+      が格納されていることが確認できます。各値とも末尾から16文字分は意図的に <code>x</code> でマスク
+      (上書き) しています。</p>
+      <ul>
+      <li><code>$2a$10$k7thHryjUJcy3O9Jo9hG7OepuIJVfibEuoB03xxxxxxxxxxxxxxxx</code></li>
+      <li><code>$2a$10$ZRpWw4DghRAQF/zPCJr.mOZ21S9AgaLJUkUrZxxxxxxxxxxxxxxxx</code></li>
+      <li><code>$2a$10$uRL0VxlZs3S.ebFbIBVa2OBVwuQ/4i4dIIrMoxxxxxxxxxxxxxxxx</code></li>
+      </ul>
+      <p>この値 (＝bcrypt関数によるハッシュ出力) は、次のような構成になっています。</p>
+      <table>
+      <colgroup>
+      <col style="width: 28%" />
+      <col style="width: 71%" />
+      </colgroup>
+      <thead>
+      <tr class="header">
+      <th>部分</th>
+      <th>説明</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="odd">
+      <td><code>$2a</code></td>
+      <td>bcryptアルゴリズムの「バージョン」を表しています。<br><code>$2a</code> は、Blowfish
+      暗号ベースの bcrypt の「初期バージョン」であることを表しています。バージョンにより
+      <code>$2b</code> や <code>$2y</code> などの値が入ります。</td>
+      </tr>
+      <tr class="even">
+      <td><code>$10$</code></td>
+      <td>「<strong>コストファクタ</strong> (Cost factor)」を表しています。<br><code>10</code>
+      であれば、<code>2^10 = 1024</code>
+      回の繰り返し計算を行うという意味になります。<br>数値が大きいほど計算コストが増して
+      <strong>ハッシュ化に時間</strong> がかかるようになります
+      (＝ブルートフォース攻撃に対して強くなります)。</td>
+      </tr>
+      <tr class="odd">
+      <td><code>k7thHryjUJcy3O9Jo9hG7O</code></td>
+      <td>「<strong>ソルト (salt)</strong>」を表しています
+      (詳細は後述)。<br><strong>22文字のBase64エンコード文字列</strong>となります。<br>レインボーテーブル攻撃に対する対策になります。</td>
+      </tr>
+      <tr class="even">
+      <td><code>epuIJVfibEuoB03xxxxxxxxx</code></td>
+      <td><strong>ハッシュ値の本体</strong>
+      を表します。<br>元のパスワードとソルトを元に計算したハッシュ値 (31文字)。</td>
+      </tr>
+      </tbody>
+      </table>
+      <h3 data-number="3.5.1" id="定着確認-4"><span class="header-section-number">3.5.1</span>
+      定着確認</h3>
+      <ul>
+      <li>bcrypt では、Cost factor に応じてハッシュ化の処理回数が指数的に増加する。たとえば Cost
+      factor は「12」の場合、ハッシュ化処理は何回繰り返されるか。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">4096回 (<span
+      class="math inline">\(2^{12}\)</span>)</span></li>
+      </ul></li>
+      <li>パスワードハッシュ関数として bcrypt
+      が推奨される理由のひとつに、GPUなどによる並列処理が困難な設計となっていることが挙げられる。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切である</span></li>
+      </ul></li>
+      </ul>
+      <h3 data-number="3.5.2" id="レインボーテーブル対策のソルトとは何か"><span
+      class="header-section-number">3.5.2</span> レインボーテーブル対策の「ソルト」とは何か？</h3>
+      <p>ハッシュ関数は、同じ入力に対して <strong>常に同じ出力 (＝ハッシュ値)</strong>
+      を生成します。そのため、A氏とB氏が、両者ともパスワードに <code>password</code>
+      という文字列を使っていた場合、同じハッシュ値 (SHA-256 の場合は
+      <code>5e884898da280471...</code> ) となってしまします。</p>
+      <pre><code>hash(&quot;password&quot;) → 5e884898da280471...</code></pre>
+      <p>そのため、データベースのテーブルをみたとき「A氏とB氏のハッシュ値が同じ」＝ <span
+      class="masked">「A氏とB氏は同じパスワードを使っている」＝「単純なパスワードを使用している可能性が高い」</span>
+      という攻撃のための足掛かりを与えてしまうことになります。また、<code>5e884898da280471...</code>
+      👉 <code>password</code>
+      という対応関係を持つため、レインボーテーブル攻撃に対して脆弱になります。</p>
+      <p>このような問題を解決するために登場するのが「<strong>ソルト</strong>」になります。</p>
+      <p>ソルト（Salt）は <span class="masked">パスワードに付け加えるランダムな文字列</span>
+      を指します。ここでのソルトは「塩」の意味で、料理に塩をひと振りするように、<strong>パスワードにひと工夫することで
+      (＝ランダムな文字列を加えることで)</strong>、ハッシュ値をユニークな値 (他とは重複しない値)
+      にするというニュアンスがあります。</p>
+      <p>以下のようにパスワードにソルトを追加することで、<span
+      class="masked">同じパスワードを使っていても異なるハッシュ値</span>
+      が生成されるようになります。</p>
+      <pre><code>// A氏の場合 🧂Salt 👉 &quot;abc123&quot; 
+hash(&quot;password&quot;+&quot;abc123&quot;) → 25f6ec2d309a47...
+
+// B氏の場合 🧂Salt 👉 &quot;xyz987&quot; 
+hash(&quot;password&quot;+&quot;xyz987&quot;) → 1700a18247a815...</code></pre>
+      <p>そして、ソルトは <span class="masked">ユーザ毎にランダムに生成する文字列</span>
+      であるため、攻撃者がレインボーテーブルをあらかじめ用意することは <strong>事実上不可能
+      (非現実的)</strong> となります。</p>
+      <hr />
+      <p>ところで、「ソルト」を導入したとき、その運用に際して次のような問題が生じます。</p>
+      <blockquote>
+      <p>🤔「ソルトを使ったのはいいけど、そのソルトはどこに保管しておけばいいの？」</p>
+      </blockquote>
+      <p>例えば、ユーザ情報を管理しているテーブルに <code>password_salt</code>
+      のようなカラムをつくって、そこに保管するという手法が考えられますが、それだと管理が煩雑になります。</p>
+      <p>そこで、bcrypt では「パスワードハッシュとソルトを別に保存する」という煩雑さを避けるために
+      <span class="masked">ハッシュ値の中にソルトをめてしまう</span>
+      という設計を採用しています。これにより、<strong>保存すべき情報はハッシュ文字列ひとつで済み、認証時も同じソルトを自動的に再利用することが可能になります</strong>。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>サーバサイドにおけるパスワード保護に「ソルト」が有効だと聞きました。ただ、bcrypt
+      はパスワードハッシュの文字列のなかに、平文でソルトが記述されています。ソルトを平文にしていることはセキュティ上、危険だと思うのですが、なぜ、このような設計になっているのですか🤔</p>
+      </blockquote>
+      <div class="note type-caution">
+      <p><strong>注意</strong></p>
+      <p>bcrypt や Argon2
+      のようなパスワード保護に特化したハッシュ関数を導入しても、<strong>パスワードが記号などを含まない数文字程度の構成であれば、ブルートフォース攻撃によって短時間で解読される可能性があります</strong>。</p>
+      <p>セキュリティの根幹となるのは、あくまで
+      <strong>パスワード自体の「複雑さ」と「長さ」</strong>となります。これらは、パスワード設定の入力フォームのバリデーションなどで制御することが可能です。zod
+      と正規表現を組み合わせれば比較的簡単に実装できます。</p>
+      </div>
+      <h3 data-number="3.5.3" id="定着確認-5"><span class="header-section-number">3.5.3</span>
+      定着確認</h3>
+      <ul>
+      <li>bcrypt
+      を使用した場合、ユーザはログインに際してパスワードとともにソルトを入力する必要がある。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>レインボーテーブル攻撃において、同じパスワードを使っているユーザのハッシュ値が同一であることは、攻撃者にとって有利に働く。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切である</span></li>
+      </ul></li>
+      <li>bcrypt
+      では、ソルトとハッシュ値を別々に管理する必要があるため、データベースには2つのカラムが必要となる。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>ソルトを使用しても、同じパスワードを使っていればハッシュ値は必ず同じになる。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      </ul>
+      <h2 data-number="3.6" id="bcrypt-によるハッシュ生成"><span
+      class="header-section-number">3.6</span> bcrypt によるハッシュ生成</h2>
+      <p>Node.js / TypeScript 環境における bcrypt
+      を使ったパスワードハッシュの生成と、その認証のサンプルプログラムを以下に示します。このプログラムは、プロジェクトフォルダの
+      <code>.lab/bcrypt.ts</code> に配置しています。</p>
+      <p>実行するためには、ターミナルから <code>npx tsx .lab/bcrypt.ts</code>
+      を入力してください。</p>
+      <div class="sourceCode" id="cb12"
+      data-caption=".lab/bcrypt.ts（bcryptによるパスワードハッシュの生成と認証）"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb12-1"><a href="#cb12-1"></a><span class="im">import</span> bcrypt <span class="im">from</span> <span class="st">&quot;bcryptjs&quot;</span><span class="op">;</span></span>
+<span id="cb12-2"><a href="#cb12-2"></a></span>
+<span id="cb12-3"><a href="#cb12-3"></a><span class="kw">const</span> main <span class="op">=</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb12-4"><a href="#cb12-4"></a>  <span class="kw">const</span> pw1 <span class="op">=</span> <span class="st">&quot;password&quot;</span><span class="op">;</span></span>
+<span id="cb12-5"><a href="#cb12-5"></a>  <span class="kw">const</span> pw2 <span class="op">=</span> <span class="st">&quot;password&quot;</span><span class="op">;</span> <span class="co">// 同じパスワード</span></span>
+<span id="cb12-6"><a href="#cb12-6"></a></span>
+<span id="cb12-7"><a href="#cb12-7"></a>  <span class="co">// パスワードからハッシュを生成</span></span>
+<span id="cb12-8"><a href="#cb12-8"></a>  <span class="kw">const</span> hash1 <span class="op">=</span> <span class="cf">await</span> bcrypt<span class="op">.</span><span class="fu">hash</span>(pw1<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb12-9"><a href="#cb12-9"></a>  <span class="kw">const</span> hash2 <span class="op">=</span> <span class="cf">await</span> bcrypt<span class="op">.</span><span class="fu">hash</span>(pw2<span class="op">,</span> <span class="dv">10</span>)<span class="op">;</span></span>
+<span id="cb12-10"><a href="#cb12-10"></a></span>
+<span id="cb12-11"><a href="#cb12-11"></a>  <span class="co">// ハッシュを表示 (同じパスワードでもソルトが異なるため、ハッシュは異なる)</span></span>
+<span id="cb12-12"><a href="#cb12-12"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`hash1 </span><span class="sc">${</span>hash1<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb12-13"><a href="#cb12-13"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`hash2 </span><span class="sc">${</span>hash2<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb12-14"><a href="#cb12-14"></a></span>
+<span id="cb12-15"><a href="#cb12-15"></a>  <span class="co">// パスワードの検証 (パスワードとハッシュを比較)</span></span>
+<span id="cb12-16"><a href="#cb12-16"></a>  <span class="co">//  第1引数が「パスワード」、第2引数が「ハッシュ値」</span></span>
+<span id="cb12-17"><a href="#cb12-17"></a>  <span class="co">//  同じパスワードであれば true、異なるパスワードであれば false</span></span>
+<span id="cb12-18"><a href="#cb12-18"></a>  <span class="kw">const</span> isPasswordValid1 <span class="op">=</span> <span class="cf">await</span> bcrypt<span class="op">.</span><span class="fu">compare</span>(<span class="st">&quot;password&quot;</span><span class="op">,</span> hash1)<span class="op">;</span></span>
+<span id="cb12-19"><a href="#cb12-19"></a>  <span class="kw">const</span> isPasswordValid2 <span class="op">=</span> <span class="cf">await</span> bcrypt<span class="op">.</span><span class="fu">compare</span>(<span class="st">&quot;password&quot;</span><span class="op">,</span> hash2)<span class="op">;</span></span>
+<span id="cb12-20"><a href="#cb12-20"></a>  <span class="kw">const</span> isPasswordValid3 <span class="op">=</span> <span class="cf">await</span> bcrypt<span class="op">.</span><span class="fu">compare</span>(<span class="st">&quot;hoge!hoge!&quot;</span><span class="op">,</span> hash1)<span class="op">;</span></span>
+<span id="cb12-21"><a href="#cb12-21"></a></span>
+<span id="cb12-22"><a href="#cb12-22"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&quot;isPasswordValid1 =&gt; &quot;</span><span class="op">,</span> isPasswordValid1)<span class="op">;</span></span>
+<span id="cb12-23"><a href="#cb12-23"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&quot;isPasswordValid2 =&gt; &quot;</span><span class="op">,</span> isPasswordValid2)<span class="op">;</span></span>
+<span id="cb12-24"><a href="#cb12-24"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&quot;isPasswordValid3 =&gt; &quot;</span><span class="op">,</span> isPasswordValid3)<span class="op">;</span></span>
+<span id="cb12-25"><a href="#cb12-25"></a>}<span class="op">;</span></span>
+<span id="cb12-26"><a href="#cb12-26"></a></span>
+<span id="cb12-27"><a href="#cb12-27"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div>
+      <p>実行結果の一例を示します。ソルトは毎回ランダムに生成されるため、コンソール出力の
+      <strong>第01行目</strong> と <strong>第02行目</strong>
+      は実行毎に値が変化することに注意してください。</p>
+      <pre><code>hash1 $2b$10$wY.L4KV4poYRZNQrrRFcGuri/Nc.S0MXhl/lszfzcnWyKJ/XXskv2
+hash2 $2b$10$lHgbtPJgku5.HmROQDEkCebWkbSIkZ7gyNYQUg327Lv8NptGI1Tga
+Match  true
+Match  true
+Match  false</code></pre>
+      <ul>
+      <li><code>bcrypt.hash</code> 関数に、パスワード (平文)
+      と、コストファクタを与えることで、ランダム生成されたソルトを使ったパスワードハッシュが得られることを確認してください。</li>
+      <li><code>bcrypt.compare</code>
+      関数を使うことでパスワードの照合が簡単にできることを確認してください。</li>
+      <li>コストファクタを大きな値 (例えば <code>15</code> ～ <code>18</code> ぐらい)
+      に設定すると、ハッシュの「生成」や「検証
+      (比較)」に体感できるレベルで時間がかかることを確認してください。
+      <ul>
+      <li>bcrypt では、コストファクタを1増やすと、計算時間が <span class="masked">約2倍</span>
+      になります。</li>
+      </ul></li>
+      </ul>
+      <p><code>bcryptjs</code> の詳細については<a
+      href="https://www.npmjs.com/package/bcryptjs">https://www.npmjs.com/package/bcryptjs</a>を参照してください。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>Supabase が提供する認証機能では、パスワードハッシュに bcrypt
+      を利用しているということで、その出力は <code>$2a$10$...</code>
+      のようになっていました。一方で、<code>bcryptjs</code> でパスワードハッシュを生成したら
+      <code>$2b$10$...</code> のようになっていました。<code>$2a$</code> や <code>$2b$</code>
+      はバージョンの違いということですが、両者では具体的にどのような違いがありますか。また、異なるバージョンで互換性はありますか。</p>
+      </blockquote>
+      <blockquote>
+      <p>Node.js では、パスワードハッシュのライブラリとして <code>bcryptjs</code> と
+      <code>bcrypt</code> がありますが、両者の違いを教えてください。どちらを使うべきですか🤔</p>
+      </blockquote>
+      <h2 data-number="3.7" id="演習"><span class="header-section-number">3.7</span> 演習</h2>
+      <p>現在、プロジェクトでは、ユーザのパスワードを平文のままデータベースに保存し、それを利用してログイン認証を行なっています。これを
+      bcrypt を使って、安全にパスワードを管理するように改修してください。</p>
+      <p>主に、以下のファイルの変更が必要になります。</p>
+      <ul>
+      <li><a
+      href="https://github.com/TakeshiWada1980/web-sec-playground-1/blob/main/prisma/seed.ts">prisma/seed.ts<i class="fa-brands fa-github"></i></a></li>
+      <li><a
+      href="https://github.com/TakeshiWada1980/web-sec-playground-1/blob/main/src/app/api/login/route.ts">src/app/api/login/route.ts<i class="fa-brands fa-github"></i></a></li>
+      <li><a
+      href="https://github.com/TakeshiWada1980/web-sec-playground-1/blob/main/src/app/_actions/signup.ts">src/app/_actions/signup.ts<i class="fa-brands fa-github"></i></a></li>
+      </ul>
+      <p>改修後は、データベースのシーディング処理を再実行し、シーディングに含まれるユーザのログイン処理が正常にできることを確認してください。また、新規ユーザのサインアップ
+      (<code>/signup</code>) およびログインが問題なく機能することを確認してください。</p>
+      <h1 data-number="4" id="ユーザ認証機能"><span class="header-section-number">4</span>
+      ユーザ認証機能</h1>
+      <p>前回の実験実習でも確認したようにウェブサーバは、基本的に <span
+      class="masked">ステートレスなシステム</span> (＝状態を持たない／状態を保持しない仕組み)
+      となっています。これは「<strong>バックエンドは、リクエストごとに独立して処理が完結するように実装しなければならない</strong>」ということになります。</p>
+      <div class="note type-tips">
+      <p><strong>重要なポイント</strong></p>
+      <p>バックエンド処理のなかでデータベースに保存しなかった情報 (例えば、変数に格納した値など)
+      は、<strong>以降のリクエスト処理に引き継がれません</strong>。仮にデータベースに保存した場合でも、以降のリクエスト処理のなかで参照したい場合は
+      <span class="masked">明示的にデータベースから読み込み処理をする必要</span> があります。</p>
+      </div>
+      <p>例えば、Next.js の バックエンド処理 (＝<code>src/app/api</code> 以下に記述する処理)
+      において、あるリクエストを受けて、以下のように変数に値をセットしても…</p>
+      <ul>
+      <li><code>userName = "寝屋川タヌキ"</code></li>
+      <li><code>isAuthenticated = true</code></li>
+      </ul>
+      <p>… 次のリクエストを処理するときには <code>userName</code> や <code>isAuthenticated</code>
+      の内容は <span class="masked">リセット</span> されています
+      (これが「<strong>ステートレスである</strong>」ということです)。これは <code>userName</code> や
+      <code>isAuthenticated</code> が<strong>「グローバル変数」であっても同じ</strong> です。</p>
+      <div class="note type-tips">
+      <p>バックエンドの実行環境は、<strong>リクエストごとに新しく立ち上がる可能性があるため、グローバル変数であっても値が残っていることは保証されません</strong>。これは、特に「Vercel」のようなサーバレス型のホスティングサービス環境において顕著になります。</p>
+      <p>また、大規模なシステムでは、負荷分散のための仕組みとして、処理が複数の実行環境に振り分けられることがあるため、グローバル変数に一時的に保存しても、それが次の処理で使えるとは限りません。</p>
+      </div>
+      <p>以上のように、ウェブが<strong>ステートレスなシステムである以上、バックエンドではリクエストごとに「毎回」認証・認可に関する判定処理を行なう必要があります</strong>。</p>
+      <p>そして、それに対応するかたちで、クライアント側でも (原理的には)
+      <strong>すべてのリクエストに認証情報を含めて送信する必要</strong> があります。しかし、たとえ
+      HTTPS によって通信が暗号化されていたとしても、<span class="masked">「ID +
+      パスワード」という極めて機密性の高い情報を何度も送信すること</span>
+      は、潜在的なセキュリティリスクとなるため避けたいという問題があります。</p>
+      <h2 data-number="4.1" id="セッションベース認証とトークンベース認証"><span
+      class="header-section-number">4.1</span> 「セッションベース認証」と「トークンベース認証」</h2>
+      <p>そこで、バックエンドでは「ID」と「パスワード」を使った認証が済んだユーザに対しては、「<strong>トークン</strong>
+      (<strong>Token</strong>)」と呼ばれる <span
+      class="masked">「期限付きの一時的な会員証のようなもの</span>
+      を発行し、クライアントに渡します。そして、以降は、<strong>その「トークン」を用いてリクエスト毎の認証・認可処理を行なう</strong>
+      という仕組みが、広く採用されています。</p>
+      <div class="note type-tips">
+      <p><strong>トークンとは</strong></p>
+      <p>トークン (Token)
+      というのは聞きなれない言葉で「イメージしずらい」と思います。トークンは、本人確認を行なったあとに発行される「<strong>期限付きの一時的な会員証</strong>」のようなものと考えてください。</p>
+      <p>たとえば、ネットカフェを初めて利用するときは、マイナンバーカードや免許証を用いて厳密に本人確認が行なわれます。しかし、その手続きが済むと「会員証」が発行され、以降はその会員証を持参・提示するだけでネットカフェを利用できるようになります。この「会員証」があることで
+      <span
+      class="masked">紛失すると大変なことになるマイナンバーカードや免許証を毎回持ち歩かずに済む</span>
+      というメリットがあります。</p>
+      <p>トークンとは、そのような存在だと考えてください。</p>
+      </div>
+      <p>以上のようにして発行される「認証トークン」については、</p>
+      <ul>
+      <li><strong>トークンに記載される内容</strong></li>
+      <li><strong>サーバー側でトークンをどのように照会・検証するか</strong></li>
+      <li><strong>クライアントがどのようにトークンをサーバーへ送信するか</strong></li>
+      </ul>
+      <p>…といった<strong>設計の違い</strong>によって、代表的な2つの認証方式である <span
+      class="masked">「セッションベース認証」と「トークンベース認証」</span> に分類されます。</p>
+      <p>例えば、<a
+      href="https://takeshiwada1980.github.io/Programming3-2024/">プログラミング3</a>では Supabase
+      を利用した認証・認可の機能を実装しましたが、これは <span class="masked">「JWT
+      を使ったトークンベース認証」</span> が用いられていました。実は。</p>
+      <p>この実験実習の教材<a
+      href="https://github.com/TakeshiWada1980/web-sec-playground-1">web-sec-playground-1</a>は、「セッションベース認証」と「トークンベース認証」を比較しながら違いを理解できるように、両者を切り替えられる設計となっています。</p>
+      <div class="sourceCode" id="cb14" data-caption="src/config/auth.ts （認証方式の切替え）"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb14-1"><a href="#cb14-1"></a><span class="co">// ▼▼ 認証モードにあわせていずれかを有効にする</span></span>
+<span id="cb14-2"><a href="#cb14-2"></a></span>
+<span id="cb14-3"><a href="#cb14-3"></a><span class="kw">const</span> AUTH_MODE <span class="op">=</span> <span class="st">&quot;session&quot;</span> <span class="im">as</span> <span class="st">&quot;session&quot;</span> <span class="op">|</span> <span class="st">&quot;jwt&quot;</span><span class="op">;</span></span>
+<span id="cb14-4"><a href="#cb14-4"></a><span class="co">// const AUTH_MODE = &quot;jwt&quot; as &quot;session&quot; | &quot;jwt&quot;;</span></span>
+<span id="cb14-5"><a href="#cb14-5"></a></span>
+<span id="cb14-6"><a href="#cb14-6"></a><span class="co">// 認証モードの設定 (ここは変更しない)</span></span>
+<span id="cb14-7"><a href="#cb14-7"></a><span class="im">export</span> <span class="kw">const</span> AUTH <span class="op">=</span> {</span>
+<span id="cb14-8"><a href="#cb14-8"></a>  mode<span class="op">:</span> AUTH_MODE<span class="op">,</span></span>
+<span id="cb14-9"><a href="#cb14-9"></a>  isSession<span class="op">:</span> AUTH_MODE <span class="op">===</span> <span class="st">&quot;session&quot;</span><span class="op">,</span></span>
+<span id="cb14-10"><a href="#cb14-10"></a>  isJWT<span class="op">:</span> AUTH_MODE <span class="op">===</span> <span class="st">&quot;jwt&quot;</span><span class="op">,</span></span>
+<span id="cb14-11"><a href="#cb14-11"></a>} <span class="im">as</span> <span class="kw">const</span><span class="op">;</span></span></code></pre></div>
+      <h2 data-number="4.2" id="セッションベース認証の概要"><span
+      class="header-section-number">4.2</span> セッションベース認証の概要</h2>
+      <p>セッションベース認証は、昔から利用されている典型的な認証方式になります。なお、ここでの「セッション」とは、サーバー側がユーザごとのログイン状態や一時的な情報を識別・管理するために用いる仕組みのことです。</p>
+      <p>このセッションベース認証に用いられる「トークン」には <strong>セッションIDのみ
+      (＝UUIDのような推測困難なランダム文字列のみ) </strong> が記載されます。たとえるなら、会員証に
+      <span class="masked">「会員番号」だけ</span> が印字されているイメージです。</p>
+      <p>初回のログイン処理と、以降の認証認可のプロセスは次のようになります。</p>
+      <h3 data-number="4.2.1" id="サーバ側ログインリクエストの処理"><span
+      class="header-section-number">4.2.1</span> [1] サーバ側：ログインリクエストの処理</h3>
+      <p>クライアントからログインリクエストが送られてきたら、まず <code>id</code> や
+      <code>password</code> を使ってユーザ認証を行ないます。認証に成功したら
+      <strong>セッションID</strong> (＝ランダムなUUID)
+      を生成し、それをキーとして「ユーザID」や「セッションIDの有効期限」などをデータベースに保存します。そして
+      <code>Set-Cookie</code>
+      <strong>ヘッダに「セッションID」をセットしてクライアントにレスポンスを返します</strong>。</p>
+      <figure>
+      <img src="figs/02/session-01.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <h3 data-number="4.2.2" id="クライアント側ログインレスポンスの処理"><span
+      class="header-section-number">4.2.2</span> [2] クライアント側：ログインレスポンスの処理</h3>
+      <p>ブラウザは、サーバからのレスポンスに含まれる <code>Set-Cookie</code>
+      ヘッダを自動的に読み取り、ドメインと紐付けて「セッションID」を保存します。</p>
+      <figure>
+      <img src="figs/02/session-02.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <h3 data-number="4.2.3" id="クライアント側ログイン後のリクエスト送信処理"><span
+      class="header-section-number">4.2.3</span> [3]
+      クライアント側：ログイン後のリクエスト送信処理</h3>
+      <p>以降、サーバのリソースにアクセスする際
+      (例えば、ユーザがリンクを押下したときや、JavaScriptから <code>fetch</code>
+      を実行したとき)、ブラウザは自動的に <code>Cookie</code>
+      ヘッダに「セッションID」をつけたHTTPリクエストを送信するようになります。</p>
+      <figure>
+      <img src="figs/02/session-03.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <h3 data-number="4.2.4" id="サーバ側リクエストに対する認証認可の処理"><span
+      class="header-section-number">4.2.4</span> [4]
+      サーバ側：リクエストに対する認証・認可の処理</h3>
+      <p>リクエストの<code>Cookie</code>
+      ヘッダから「セッションID」を読み取り、それをキーとしてデータベースから「ユーザID」などを取得します。</p>
+      <p>もし、対応する「ユーザID」が存在しなかったり、存在していても <span
+      class="masked">「セッションIDの有効期限」が切れている場合</span>
+      は、<strong>認証失敗</strong>とします
+      (必要に応じてログインページにリダイレクトさせたりします)。</p>
+      <p>そうでなければ、認証成功として、そのユーザの「ID」や「ロール」に基づいてバックエンドの処理
+      (データベースの CRUD 処理など) を行ない、その結果をレスポンスします。</p>
+      <p><strong>CRUD</strong>: <span class="masked">「Create (作成) 」「Read (読み取り)」「Update
+      (更新)」「Delete (削除)」</span></p>
+      <h3 data-number="4.2.5" id="ログアウト処理"><span class="header-section-number">4.2.5</span>
+      [5] ログアウト処理</h3>
+      <p>サーバ側で、[1]
+      で作成した「セッションID」とユーザ情報を紐付けていたレコードを削除します。これにより、今後、この
+      セッションID が使われても、該当するユーザ情報が取得できなくなります。</p>
+      <p>さらに、<span class="masked">クライアント側の Cookie
+      に保存されている「セッションID」を削除</span> するため、<code>Set-Cookie</code> ヘッダに
+      <code>Max-Age=0</code>
+      属性を設定したレスポンスを返します。これによって、ブラウザに保存されていた Cookie
+      は即座に無効となり、以降のリクエストでは Cookie
+      として「セッションID」が送信されなくなります。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>Cookie を削除したいときに、<code>Max-Age=0</code> を設定した Cookie をレスポンスの
+      <code>Set-Cookie</code> ヘッダにセットするのはなぜですか。</p>
+      </blockquote>
+      <hr />
+      <p>以上のように、セッションベース認証では、<strong>トークンの内容は「セッションID」のみで、それを
+      Cookie
+      を利用して送受信</strong>します。また、ユーザ認証は、サーバ側でデータベースに問い合わせること
+      (＝<span
+      class="masked">「セッションID」をキーとして「ユーザID」や「セッションIDの有効期限」を照会すること</span>)
+      で行ないます。</p>
+      <p>セッションベース認証の「課題」は、<strong>認証処理のたびに必ずデータベースへ問い合わせる必要があるという点</strong>です。
+      一般に、サーバー処理の中でデータベースアクセスは比較的コストが高く、<strong>システム全体の処理速度を下げる要因（＝ボトルネック）</strong>
+      となる可能性があります。</p>
+      <h3 data-number="4.2.6" id="定着確認-6"><span class="header-section-number">4.2.6</span>
+      定着確認</h3>
+      <ul>
+      <li>セッションベース認証において、ログイン時に発行される「トークン」には、ユーザ名やロールなどのユーザ情報が直接的に含まれている。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>セッションベース認証では、ログイン後のリクエストにおいてクライアントは自動的にセッションIDを送信する。これは、通常、何という
+      HTTPヘッダ にセットされて送信されるか？
+      <ul>
+      <li><strong>答え</strong>：<span class="masked"><code>Cookie</code></span></li>
+      </ul></li>
+      <li>通信量の削減とデータベース照合処理の高速化・効率化のため、セッションIDはできるだけ短く単純な文字列である方が望ましい。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>セッションベース認証において、クライアント側では JavaScript を使って
+      <code>Set-Cookie</code> ヘッダのデータを読み取り、Cookie
+      に保存する必要がある。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>セッションベース認証の課題のひとつは、すべての認証処理においてデータベースアクセスが必要となる点である。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切である</span></li>
+      </ul></li>
+      </ul>
+      <h2 data-number="4.3" id="トークンベース認証-jwt-の概要"><span
+      class="header-section-number">4.3</span> トークンベース認証 (JWT) の概要</h2>
+      <p><strong>トークンベース認証</strong>は、近年になって広く使われるようになった認証方式になります。特に
+      <strong>フロントエンドとバックエンドが分離されたSPA (Single Page Application)</strong>
+      や、<code>IoTシステム</code>
+      などでは主流な認証方式となっています。この認証方式の特徴は、IDとパスワードによる認証が成功したユーザについて、<span
+      class="masked">そのユーザの情報 (たとえば「id」「name」「role」など)</span> と
+      <strong>改竄防止の署名</strong>
+      を内包した「トークン」を発行し、それをクライアント側に渡してしまう点にあります。</p>
+      <p>トークンには、例えば以下のような任意の情報を含めることができます。イメージとしては、「<strong>会員証</strong>」に
+      <span class="masked">「会員番号」「氏名」「会員ランク (ブロンズ/シルバー/ゴールド)
+      」「有効期限」など</span> が印字されているイメージです。</p>
+      <ul>
+      <li><code>id</code> (ユーザID)</li>
+      <li><code>email</code> (ログインID)</li>
+      <li><code>name</code> (表示名)</li>
+      <li><code>role</code> (<code>ADMIN</code> or <code>USER</code> のような権限)</li>
+      <li><code>exp</code> (トークンの有効期限)</li>
+      </ul>
+      <p>このような情報を「<strong>JWT (JSON Web
+      Token)</strong>」と呼ばれるフォーマットでまとめ、<span class="masked">仮に内容が改竄</span>
+      された場合でもサーバ側で検出できるような <strong>署名（Signature）</strong>
+      を付加し、それをトークンとします。</p>
+      <p>トークンベース認証の初回のログイン処理と、以降の認証認可のプロセスは次のようになります。なお、トークンベース認証
+      (Supabaseの認証機能を利用したもの) については、プログラミング3の<a
+      href="https://takeshiwada1980.github.io/Programming3-2024/lecture11.html">第11回講義</a>で、既に学んでいる内容です
+      (実際に課題として実装もしてもらっています)。</p>
+      <h3 data-number="4.3.1" id="サーバ側ログインリクエストの処理-1"><span
+      class="header-section-number">4.3.1</span> [1] サーバ側：ログインリクエストの処理</h3>
+      <p>クライアントからログインリクエストが送られてきたら、まず <code>id</code> や
+      <code>password</code>
+      を使ってユーザ認証を行ないます。認証に成功したら、そのユーザに対応する情報（<code>id</code>,
+      <code>name</code>, <code>role</code> など）を含む「<strong>JWT</strong>」を作成し、それを
+      <span class="masked">レスポンスのボディ</span> としてクライアントに返します。</p>
+      <ul>
+      <li>JWT には、<span class="masked">サーバだけが参照可能な「秘密鍵」</span>
+      を使って改竄検出のための署名をします。</li>
+      </ul>
+      <figure>
+      <img src="figs/02/token-01.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <p>上記の <code>eyJhbGciOiJIUzI1NiJ9...</code> が JWT
+      となります。Base64でエンコードされているため分かりづらいですが、ユーザの <code>id</code> や
+      <code>email</code> などの情報が内包されています。</p>
+      <h3 data-number="4.3.2" id="クライアント側ログインレスポンスの処理-1"><span
+      class="header-section-number">4.3.2</span> [2] クライアント側：ログインレスポンスの処理</h3>
+      <p>ログイン処理のレスポンスとして JWT を受け取ったクライアントは、それを手動で <span
+      class="masked">ウェブブラウザの LocalStorage (または SessionStorage)</span>
+      のなかに保存します。</p>
+      <ul>
+      <li><strong>LocalStorage (ローカルストレージ)</strong> については、プログラミング3の<a
+      href="https://takeshiwada1980.github.io/Programming3-2024/lecture05.html#localstorageを利用したデータの永続化">第05回講義</a>で既に学習済みです。</li>
+      </ul>
+      <figure>
+      <img src="figs/02/token-03.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>ウェブアプリ開発で、以前に LocalStorage は使用したことがあります。さきほど、SessionStorage
+      という言葉を聞きました。なんですかこれ？</p>
+      </blockquote>
+      <h3 data-number="4.3.3" id="クライアント側ログイン後のリクエスト送信処理-1"><span
+      class="header-section-number">4.3.3</span> [3]
+      クライアント側：ログイン後のリクエスト送信処理</h3>
+      <p>ユーザ認証が必要な URI
+      にアクセスする際、先ほどローカルストレージに保存しておいた「<strong>JWT</strong>」を
+      HTTPリクエストの <code>Authorization</code> ヘッダに付けて送信します。</p>
+      <figure>
+      <img src="figs/02/token-02.png" alt="img" />
+      <figcaption aria-hidden="true">img</figcaption>
+      </figure>
+      <ul>
+      <li><code>Authorization</code> ヘッダは、自動付与される Cookie とは違って
+      <strong>JavaScriptで明示的にセットする必要があります</strong>。</li>
+      </ul>
+      <div class="sourceCode" id="cb15"
+      data-caption="JWTを LocalStorage から読み込み、Header に設定"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb15-1"><a href="#cb15-1"></a><span class="kw">const</span> ep <span class="op">=</span> <span class="st">&quot;/api/about-draft&quot;</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a><span class="kw">const</span> jwt <span class="op">=</span> localStorage<span class="op">.</span><span class="fu">getItem</span>(<span class="st">&quot;jwt&quot;</span>)<span class="op">;</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a><span class="kw">const</span> headers<span class="op">:</span> HeadersInit <span class="op">=</span> {}<span class="op">;</span></span>
+<span id="cb15-4"><a href="#cb15-4"></a><span class="cf">if</span> (jwt) headers[<span class="st">&quot;Authorization&quot;</span>] <span class="op">=</span> <span class="vs">`Bearer </span><span class="sc">${</span>jwt<span class="sc">}</span><span class="vs">`</span><span class="op">;</span></span>
+<span id="cb15-5"><a href="#cb15-5"></a><span class="kw">const</span> res <span class="op">=</span> <span class="cf">await</span> <span class="fu">fetch</span>(ep<span class="op">,</span> {</span>
+<span id="cb15-6"><a href="#cb15-6"></a>  credentials<span class="op">:</span> <span class="st">&quot;same-origin&quot;</span><span class="op">,</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>  cache<span class="op">:</span> <span class="st">&quot;no-store&quot;</span><span class="op">,</span></span>
+<span id="cb15-8"><a href="#cb15-8"></a>  headers<span class="op">,</span></span>
+<span id="cb15-9"><a href="#cb15-9"></a>})<span class="op">;</span></span></code></pre></div>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>JWTによるトークンベースの認証システムを開発しています。HTTPリクエストの Authorization
+      ヘッダに指定する <code>Bearer</code> ってなんですか？ <code>Authorization: &lt;JWT&gt;</code>
+      ではなく <code>Authorization: Bearer &lt;JWT&gt;</code> にする理由って何ですか？🤔</p>
+      </blockquote>
+      <h3 data-number="4.3.4" id="サーバ側リクエストに対する認証認可の処理-1"><span
+      class="header-section-number">4.3.4</span> [4]
+      サーバ側：リクエストに対する認証・認可の処理</h3>
+      <p>サーバ側では、リクエストヘッダに含まれた <strong>JWT
+      を受け取り、(サーバだけが参照可能な秘密鍵を使って) その署名を検証</strong> (＝<span
+      class="masked">JWT の内容が不正に改竄されていないことの確認</span>) します。署名が正しく、かつ
+      JWT の有効期限が切れていなければ、トークンに含まれる <code>id</code> や <code>role</code>
+      が正しい情報であると見なして、その情報を使って認証や認可を行ないます。</p>
+      <p>署名検証に失敗すれば、内容が改竄されていると判断して、ログインページにリダイレクトさせたりします。</p>
+      <ul>
+      <li>この [4] のプロセスのなかでは <span class="masked">データベースに対するアクセス</span>
+      が発生していないことに注意してください。</li>
+      </ul>
+      <h3 data-number="4.3.5" id="ログアウト処理-1"><span class="header-section-number">4.3.5</span>
+      [5] ログアウト処理</h3>
+      <p>クライアント側において、JavaScript を使って LocalStorage のなかの JWT を削除します。</p>
+      <hr />
+      <p>以上のように、トークンベース認証では、<strong>ログイン処理以外ではデータベースに問い合わせることなくユーザの認証・認可を行なうこと</strong>ができます。また、「JWT」という自己完結型トークンの特性を活かして、クライアント側でも、LocalStorage
+      の JWT から <code>name</code> や <code>role</code> を読み込み、それに応じた UI
+      を提供することが可能になります。</p>
+      <p>なお、トークンが一度漏洩すると第三者でも署名の内容が有効なうちは自由にアクセスできてしまうため、<strong>トークンの保存場所や取り扱いには細心の注意が必要</strong>
+      となります。特に <code>LocalStorage</code> は、Cookie
+      の「HttpOnly属性」のような設定ができないので、<strong>XSS攻撃</strong>
+      を受けると、JWTは簡単に流出してしまいます。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>Next.js
+      を使ったウェブアプリ開発について学んでいます。いま、JWTを使ったトークンベース認証についての解説を読んでいるのですが、そこに「JWTという自己完結型トークンの特性を活かして、クライアント側でも、LocalStorage
+      の JWT から <code>name</code> や <code>role</code> を読み込み、それに応じた UI
+      を提供することが可能になります。」と書いてありました。意味が分かりません😭。特に「<code>name</code>
+      や <code>role</code> を読み込み、それに応じた UI を提供する」ってどういうことですか？</p>
+      </blockquote>
+      <blockquote>
+      <p>トークンベース認証では、JWT を LocalStorage に保存することが多いようですが、HttpOnly属性
+      をつけて <code>Set-Cookie</code> で JWT
+      をサーバから送ってもらったら、XSS対策もできて超安全だと思います。JWT を LocalStorage
+      に保存しておくと嬉しい理由って何なんですか🤔。UI/UX に関連してのメリットでもあるのですか？</p>
+      </blockquote>
+      <h3 data-number="4.3.6" id="定着確認-7"><span class="header-section-number">4.3.6</span>
+      定着確認</h3>
+      <ul>
+      <li>JWT (JSON Web Token)
+      には改竄検出のために「署名」が含まれており、この署名はサーバ側だけが知っている「秘密鍵」を用いて生成される。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      <li>JWTを LocalStorage に保存した場合、JavaScript から自由に読み書きできるが、LocalStorage
+      に保存する際に「HttpOnly属性」を設定すれば、JavaScript からの参照が制限されて XSS対策
+      となる。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない。「HttpOnly属性」は Cookie
+      に設定するもので、LocalStorage にそれに相当するものはない</span></li>
+      </ul></li>
+      <li>JWT によるトークンベース認証において、トークンに含まれる <code>role</code>
+      の値をもとに、フロントエンドで表示内容を変えるようなUI制御が可能である。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切である</span></li>
+      </ul></li>
+      <li>JWTをHTTPリクエストで送信する際は、Authorization ヘッダに <code>Bearer &lt;JWT&gt;</code>
+      の形式で明示的に設定する必要がある。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切である</span></li>
+      </ul></li>
+      <li>JWTの署名に使われる秘密鍵はクライアントにも配布されており、署名検証はクライアント側でも可能である。この説明は「適切である」か「適切ではない」かを答えよ。
+      <ul>
+      <li><strong>答え</strong>：<span class="masked">適切ではない</span></li>
+      </ul></li>
+      </ul>
+      <h2 data-number="4.4" id="jwt-のデコード"><span class="header-section-number">4.4</span> JWT
+      のデコード</h2>
+      <p>JWT は「<strong>JSON Web
+      Token</strong>」の略であり、その名前のように本質的には「JSON形式のデータ」となっています。しかし、HTTP
+      リクエストの <code>Authorization</code> ヘッダにセットして送信する都合で <span
+      class="masked">Base64 形式でエンコード (符号化)</span>
+      されています。そのため、`<code>eyJhbGciOiJIUzI1NiJ9...</code> のような
+      <strong>一見すると意味不明な文字列</strong> となっています。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>JWTの勉強をしていて「Base64エンコード」という言葉がでてきたのですが、これは何ですか？「Authorizationヘッダにセットする都合でBase64にエンコードされている」って書いてありましたが、それって「どんな都合」ですか😅</p>
+      </blockquote>
+      <p>… とはいえ、JWT は Base64 でデコード (復号化) すれば <span
+      class="masked">元のJSON形式に戻すことができ、その内容を確認すること</span>
+      ができます。デコードは、プログラムでも可能ですが、以下のサイトでも簡単にデコードして JWT
+      の内容を確認することが可能です。</p>
+      <ul>
+      <li><a href="https://jwt.io/">JSON Web Token (JWT) Debugger</a></li>
+      <li><a href="https://web-toolbox.dev/tools/jwt-decoder">JWTデコーダー</a></li>
+      <li><a href="https://logto.io/ja/jwt-decoder">JWT decoder</a></li>
+      </ul>
+      <p>各サイトで、実際に以下の「JWT」を貼り付けてデコードしてみてください。</p>
+      <pre><code>eyJhbGciOiJIUzI1NiJ9.eyJpZCI6IjI5Y2UzYTIwLTRhNjgtNDJmMS04Y2UwLTQxZDIxYjc2N2IyYSIsIm5hbWUiOiLku5Xmp5gg5puW5pin5a2QIiwiZW1haWwiOiJ1c2VyMDJAZXhhbXBsZS5jb20iLCJyb2xlIjoiVVNFUiIsImV4cCI6MTc0ODQ5MjE3NX0.ffXNlXewPtNQFHcAyLy1-MMRy0jrls58TdWkBT92JUw</code></pre>
+      <h2 data-number="4.5" id="jwt-生成デコード署名検証を行なうプログラム"><span
+      class="header-section-number">4.5</span> JWT 生成・デコード・署名検証を行なうプログラム</h2>
+      <p>Node.js / TypeScript 環境において、<strong>JWT の生成
+      (署名付き)</strong>、Base64デコード、<strong>改竄されていないこと/有効期限を過ぎていないことを確認するための検証
+      (確認)</strong> を行なうサンプルプログラムを以下に示します。<code>jose</code>
+      というライブラリを使用しています。</p>
+      <p>このプログラムは、プロジェクトフォルダの <code>.lab/jwt-1.ts</code>
+      に配置しています。<code>npx tsx .lab/jwt-1.ts</code> で実行することができます。</p>
+      <div class="sourceCode" id="cb17" data-caption=".lab/jwt-1.ts"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb17-1"><a href="#cb17-1"></a><span class="im">import</span> { SignJWT<span class="op">,</span> jwtVerify<span class="op">,</span> decodeJwt } <span class="im">from</span> <span class="st">&quot;jose&quot;</span><span class="op">;</span></span>
+<span id="cb17-2"><a href="#cb17-2"></a></span>
+<span id="cb17-3"><a href="#cb17-3"></a><span class="co">// JWTの秘密鍵 (通常は環境変数として設定して、そこから取得する)</span></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="kw">const</span> JWT_SECRET <span class="op">=</span> <span class="st">&quot;ABCDEFG123456789UVWXYZ&quot;</span><span class="op">;</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a></span>
+<span id="cb17-6"><a href="#cb17-6"></a><span class="kw">const</span> main <span class="op">=</span> <span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb17-7"><a href="#cb17-7"></a>  <span class="co">// JWTのペイロード (本体のデータ)</span></span>
+<span id="cb17-8"><a href="#cb17-8"></a>  <span class="kw">const</span> payload <span class="op">=</span> {</span>
+<span id="cb17-9"><a href="#cb17-9"></a>    id<span class="op">:</span> <span class="st">&quot;12345&quot;</span><span class="op">,</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a>    name<span class="op">:</span> <span class="st">&quot;寝屋川タヌキ&quot;</span><span class="op">,</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>    role<span class="op">:</span> <span class="st">&quot;USER&quot;</span><span class="op">,</span></span>
+<span id="cb17-12"><a href="#cb17-12"></a>  }<span class="op">;</span></span>
+<span id="cb17-13"><a href="#cb17-13"></a></span>
+<span id="cb17-14"><a href="#cb17-14"></a>  <span class="kw">const</span> secret <span class="op">=</span> <span class="kw">new</span> <span class="fu">TextEncoder</span>()<span class="op">.</span><span class="fu">encode</span>(JWT_SECRET)<span class="op">;</span></span>
+<span id="cb17-15"><a href="#cb17-15"></a>  <span class="kw">const</span> tokenMaxAgeSeconds <span class="op">=</span> <span class="dv">5</span><span class="op">;</span> <span class="co">// トークンの有効期限（秒単位） 5秒!</span></span>
+<span id="cb17-16"><a href="#cb17-16"></a>  <span class="kw">const</span> expiresAt <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>(<span class="bu">Date</span><span class="op">.</span><span class="fu">now</span>() <span class="op">+</span> tokenMaxAgeSeconds <span class="op">*</span> <span class="dv">1000</span>)<span class="op">;</span></span>
+<span id="cb17-17"><a href="#cb17-17"></a></span>
+<span id="cb17-18"><a href="#cb17-18"></a>  <span class="co">// [1] JWTの生成</span></span>
+<span id="cb17-19"><a href="#cb17-19"></a>  <span class="kw">const</span> jwt <span class="op">=</span> <span class="cf">await</span> <span class="kw">new</span> <span class="fu">SignJWT</span>({ <span class="op">...</span>payload })</span>
+<span id="cb17-20"><a href="#cb17-20"></a>    <span class="op">.</span><span class="fu">setProtectedHeader</span>({ alg<span class="op">:</span> <span class="st">&quot;HS256&quot;</span> })</span>
+<span id="cb17-21"><a href="#cb17-21"></a>    <span class="op">.</span><span class="fu">setExpirationTime</span>(expiresAt)</span>
+<span id="cb17-22"><a href="#cb17-22"></a>    <span class="op">.</span><span class="fu">sign</span>(secret)<span class="op">;</span></span>
+<span id="cb17-23"><a href="#cb17-23"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`[1] JWT: </span><span class="sc">${</span>jwt<span class="sc">}\n</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb17-24"><a href="#cb17-24"></a></span>
+<span id="cb17-25"><a href="#cb17-25"></a>  <span class="co">// [2] JWTのデコード (署名を検証せずにペイロードを取得)</span></span>
+<span id="cb17-26"><a href="#cb17-26"></a>  <span class="kw">const</span> decoded <span class="op">=</span> <span class="fu">decodeJwt</span>(jwt)<span class="op">;</span></span>
+<span id="cb17-27"><a href="#cb17-27"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`[2] Decoded : </span><span class="sc">${</span><span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(decoded<span class="op">,</span> <span class="kw">null</span><span class="op">,</span> <span class="dv">2</span>)<span class="sc">}\n</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb17-28"><a href="#cb17-28"></a></span>
+<span id="cb17-29"><a href="#cb17-29"></a>  <span class="co">// [3] JWTの有効期限を確認</span></span>
+<span id="cb17-30"><a href="#cb17-30"></a>  <span class="kw">const</span> now <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>()<span class="op">;</span></span>
+<span id="cb17-31"><a href="#cb17-31"></a>  <span class="kw">const</span> expirationDate <span class="op">=</span> <span class="kw">new</span> <span class="bu">Date</span>(decoded<span class="op">.</span><span class="at">exp</span><span class="op">!</span> <span class="op">*</span> <span class="dv">1000</span>)<span class="op">;</span></span>
+<span id="cb17-32"><a href="#cb17-32"></a>  <span class="kw">const</span> toJST <span class="op">=</span> (date<span class="op">:</span> <span class="bu">Date</span>) <span class="kw">=&gt;</span></span>
+<span id="cb17-33"><a href="#cb17-33"></a>    date<span class="op">.</span><span class="fu">toLocaleString</span>(<span class="st">&quot;ja-JP&quot;</span><span class="op">,</span> { timeZone<span class="op">:</span> <span class="st">&quot;Asia/Tokyo&quot;</span> })<span class="op">;</span></span>
+<span id="cb17-34"><a href="#cb17-34"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`[3a] Current Date: </span><span class="sc">${</span><span class="fu">toJST</span>(now)<span class="sc">}</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb17-35"><a href="#cb17-35"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`[3b] JWT Expiration Date: </span><span class="sc">${</span><span class="fu">toJST</span>(expirationDate)<span class="sc">}\n</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb17-36"><a href="#cb17-36"></a></span>
+<span id="cb17-37"><a href="#cb17-37"></a>  <span class="co">// [4a] JWTの検証1</span></span>
+<span id="cb17-38"><a href="#cb17-38"></a>  <span class="cf">try</span> {</span>
+<span id="cb17-39"><a href="#cb17-39"></a>    <span class="kw">const</span> verified <span class="op">=</span> <span class="cf">await</span> <span class="fu">jwtVerify</span>(jwt<span class="op">,</span> secret)<span class="op">;</span></span>
+<span id="cb17-40"><a href="#cb17-40"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`[4a] Verified : </span><span class="sc">${</span><span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(verified<span class="op">,</span> <span class="kw">null</span><span class="op">,</span> <span class="dv">2</span>)<span class="sc">}\n</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb17-41"><a href="#cb17-41"></a>  } <span class="cf">catch</span> {</span>
+<span id="cb17-42"><a href="#cb17-42"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">error</span>(<span class="st">&quot;[4a] JWT verification failed.&quot;</span>)<span class="op">;</span></span>
+<span id="cb17-43"><a href="#cb17-43"></a>  }</span>
+<span id="cb17-44"><a href="#cb17-44"></a></span>
+<span id="cb17-45"><a href="#cb17-45"></a>  <span class="co">// JWTの有効期限が切れ待ち (10秒待機)</span></span>
+<span id="cb17-46"><a href="#cb17-46"></a>  <span class="kw">const</span> wait <span class="op">=</span> <span class="dv">10</span><span class="op">;</span></span>
+<span id="cb17-47"><a href="#cb17-47"></a>  <span class="bu">process</span><span class="op">.</span><span class="at">stdout</span><span class="op">.</span><span class="fu">write</span>(<span class="vs">`Waiting for </span><span class="sc">${</span>wait<span class="sc">}</span><span class="vs"> seconds... `</span>)<span class="op">;</span></span>
+<span id="cb17-48"><a href="#cb17-48"></a>  <span class="cf">for</span> (<span class="kw">let</span> i <span class="op">=</span> <span class="dv">0</span><span class="op">;</span> i <span class="op">&lt;</span> wait<span class="op">;</span> i<span class="op">++</span>) {</span>
+<span id="cb17-49"><a href="#cb17-49"></a>    <span class="cf">await</span> <span class="kw">new</span> <span class="bu">Promise</span>((resolve) <span class="kw">=&gt;</span> <span class="pp">setTimeout</span>(resolve<span class="op">,</span> <span class="dv">1000</span>))<span class="op">;</span></span>
+<span id="cb17-50"><a href="#cb17-50"></a>    <span class="bu">process</span><span class="op">.</span><span class="at">stdout</span><span class="op">.</span><span class="fu">write</span>(<span class="st">&quot;.&quot;</span>)<span class="op">;</span></span>
+<span id="cb17-51"><a href="#cb17-51"></a>  }</span>
+<span id="cb17-52"><a href="#cb17-52"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>)<span class="op">;</span></span>
+<span id="cb17-53"><a href="#cb17-53"></a></span>
+<span id="cb17-54"><a href="#cb17-54"></a>  <span class="co">// [4b] JWTの検証2 (有効期限切れのJWTを検証) → 失敗するはず</span></span>
+<span id="cb17-55"><a href="#cb17-55"></a>  <span class="cf">try</span> {</span>
+<span id="cb17-56"><a href="#cb17-56"></a>    <span class="kw">const</span> verified <span class="op">=</span> <span class="cf">await</span> <span class="fu">jwtVerify</span>(jwt<span class="op">,</span> secret)<span class="op">;</span></span>
+<span id="cb17-57"><a href="#cb17-57"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="vs">`[4b] Verified : </span><span class="sc">${</span><span class="bu">JSON</span><span class="op">.</span><span class="fu">stringify</span>(verified<span class="op">,</span> <span class="kw">null</span><span class="op">,</span> <span class="dv">2</span>)<span class="sc">}\n</span><span class="vs">`</span>)<span class="op">;</span></span>
+<span id="cb17-58"><a href="#cb17-58"></a>  } <span class="cf">catch</span> {</span>
+<span id="cb17-59"><a href="#cb17-59"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">error</span>(<span class="st">&quot;[4b] JWT verification failed.&quot;</span>)<span class="op">;</span></span>
+<span id="cb17-60"><a href="#cb17-60"></a>  }</span>
+<span id="cb17-61"><a href="#cb17-61"></a>}<span class="op">;</span></span>
+<span id="cb17-62"><a href="#cb17-62"></a></span>
+<span id="cb17-63"><a href="#cb17-63"></a><span class="fu">main</span>()<span class="op">;</span></span></code></pre></div>
+      <h3 data-number="4.5.1" id="演習-1"><span class="header-section-number">4.5.1</span> 演習</h3>
+      <ul>
+      <li>上記のプログラムを実行し、その結果を確認しながらプログラムを読解・理解してください。</li>
+      <li><code>.lab/jwt-2.ts</code> は、<strong>JWTに対する改竄を検知する実験</strong>
+      のプログラムなります。こちらについても、同様に読解・理解をしてください。</li>
+      </ul>
+      <h2 data-number="4.6" id="比較"><span class="header-section-number">4.6</span> 比較</h2>
+      <p>「セッションベース認証」と「トークンベース認証」について簡単に比較すると次のようになります。</p>
+      <table>
+      <colgroup>
+      <col style="width: 10%" />
+      <col style="width: 40%" />
+      <col style="width: 50%" />
+      </colgroup>
+      <thead>
+      <tr class="header">
+      <th>観点</th>
+      <th>セッションベース認証</th>
+      <th>トークンベース認証 (例: JWT)</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr class="odd">
+      <td><strong>トークンの送信方法</strong></td>
+      <td>HttpRequest の Cookie<br>属性には <code>HttpOnly</code> と <code>Secure</code> を設定</td>
+      <td>HttpRequest の Header<br><code>Authorization: Bearer &lt;JWT&gt;</code></td>
+      </tr>
+      <tr class="even">
+      <td><strong>トークンの記載内容</strong></td>
+      <td>セッションIDのみを含む</td>
+      <td>JWT (JSON Web
+      Token)<br><code>id</code>、<code>name</code>、<code>role</code>、<code>exp</code> (有効期限)
+      などの任意の情報を <strong>署名付き</strong> で含む</td>
+      </tr>
+      <tr class="odd">
+      <td><strong>サーバー側での照会・検証方法</strong></td>
+      <td>セッションIDをキーにデータベースから情報を取得して検証</td>
+      <td>トークンの<strong>署名を検証</strong> して内容の正当性を確認</td>
+      </tr>
+      </tbody>
+      </table>
+      <h1 data-number="5" id="セッションベース認証の詳細"><span
+      class="header-section-number">5</span> セッションベース認証の詳細</h1>
+      <p>教材ウェブアプリを「セッションベース認証」で動作させるためには
+      <code>src/config/auth.ts</code> を以下のように設定してください。</p>
+      <div class="sourceCode" id="cb18" data-caption="src/config/auth.ts （認証方式の切替え）"
+      data-startFrom="3"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 2;"><span id="cb18-3"><a href="#cb18-3"></a><span class="kw">const</span> AUTH_MODE <span class="op">=</span> <span class="st">&quot;session&quot;</span> <span class="im">as</span> <span class="st">&quot;session&quot;</span> <span class="op">|</span> <span class="st">&quot;jwt&quot;</span><span class="op">;</span></span>
+<span id="cb18-4"><a href="#cb18-4"></a><span class="co">// const AUTH_MODE = &quot;jwt&quot; as &quot;session&quot; | &quot;jwt&quot;;</span></span></code></pre></div>
+      <h2 data-number="5.1" id="演習-2"><span class="header-section-number">5.1</span> 演習</h2>
+      <p>以下の参考に、セッションベース認証の処理 (実装) について読解してください。</p>
+      <h3 data-number="5.1.1" id="サーバ側ログインリクエストの処理-2"><span
+      class="header-section-number">5.1.1</span> サーバ側：ログインリクエストの処理</h3>
+      <ul>
+      <li><code>src/app/api/login/route.ts</code> <strong>第59行目</strong>～</li>
+      <li><code>src/app/api/_helper/createSession.ts</code></li>
+      </ul>
+      <h3 data-number="5.1.2" id="クライアント側ログインレスポンスの処理-2"><span
+      class="header-section-number">5.1.2</span> クライアント側：ログインレスポンスの処理</h3>
+      <ul>
+      <li>ブラウザが自動で処理するため明示的なプログラムは不要</li>
+      </ul>
+      <h3 data-number="5.1.3" id="クライアント側ログイン後のリクエスト送信処理-2"><span
+      class="header-section-number">5.1.3</span> クライアント側：ログイン後のリクエスト送信処理</h3>
+      <ul>
+      <li>ブラウザが自動で処理するため明示的なプログラムは不要</li>
+      </ul>
+      <h3 data-number="5.1.4" id="サーバ側リクエストに対する認証認可の処理-2"><span
+      class="header-section-number">5.1.4</span> サーバ側：リクエストに対する認証・認可の処理</h3>
+      <ul>
+      <li><code>src/app/api/about-draft/route.ts</code>
+      <strong>第15行目</strong>～、<strong>第25行目</strong>～<br />
+      </li>
+      <li><code>src/app/api/_helper/verifySession.ts</code></li>
+      </ul>
+      <h3 data-number="5.1.5" id="ログアウト処理-2"><span class="header-section-number">5.1.5</span>
+      ログアウト処理</h3>
+      <ul>
+      <li><code>src/app/_components/Header.tsx</code> <strong>第14行目</strong></li>
+      <li><code>src/app/_contexts/AuthContext.tsx</code> <strong>第39行目</strong>～</li>
+      <li><code>src/app/api/logout/route.ts</code></li>
+      </ul>
+      <h1 data-number="6" id="トークンベース認証の詳細"><span class="header-section-number">6</span>
+      トークンベース認証の詳細</h1>
+      <p>教材ウェブアプリを「トークンベース認証」で動作させるためには
+      <code>src/config/auth.ts</code> を以下のように設定してください。</p>
+      <div class="sourceCode" id="cb19" data-caption="src/config/auth.ts （認証方式の切替え）"
+      data-startFrom="3"><pre class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 2;"><span id="cb19-3"><a href="#cb19-3"></a><span class="co">// const AUTH_MODE = &quot;session&quot; as &quot;session&quot; | &quot;jwt&quot;;</span></span>
+<span id="cb19-4"><a href="#cb19-4"></a><span class="kw">const</span> AUTH_MODE <span class="op">=</span> <span class="st">&quot;jwt&quot;</span> <span class="im">as</span> <span class="st">&quot;session&quot;</span> <span class="op">|</span> <span class="st">&quot;jwt&quot;</span><span class="op">;</span></span></code></pre></div>
+      <h2 data-number="6.1" id="演習-3"><span class="header-section-number">6.1</span> 演習</h2>
+      <p>以下の参考に、トークンベース認証の処理 (実装) について読解してください。</p>
+      <h3 data-number="6.1.1" id="サーバ側ログインリクエストの処理-3"><span
+      class="header-section-number">6.1.1</span> サーバ側：ログインリクエストの処理</h3>
+      <ul>
+      <li><code>src/app/api/login/route.ts</code> <strong>第68行目</strong>～</li>
+      <li><code>src/app/api/_helper/createJwt.ts</code></li>
+      </ul>
+      <h3 data-number="6.1.2" id="クライアント側ログインレスポンスの処理-3"><span
+      class="header-section-number">6.1.2</span> クライアント側：ログインレスポンスの処理</h3>
+      <ul>
+      <li><code>src/app/login/page.ts</code> <strong>第102行目</strong>～</li>
+      </ul>
+      <h3 data-number="6.1.3" id="クライアント側ログイン後のリクエスト送信処理-3"><span
+      class="header-section-number">6.1.3</span> クライアント側：ログイン後のリクエスト送信処理</h3>
+      <ul>
+      <li><code>src/app/member/about/page.tsx</code> <strong>第63行目</strong>～</li>
+      </ul>
+      <h3 data-number="6.1.4" id="サーバ側リクエストに対する認証認可の処理-3"><span
+      class="header-section-number">6.1.4</span> サーバ側：リクエストに対する認証・認可の処理</h3>
+      <ul>
+      <li><code>src/app/api/about-draft/route.ts</code>
+      <strong>第15行目</strong>～、<strong>第25行目</strong>～<br />
+      </li>
+      <li><code>src/app/api/_helper/verifyJwt.ts</code></li>
+      </ul>
+      <h3 data-number="6.1.5" id="ログアウト処理-3"><span class="header-section-number">6.1.5</span>
+      ログアウト処理</h3>
+      <ul>
+      <li><code>src/app/_components/Header.tsx</code> <strong>第14行目</strong></li>
+      <li><code>src/app/_contexts/AuthContext.tsx</code> <strong>第39行目</strong>～</li>
+      </ul>
+      <h1 data-number="7" id="content-security-policy-csp"><span
+      class="header-section-number">7</span> Content Security Policy (CSP)</h1>
+      <p><strong>CSP (Content Security Policy)</strong> は、<span
+      class="masked">ウェブページに読み込ませるコンテンツの「種類」や「読み込み元」</span>
+      を制限するためのセキュリティ機能となります。XSS攻撃 (クロスサイトスクリプティング攻撃)
+      や、<strong>意図しない外部リソースの読み込み</strong>を防ぐために使用されます。</p>
+      <p>通常、CSP は <strong>HTTPレスポンス</strong> の <code>Content-Security-Policy</code>
+      として設定します。HTML の <code>&lt;meta&gt;</code>
+      タグで指定することもできますが、<strong>すべてのポリシーが有効になるわけではなく、また適用のタイミングにも制限があるため</strong>、CSP
+      はヘッダで指定することが基本となります。</p>
+      <p>たとえば、次のような <code>Content-Security-Policy</code>
+      ヘッダが、HTTPレスポンスに設定されていたとします。</p>
+      <pre><code>Content-Security-Policy: default-src &#39;self&#39;; script-src &#39;self&#39; https://example.com</code></pre>
+      <p>このとき、<strong>「ウェブブラウザ」のセキュリティ機能</strong>によって、次のような制限が働きます。</p>
+      <ul>
+      <li><p><code>default-src 'self'</code> の指定により、画像やフォントなどのリソースが
+      自分自身（＝同じオリジン）からしか読み込めなくなり、それ以外の場所からの読み込みは<strong>ブラウザによってブロックされます</strong>。例えば、この設定では
+      <span class="masked">Googleフォント</span> は利用できなくなります。</p></li>
+      <li><p><code>script-src 'self' https://example.com</code> の指定により、JavaScriptファイルは
+      同一オリジン または <code>https://example.com</code>
+      から読み込まれたものだけが実行可能になります。</p></li>
+      </ul>
+      <p>これ以外にも、CSP には様々な設定が可能です。script-src ‘self’ https://example.com
+      を指定すると、JavaScriptファイルは 同一オリジン または https://example.com
+      から読み込まれたものだけが実行可能になります。</p>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>CSP として、レスポンスヘッダに <code>Content-Security-Policy: default-src 'self'</code>
+      を設定したら、Googleフォントが機能しなくなってしまいました。どのようにすればよいですか。</p>
+      </blockquote>
+      <blockquote>
+      <p>ウェブアプリを開発しています。CSP (Content Security Policy)
+      には、どのような項目があり、それによってどのようなセキュティ設定ができますか。分かりやすく解説してください。</p>
+      </blockquote>
+      <p>CSP
+      を適切に設定すれば、仮に「サニタイズ処理」や「エスケープ処理」に不備があったとしても、XSS攻撃のような「外部からの悪意あるスクリプトの実行」を防ぐことができます。しかし、XSS対策は、ブラウザのセキュリティ機能である
+      CSP
+      に頼るのではなく、アプリ側の「サニタイズ処理」や「エスケープ処理」で対策することが大原則となります。あくまで
+      CSP は <span class="masked">「最後の砦」</span> と考えてください。</p>
+      <div class="note type-caution">
+      <p><strong>CSPに関する注意</strong></p>
+      <p>ストア型XSS（Stored XSS）が仕掛けられていたとしても、CSP（Content Security
+      Policy）が適切に構成されており、それを正しく解釈できるブラウザでアクセスすれば、XSS攻撃は無効化されます。しかし、<strong>CSPに十分に対応していないブラウザからアクセスしたときには、XSS攻撃がそのまま実行されてしまいます</strong>。</p>
+      </div>
+      <p>Next.js では <code>next.config.ts</code> で CSP
+      を設定することができます。詳しくは、以下の参照してください (記事の後半に
+      <code>next.config.ts</code> の設定例があります)。また、適切に CSP
+      が設定されたかどうかは、デベロッパツールのレスポンスヘッダから確認することができます。</p>
+      <ul>
+      <li><a href="https://nextjs.org/docs/app/guides/content-security-policy">How to set a Content
+      Security Policy (CSP) for your Next.js application</a></li>
+      </ul>
+      <p>(プロンプト例)</p>
+      <blockquote>
+      <p>Next.js 15 (TypeScript) において <code>next.config.ts</code> で CSP
+      を設定する方法について教えてください。また、一般的な設定例を示してください。なお、Googleフォントを使っているので、それは制限したくありません。</p>
+      </blockquote>
+      <h1 data-number="8" id="おまけnext.js-serveractions-custom-invocation"><span
+      class="header-section-number">8</span> おまけ：Next.js ServerActions (Custom Invocation)</h1>
+      <p>Next.js 13.4 以降では、APIルート (＝<code>src/app/api/</code> 以下に <code>route.ts</code>
+      を設ける枠組み) を使わずに、<span class="masked">バックエンド処理</span>
+      を直接的に記述できる仕組みとして「ServerActions」が導入されています。これを活用することにより、フロントエンドとバックエンドの連携が、かなりシンプルに書けるようになります
+      (開発の生産性がグッとあがります🤩)。</p>
+      <p>ただし、すべてのAPIルートを無条件に ServerActions
+      に置き換えられるわけではなく、いくつかの条件や前提がある点に注意が必要です。特に、ServerActions
+      は <code>useEffect</code> の内部で呼び出すことができない点に注意が必要です。</p>
+      <p>このプロジェクトでは、サインアップ (<code>/signup</code>) のバックエンド処理
+      (新規登録のユーザ情報のデータベースへの書き込みなど) を、APIルートを設けずに ServerActions
+      で記述しています。</p>
+      <div class="sourceCode" id="cb21"
+      data-caption="src/app/signup/page.ts (抜粋) ServerActions の呼び出し" data-startFrom="64"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript" style="counter-reset: source-line 63;"><span id="cb21-64"><a href="#cb21-64"></a><span class="co">// フォームの送信処理</span></span>
+<span id="cb21-65"><a href="#cb21-65"></a><span class="kw">const</span> onSubmit <span class="op">=</span> <span class="kw">async</span> (signupRequest<span class="op">:</span> SignupRequest) <span class="kw">=&gt;</span> {</span>
+<span id="cb21-66"><a href="#cb21-66"></a>  <span class="cf">try</span> {</span>
+<span id="cb21-67"><a href="#cb21-67"></a>    <span class="fu">startTransition</span>(<span class="kw">async</span> () <span class="kw">=&gt;</span> {</span>
+<span id="cb21-68"><a href="#cb21-68"></a>      <span class="co">// ServerActions (Custom Invocation) の利用</span></span>
+<span id="cb21-69"><a href="#cb21-69"></a>      <span class="kw">const</span> res <span class="op">=</span> <span class="cf">await</span> <span class="fu">signupServerAction</span>(signupRequest)<span class="op">;</span></span>
+<span id="cb21-70"><a href="#cb21-70"></a>      <span class="cf">if</span> (<span class="op">!</span>res<span class="op">.</span><span class="at">success</span>) {</span>
+<span id="cb21-71"><a href="#cb21-71"></a>        <span class="fu">setRootError</span>(res<span class="op">.</span><span class="at">message</span>)<span class="op">;</span></span>
+<span id="cb21-72"><a href="#cb21-72"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb21-73"><a href="#cb21-73"></a>      }</span>
+<span id="cb21-74"><a href="#cb21-74"></a>      <span class="fu">setIsSignUpCompleted</span>(<span class="kw">true</span>)<span class="op">;</span></span>
+<span id="cb21-75"><a href="#cb21-75"></a>    })<span class="op">;</span></span>
+<span id="cb21-76"><a href="#cb21-76"></a>  } <span class="cf">catch</span> (e) {</span>
+<span id="cb21-77"><a href="#cb21-77"></a>    <span class="kw">const</span> errorMsg <span class="op">=</span></span>
+<span id="cb21-78"><a href="#cb21-78"></a>      e <span class="kw">instanceof</span> <span class="bu">Error</span> <span class="op">?</span> e<span class="op">.</span><span class="at">message</span> <span class="op">:</span> <span class="st">&quot;予期せぬエラーが発生しました。&quot;</span><span class="op">;</span></span>
+<span id="cb21-79"><a href="#cb21-79"></a>    <span class="fu">setRootError</span>(errorMsg)<span class="op">;</span></span>
+<span id="cb21-80"><a href="#cb21-80"></a>  }</span>
+<span id="cb21-81"><a href="#cb21-81"></a>}<span class="op">;</span></span></code></pre></div>
+      <p>上記の <strong>第69行目</strong> で ServerActions の仕組みを利用して以下に示す
+      <code>src/app/_actions/signup.ts</code> の <code>signupServerAction</code>
+      という処理を呼び出しています。</p>
+      <p>以下に ServerActions の本体を示します。ファイル先頭に <span
+      class="masked"><code>"use server";</code></span> のように記述しているのがポイントです。</p>
+      <div class="sourceCode" id="cb22" data-caption="src/app/_actions/signup.ts"><pre
+      class="sourceCode numberSource ts numberLines"><code class="sourceCode typescript"><span id="cb22-1"><a href="#cb22-1"></a><span class="st">&quot;use server&quot;</span><span class="op">;</span></span>
+<span id="cb22-2"><a href="#cb22-2"></a></span>
+<span id="cb22-3"><a href="#cb22-3"></a><span class="im">import</span> { prisma } <span class="im">from</span> <span class="st">&quot;@/libs/prisma&quot;</span><span class="op">;</span></span>
+<span id="cb22-4"><a href="#cb22-4"></a><span class="im">import</span> { signupRequestSchema } <span class="im">from</span> <span class="st">&quot;@/app/_types/SignupRequest&quot;</span><span class="op">;</span></span>
+<span id="cb22-5"><a href="#cb22-5"></a><span class="im">import</span> { userProfileSchema } <span class="im">from</span> <span class="st">&quot;@/app/_types/UserProfile&quot;</span><span class="op">;</span></span>
+<span id="cb22-6"><a href="#cb22-6"></a><span class="im">import</span> <span class="im">type</span> { SignupRequest } <span class="im">from</span> <span class="st">&quot;@/app/_types/SignupRequest&quot;</span><span class="op">;</span></span>
+<span id="cb22-7"><a href="#cb22-7"></a><span class="im">import</span> <span class="im">type</span> { UserProfile } <span class="im">from</span> <span class="st">&quot;@/app/_types/UserProfile&quot;</span><span class="op">;</span></span>
+<span id="cb22-8"><a href="#cb22-8"></a><span class="im">import</span> <span class="im">type</span> { ServerActionResponse } <span class="im">from</span> <span class="st">&quot;@/app/_types/ServerActionResponse&quot;</span><span class="op">;</span></span>
+<span id="cb22-9"><a href="#cb22-9"></a></span>
+<span id="cb22-10"><a href="#cb22-10"></a><span class="co">// ユーザのサインアップのサーバアクション</span></span>
+<span id="cb22-11"><a href="#cb22-11"></a><span class="im">export</span> <span class="kw">const</span> signupServerAction <span class="op">=</span> <span class="kw">async</span> (</span>
+<span id="cb22-12"><a href="#cb22-12"></a>  signupRequest<span class="op">:</span> SignupRequest<span class="op">,</span></span>
+<span id="cb22-13"><a href="#cb22-13"></a>)<span class="op">:</span> <span class="bu">Promise</span><span class="op">&lt;</span>ServerActionResponse<span class="op">&lt;</span>UserProfile <span class="op">|</span> <span class="dt">null</span><span class="op">&gt;&gt;</span> <span class="kw">=&gt;</span> {</span>
+<span id="cb22-14"><a href="#cb22-14"></a>  <span class="cf">try</span> {</span>
+<span id="cb22-15"><a href="#cb22-15"></a>    <span class="co">// 入力検証</span></span>
+<span id="cb22-16"><a href="#cb22-16"></a>    <span class="co">// 💀 現状では日本語のPWも受入れてしまう -&gt; SignupRequest のバリデーション見直し</span></span>
+<span id="cb22-17"><a href="#cb22-17"></a>    <span class="kw">const</span> payload <span class="op">=</span> signupRequestSchema<span class="op">.</span><span class="fu">parse</span>(signupRequest)<span class="op">;</span></span>
+<span id="cb22-18"><a href="#cb22-18"></a></span>
+<span id="cb22-19"><a href="#cb22-19"></a>    <span class="co">// 💡スパム登録対策（1秒遅延）</span></span>
+<span id="cb22-20"><a href="#cb22-20"></a>    <span class="cf">await</span> <span class="kw">new</span> <span class="bu">Promise</span>((resolve) <span class="kw">=&gt;</span> <span class="pp">setTimeout</span>(resolve<span class="op">,</span> <span class="dv">1000</span>))<span class="op">;</span></span>
+<span id="cb22-21"><a href="#cb22-21"></a></span>
+<span id="cb22-22"><a href="#cb22-22"></a>    <span class="co">// 既に登録済みユーザのサインアップではないか確認</span></span>
+<span id="cb22-23"><a href="#cb22-23"></a>    <span class="kw">const</span> existingUser <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">user</span><span class="op">.</span><span class="fu">findUnique</span>({</span>
+<span id="cb22-24"><a href="#cb22-24"></a>      where<span class="op">:</span> { email<span class="op">:</span> payload<span class="op">.</span><span class="at">email</span> }<span class="op">,</span></span>
+<span id="cb22-25"><a href="#cb22-25"></a>    })<span class="op">;</span></span>
+<span id="cb22-26"><a href="#cb22-26"></a>    <span class="cf">if</span> (existingUser) {</span>
+<span id="cb22-27"><a href="#cb22-27"></a>      <span class="co">// 💀 このアカウントがシステムに存在することを知らせてしまうことになる。</span></span>
+<span id="cb22-28"><a href="#cb22-28"></a>      <span class="co">// 認証メールを送信するなどの方法が望ましい</span></span>
+<span id="cb22-29"><a href="#cb22-29"></a>      <span class="cf">return</span> {</span>
+<span id="cb22-30"><a href="#cb22-30"></a>        success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb22-31"><a href="#cb22-31"></a>        payload<span class="op">:</span> <span class="dt">null</span><span class="op">,</span></span>
+<span id="cb22-32"><a href="#cb22-32"></a>        message<span class="op">:</span> <span class="st">&quot;このメールアドレスは既に使用されています。&quot;</span><span class="op">,</span></span>
+<span id="cb22-33"><a href="#cb22-33"></a>      }<span class="op">;</span></span>
+<span id="cb22-34"><a href="#cb22-34"></a>    }</span>
+<span id="cb22-35"><a href="#cb22-35"></a></span>
+<span id="cb22-36"><a href="#cb22-36"></a>    <span class="co">// パスワードのハッシュ化</span></span>
+<span id="cb22-37"><a href="#cb22-37"></a>    <span class="co">// 💀 ハッシュ化せずにPW保存（ダメ絶対）</span></span>
+<span id="cb22-38"><a href="#cb22-38"></a>    <span class="kw">const</span> hashedPassword <span class="op">=</span> payload<span class="op">.</span><span class="at">password</span><span class="op">;</span></span>
+<span id="cb22-39"><a href="#cb22-39"></a>    <span class="co">// const hashedPassword = await bcrypt.hash(payload.password, 10);</span></span>
+<span id="cb22-40"><a href="#cb22-40"></a></span>
+<span id="cb22-41"><a href="#cb22-41"></a>    <span class="co">// ユーザの作成</span></span>
+<span id="cb22-42"><a href="#cb22-42"></a>    <span class="kw">const</span> user <span class="op">=</span> <span class="cf">await</span> prisma<span class="op">.</span><span class="at">user</span><span class="op">.</span><span class="fu">create</span>({</span>
+<span id="cb22-43"><a href="#cb22-43"></a>      data<span class="op">:</span> {</span>
+<span id="cb22-44"><a href="#cb22-44"></a>        email<span class="op">:</span> payload<span class="op">.</span><span class="at">email</span><span class="op">,</span></span>
+<span id="cb22-45"><a href="#cb22-45"></a>        password<span class="op">:</span> hashedPassword<span class="op">,</span></span>
+<span id="cb22-46"><a href="#cb22-46"></a>        name<span class="op">:</span> payload<span class="op">.</span><span class="at">name</span><span class="op">,</span></span>
+<span id="cb22-47"><a href="#cb22-47"></a>      }<span class="op">,</span></span>
+<span id="cb22-48"><a href="#cb22-48"></a>    })<span class="op">;</span></span>
+<span id="cb22-49"><a href="#cb22-49"></a></span>
+<span id="cb22-50"><a href="#cb22-50"></a>    <span class="co">// レスポンスの生成</span></span>
+<span id="cb22-51"><a href="#cb22-51"></a>    <span class="co">// 💀 パスワードは無論、不要な情報はレスポンスしない。</span></span>
+<span id="cb22-52"><a href="#cb22-52"></a>    <span class="kw">const</span> res<span class="op">:</span> ServerActionResponse<span class="op">&lt;</span>UserProfile<span class="op">&gt;</span> <span class="op">=</span> {</span>
+<span id="cb22-53"><a href="#cb22-53"></a>      success<span class="op">:</span> <span class="kw">true</span><span class="op">,</span></span>
+<span id="cb22-54"><a href="#cb22-54"></a>      payload<span class="op">:</span> userProfileSchema<span class="op">.</span><span class="fu">parse</span>(user)<span class="op">,</span> <span class="co">// 余分なプロパティを削除,</span></span>
+<span id="cb22-55"><a href="#cb22-55"></a>      message<span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">,</span></span>
+<span id="cb22-56"><a href="#cb22-56"></a>    }<span class="op">;</span></span>
+<span id="cb22-57"><a href="#cb22-57"></a>    <span class="cf">return</span> res<span class="op">;</span></span>
+<span id="cb22-58"><a href="#cb22-58"></a>  } <span class="cf">catch</span> (e) {</span>
+<span id="cb22-59"><a href="#cb22-59"></a>    <span class="kw">const</span> errorMsg <span class="op">=</span> e <span class="kw">instanceof</span> <span class="bu">Error</span> <span class="op">?</span> e<span class="op">.</span><span class="at">message</span> <span class="op">:</span> <span class="st">&quot;Internal Server Error&quot;</span><span class="op">;</span></span>
+<span id="cb22-60"><a href="#cb22-60"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">error</span>(errorMsg)<span class="op">;</span></span>
+<span id="cb22-61"><a href="#cb22-61"></a>    <span class="cf">return</span> {</span>
+<span id="cb22-62"><a href="#cb22-62"></a>      success<span class="op">:</span> <span class="kw">false</span><span class="op">,</span></span>
+<span id="cb22-63"><a href="#cb22-63"></a>      payload<span class="op">:</span> <span class="dt">null</span><span class="op">,</span></span>
+<span id="cb22-64"><a href="#cb22-64"></a>      message<span class="op">:</span> errorMsg<span class="op">,</span></span>
+<span id="cb22-65"><a href="#cb22-65"></a>      <span class="co">// 💀 エラーメッセージはユーザに見せない方が良い</span></span>
+<span id="cb22-66"><a href="#cb22-66"></a>      <span class="co">// システム内部構造や依存関係をユーザに漏らす可能性がある</span></span>
+<span id="cb22-67"><a href="#cb22-67"></a>      <span class="co">// message: &quot;サインアップのサーバサイドの処理に失敗しました。&quot;,</span></span>
+<span id="cb22-68"><a href="#cb22-68"></a>    }<span class="op">;</span></span>
+<span id="cb22-69"><a href="#cb22-69"></a>  }</span>
+<span id="cb22-70"><a href="#cb22-70"></a>}<span class="op">;</span></span></code></pre></div>
+      <p>本来、<strong>データベースの操作はバックエンドでしか許されていない処理</strong> となります
+      (クライアントサイドで prisma のような ORM
+      は読み込めません)。それにも関わらず、<strong>あたかもクライアント側からバックエンド処理を直接的に呼び出しているように記述できること</strong>
+      が、Server Actions
+      のセールスポイントになっています。ただし、実際には、内部的にAPIエンドポイントがつくられ、それを叩いている仕組みになります。</p>
+      <p>この仕組みを正しく理解せずに使ってしまうと、セキュリティ上のリスクを生む可能性があります。とても便利な仕組みですが、<strong>「何がクライアント側に公開されるのか」「どの処理が安全なのか」</strong>をよく考えた上で使うようにしてください。</p>
+      <h3 data-number="8.0.1" id="参考"><span class="header-section-number">8.0.1</span> 参考</h3>
+      <p><a href="https://github.com/TakeshiWada1980/nextjs-render-compare">こちら</a>
+      のリポジトリは、同じ機能を持つ画面を、以下の4バージョンで実装して比較したものです。ServerAction
+      に興味があるひとは参考にしてみてください。</p>
+      <ul>
+      <li>CSR (Client Side Rendering) only <strong>PG3で扱った手法</strong></li>
+      <li>SSR (Server Side Rendering) only</li>
+      <li>Hybrid1（CSR+SSR+ServerAction（Custom Invocation））</li>
+      <li>Hybrid2（CSR+SSR+ServerAction（Progressive Enhancement））</li>
+      </ul>
+      <h1 data-number="9" id="実装課題2"><span class="header-section-number">9</span> 実装課題2</h1>
+      <p>実装課題2として、以下の内容に取り組み、その <strong>GitHubリポジトリ (Public)
+      の「URL」</strong> を Teams に提出してください。</p>
+      <ul>
+      <li>本教材<i class="fa-brands fa-github"></i><a
+          href="https://github.com/TakeshiWada1980/web-sec-playground-1">web-sec-playground-1</a>
+      を参考に「トークンベース認証」もしくは「セッションベース認証」の
+      <strong>いずれかを用いた認証・認可機能を備えたウェブアプリ</strong> を Next.js
+      で実装してください。また、<span
+      class="masked">教材には実装されていない何らかの認証・認可に関する機能</span> を
+      <strong>2つ以上実装</strong> してください。何も思いつかなければ、以下を実装してみてください。
+      <ul>
+      <li>連続N回のログイン失敗でアカウントロックする機能</li>
+      <li>サインアップのときに確認用パスワードを要求するようなUI機能</li>
+      <li>サインアップのときにパスワード強度を表示するような機能</li>
+      <li>パスワードの変更機能</li>
+      <li>サインアップにおけるメールアドレスのリアルタイムの重複チェック機能</li>
+      <li>CAPTCHA (bot対策)</li>
+      <li>秘密の質問によるパスワードリセット機能</li>
+      <li>ログイン試行の間隔制限機能</li>
+      <li>ログイン履歴の表示機能</li>
+      <li>チェックボックス「次回からログインIDを自動入力する」な機能</li>
+      <li>キーロガー対策のソフトウェアキーボードによるパスワード入力機能</li>
+      </ul></li>
+      <li>提出期限：<strong>2025年08月31日 (日)</strong> 23時59分 (これ以降に確認・評価します)
+      <ul>
+      <li>Teamsで評価をフィードバックした後は、修正版の再提出・追提出があっても原則として再評価はしません。</li>
+      </ul></li>
+      <li>想定取り組み時間：最低でも「<strong>8時間以上</strong>」を費やしてください。</li>
+      </ul>
+      <p>なお、アプリが認証・認可機能 (および、それを確認できる要素) を持っていれば OK
+      で、アプリ自体が何らかの機能を提供する必要はありません。</p>
+      <h2 data-number="9.1" id="評価の観点"><span class="header-section-number">9.1</span>
+      評価の観点</h2>
+      <ul>
+      <li>GitHubリポジトリの <strong>README.md</strong>
+      の内容を「5点満点」、ソースコードを「5点満点」で「合計10点満点」で評価します。「7.6点」を<strong>標準</strong>とします。
+      <ul>
+      <li>評価に際しては、まず README.md
+      を読んでから、それに関係しそうなソースコードを確認します。そのため、<strong>README.md
+      に書かれていない内容は、実装していても評価でスルーされる可能性があります</strong>。実装した機能や創意工夫した箇所は、詳細に
+      README.md に記載してください。</li>
+      <li>README.md には <span
+      class="masked">最低でも3枚以上の「画像」、もしくは、1つ以上の「動画」</span>
+      を含めてください。</li>
+      </ul></li>
+      <li>基本的に <code>main</code> ブランチのソースコードを確認します。
+      <ul>
+      <li>評価の際、(基本的には) アプリを起動させる予定はないので環境変数等の共有は不要です。</li>
+      </ul></li>
+      <li>ガチガチに <strong>セキュアな設計</strong> としてしてください。
+      <ul>
+      <li>パスワードは bcrypt を使ってハッシュ化して保存、Cookie を使う場合は適切な属性を設定、CSP
+      も適切に設定するなどを講じてください。</li>
+      </ul></li>
+      <li><i class="fa-brands fa-github"></i><a
+          href="https://github.com/TakeshiWada1980/web-sec-playground-1">web-sec-playground-1</a>
+      をベースに開発するときは、<strong>使用しない認証方式に関連するコードやコメント、「ニュース」や「ショップ」に関連するコード
+      (処理や型) は全て削除</strong> してください。残っている場合は減点とします。</li>
+      </ul>
+      <h2 data-number="9.2" id="その他"><span class="header-section-number">9.2</span> その他</h2>
+      <ul>
+      <li>実装指示「<strong>教材には実装されていない何らかの認証・認可に関する機能</strong>」については拡大解釈して
+      OK です。悩む場合は、Teamsのチャットで相談してください。</li>
+      <li>作成したリポジトリは、ポートフォリオ (作品集)
+      のなかに追加しておくことを強くお勧めします。</li>
+      <li>提出されたリポジトリは、知能情報コースの教員と学生に共有することがあります。</li>
+      </ul>
+      <!-- ---------------------------------------- -->
+    </main>
+
+    <footer class="markdown-body">
+      <p><a href="https://takeshiwada1980.github.io/Eii2-2025/">講義資料のIndexに移動</a></p>
+    </footer>
+
+    <script>
+      window.onload = function () {
+        // ナビゲーション関連
+        let openBtn = document.getElementsByClassName("openbtn")[0];
+        let navPnl = document.getElementById("g-nav");
+        openBtn.onclick = () => {
+          openBtn.classList.toggle("active");
+          navPnl.classList.toggle("panelactive");
+        };
+
+        let items = navPnl.getElementsByTagName("a");
+        Array.from(items).forEach((item) => {
+          item.onclick = () => {
+            openBtn.classList.toggle("active");
+            navPnl.classList.toggle("panelactive");
+          };
+        });
+
+        // マスク処理
+        let maskedSpans = document.getElementsByClassName("masked");
+        Array.from(maskedSpans).forEach((span) => {
+          span.onclick = () => {
+            span.classList.toggle("open");
+          };
+        });
+
+        // data-startfrom 属性の行番号カウンタのリセット
+        document.querySelectorAll("div.sourceCode").forEach(function (div) {
+          var startFrom = div.getAttribute("data-startfrom");
+          if (startFrom != null) {
+            div.style.counterReset = "pg-line " + (startFrom - 1);
+          }
+        });
+
+        // 画像にリンクを付与
+        // let images = document.querySelectorAll("figure img");
+        // Array.from(images).forEach((img) => {
+        //   img.onclick = () => {
+        //     location.href = img.getAttribute("src");
+        //   };
+        // });
+      };
+    </script>
+  </body>
+</html>
