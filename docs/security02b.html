@@ -243,7 +243,7 @@ git commit --allow-empty -m &quot;Start week-6 branch&quot;</code></pre>
       </ol>
       <h1 data-number="2" id="ユーザのパスワード管理と認証認可の機能"><span
       class="header-section-number">2</span> ユーザのパスワード管理と認証/認可の機能</h1>
-      <p>認証機能を備えたウェブアプリやウェブサービスの開発する場合、<span
+      <p>認証機能を備えたウェブアプリやウェブサービスを開発する場合、<span
       class="masked">サーバーサイド (バックエンド) におけるユーザのパスワード管理</span>
       は避けて通れない重要な課題となります。パスワード管理を含む認証/認可の仕組みは、<strong>セキュリティの根幹</strong>であり、その<strong>適切かつ安全な実装と運用には高度な専門知識</strong>が求められます。</p>
       <p>このような理由から、通常はフルスクラッチ (＝<span
@@ -688,7 +688,7 @@ hash(&quot;password&quot;+&quot;xyz987&quot;) → 1700a18247a815...</code></pre>
       <p>例えば、ユーザ情報を管理しているテーブルに <code>password_salt</code>
       のようなカラムをつくって、そこに保管するという手法が考えられますが、それだと管理が煩雑になります。</p>
       <p>そこで、bcrypt では「パスワードハッシュとソルトを別に保存する」という煩雑さを避けるために
-      <span class="masked">ハッシュ値の中にソルトをめてしまう</span>
+      <span class="masked">ハッシュ値と一緒にソルトも保存してしまう</span>
       という設計を採用しています。これにより、<strong>保存すべき情報はハッシュ文字列ひとつで済み、認証時も同じソルトを自動的に再利用することが可能になります</strong>。</p>
       <p>(プロンプト例)</p>
       <blockquote>
